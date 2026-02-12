@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git rm:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nOptimize blog with SEO and documentation improvements\n\n- Fix URL configuration \\(github.com -> github.io\\)\n- Add comprehensive site metadata \\(subtitle, description, keywords\\)\n- Configure timezone to Asia/Shanghai\n- Install SEO plugins \\(sitemap, RSS feed, search, wordcount\\)\n- Add Cactus theme configuration with social links and comments\n- Create professional README documentation\n- Unify dependency management to npm only\n- Update .gitignore to exclude generated files\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(gh run list:*)"
+    ]
+  }
+}
