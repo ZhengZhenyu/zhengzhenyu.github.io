@@ -27,7 +27,7 @@ VS Code 现在可以直接读取 Claude 的配置文件，实现了真正的配�
 
 VS Code 1.109 引入了 Claude Agent 集成（预览版），使用的是 Anthropic 官方的 Claude Agent SDK，确保了与其他实现的一致性。在Copilot使用时选择“Claude Agent”模式，就可以直接在 VS Code 中体验到 Claude Agent 的强大功能了。
 
-![开启Claude模式](./claude-config/image.pngimage.png)
+![开启Claude模式](./claude-config/image.png)
 
 这个版本还为 Anthropic 模型增加了三项重要功能：
 - 推理能力的消息 API 集成
