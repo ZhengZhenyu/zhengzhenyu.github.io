@@ -1,0 +1,193 @@
+<!-- ════════════════════════════════════════ -->
+<!--  Common layout: Home / Post / Archive   -->
+<!-- ════════════════════════════════════════ -->
+
+<% if (is_home()) { %>
+<!-- HOME PAGE -->
+<main class="main-home">
+
+  <!-- Hero -->
+  <section class="hero-area">
+    <h1 class="hero-name"><%= config.author %></h1>
+    <p class="hero-tagline"><%= config.description %></p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num"><%= site.posts.length %></span>
+        <span class="hero-stat-label">articles</span>
+      </div>
+      <span class="hero-stat-sep">/</span>
+      <div class="hero-stat">
+        <span class="hero-stat-num"><%= site.tags.length %></span>
+        <span class="hero-stat-label">tags</span>
+      </div>
+      <span class="hero-stat-sep">/</span>
+      <div class="hero-stat">
+        <span class="hero-stat-num"><%= site.categories.length %></span>
+        <span class="hero-stat-label">categories</span>
+      </div>
+    </div>
+    <div class="hero-social">
+      <% if (theme.social_links) { %>
+        <% theme.social_links.forEach(function(link) { %>
+          <a href="<%= link.link %>" class="social-link" title="<%= link.icon %>"
+             <% if (link.link.startsWith('http')) { %>target="_blank" rel="noopener"<% } %>>
+            <span><%= link.icon %></span>
+          </a>
+        <% }) %>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Post cards -->
+  <section class="posts-section">
+    <h2 class="section-title">文章</h2>
+    <%
+      var posts = site.posts.sort('date', -1);
+      var count = theme.posts_overview && theme.posts_overview.post_count || 10;
+      posts = posts.toArray().slice(0, count);
+    %>
+    <div class="post-cards">
+      <% posts.forEach(function(post) { %>
+      <a href="<%= url_for(post.path) %>" class="post-card">
+        <div class="post-card-meta">
+          <time><%= date(post.date, 'YYYY-MM-DD') %></time>
+          <% if (post.categories && post.categories.length) { %>
+          <span>·</span>
+          <span class="post-card-category"><%= post.categories.first().name %></span>
+          <% } %>
+        </div>
+        <h3 class="post-card-title"><%= post.title %></h3>
+        <% if (post.description) { %>
+        <p class="post-card-desc"><%= post.description %></p>
+        <% } %>
+      </a>
+      <% }) %>
+    </div>
+  </section>
+
+  <!-- Tag cloud -->
+  <% if (site.tags && site.tags.length) { %>
+  <section class="tags-section">
+    <h2 class="section-title">标签</h2>
+    <div class="tag-cloud">
+      <% site.tags.each(function(tag) { %>
+      <a href="<%= url_for(tag.path) %>" class="tag-cloud-item">
+        <%= tag.name %>
+      </a>
+      <% }) %>
+    </div>
+  </section>
+  <% } %>
+</main>
+
+<% } else if (is_post()) { %>
+<!-- POST PAGE -->
+<%
+  var has_toc = page.toc !== false && page.content && page.content.includes('</h');
+%>
+<main class="main-post <%= has_toc ? 'with-toc' : '' %>">
+  <% if (has_toc) { %>
+  <aside class="post-sidebar">
+    <p class="toc-label">目录</p>
+    <nav class="toc-nav" id="toc-nav"></nav>
+  </aside>
+  <% } %>
+
+  <article class="post-article">
+    <header class="post-hero">
+      <% if (page.categories && page.categories.length) { %>
+      <span class="post-eyebrow"><%= page.categories.first().name %></span>
+      <% } %>
+      <h1 class="post-title"><%= page.title %></h1>
+      <div class="post-meta">
+        <time datetime="<%= date(page.date, 'YYYY-MM-DD') %>">📅 <%= date(page.date, 'YYYY-MM-DD') %></time>
+        <% if (theme.post.show_updated && page.updated) { %>
+        <span class="post-updated">✏️ <%= date(page.updated, 'YYYY-MM-DD') %></span>
+        <% } %>
+        <% if (page.tags && page.tags.length) { %>
+        <span class="post-tags-meta">
+          🏷️
+          <% page.tags.each(function(tag, i) { %>
+          <a href="<%= url_for(tag.path) %>"><%= tag.name %></a><%= i < page.tags.length - 1 ? ', ' : '' %>
+          <% }) %>
+        </span>
+        <% } %>
+      </div>
+    </header>
+
+    <div class="post-body <%= page.layout === 'post-html' ? 'post-html' : '' %>">
+      <%- page.content %>
+    </div>
+
+    <footer class="post-footer">
+      <% if (page.tags && page.tags.length) { %>
+      <div class="post-tags">
+        <% page.tags.each(function(tag) { %>
+        <a href="<%= url_for(tag.path) %>" class="tag-chip"><%= tag.name %></a>
+        <% }) %>
+      </div>
+      <% } %>
+
+      <nav class="post-nav">
+        <% if (page.prev) { %>
+        <a href="<%= url_for(page.prev.path) %>" class="post-nav-prev">&larr; <%= page.prev.title %></a>
+        <% } %>
+        <% if (page.next) { %>
+        <a href="<%= url_for(page.next.path) %>" class="post-nav-next"><%= page.next.title %> &rarr;</a>
+        <% } %>
+      </nav>
+    </footer>
+  </article>
+</main>
+
+<% } else if (is_archive() || is_category() || is_tag()) { %>
+<!-- ARCHIVE / CATEGORY / TAG PAGE -->
+<main class="main-archive">
+  <% if (is_category()) { %>
+  <h1 class="archive-title">分类：<%= page.category %></h1>
+  <% } else if (is_tag()) { %>
+  <h1 class="archive-title">标签：<%= page.tag %></h1>
+  <% } else { %>
+  <h1 class="archive-title">归档</h1>
+  <% } %>
+
+  <%
+    var archive_posts = page.posts ? page.posts.sort('date', -1) : site.posts.sort('date', -1);
+    var grouped = {};
+    archive_posts.each(function(post) {
+      var year = date(post.date, 'YYYY');
+      if (!grouped[year]) grouped[year] = [];
+      grouped[year].push(post);
+    });
+  %>
+
+  <div class="archive-list">
+    <% Object.keys(grouped).sort().reverse().forEach(function(year) { %>
+    <div class="archive-year">
+      <h2 class="archive-year-title"><%= year %></h2>
+      <div class="archive-posts">
+        <% grouped[year].forEach(function(post) { %>
+        <a href="<%= url_for(post.path) %>" class="archive-post">
+          <time datetime="<%= date(post.date, 'YYYY-MM-DD') %>"><%= date(post.date, 'MM-DD') %></time>
+          <span class="archive-post-title"><%= post.title %></span>
+        </a>
+        <% }) %>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+</main>
+
+<% } else if (is_page()) { %>
+<!-- GENERIC PAGE (about, etc.) -->
+<main class="main-page">
+  <article class="page-article">
+    <% if (page.title && page.type !== 'tags') { %>
+    <h1 class="page-title"><%= page.title %></h1>
+    <% } %>
+    <div class="page-body">
+      <%- page.content %>
+    </div>
+  </article>
+</main>
+<% } %>

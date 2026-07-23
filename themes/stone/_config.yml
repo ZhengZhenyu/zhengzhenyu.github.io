@@ -1,0 +1,53 @@
+# Stone Theme Configuration
+
+# Navigation menu
+nav:
+  home: /
+  about: /about/
+  articles: /archives/
+  projects: https://github.com/zhengzhenyu
+
+# Social links
+social_links:
+  - icon: github
+    link: https://github.com/zhengzhenyu
+  - icon: mail
+    link: mailto:zhengzhenyu.here@gmail.com
+  - icon: rss
+    link: /atom.xml
+
+# Homepage settings
+posts_overview:
+  post_count: 10
+  sort_updated: true
+
+# Post settings
+post:
+  show_updated: true
+
+# Copyright
+copyright:
+  start_year: 2024
+
+# Logo
+logo:
+  enabled: true
+  width: 42
+  height: 42
+  url: /images/logo.png
+
+# RSS
+rss: /atom.xml
+
+# Utterances comments
+utterances:
+  enabled: true
+  repo: zhengzhenyu/zhengzhenyu.github.io
+  issue_term: pathname
+  label: Comment
+  theme: preferred-color-scheme
+
+# Google Analytics (disabled by default)
+google_analytics:
+  enabled: false
+  id:

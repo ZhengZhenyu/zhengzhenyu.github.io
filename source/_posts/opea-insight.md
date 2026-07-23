@@ -1,12 +1,14 @@
 ---
 title: A brief insight of Open Platform for Enterprise AI(OPEA)
 date: 2024-11-02 09:35:40
-tags:
+tags: [AI, OPEA, GenAI, RAG, 开源, 企业级]
+categories: AI
+description: 深入解析 OPEA（Open Platform for Enterprise AI）的治理架构、技术体系与核心组件，了解企业级 GenAI 平台的构建之道。
 ---
 
 Open Platform for Enterprise AI (OPEA)是一个由Intel发起并捐赠至 Linux Foundation AI & Data 基金会的开放生态系统编排框架，旨在集成高效的生成式人工智能（GenAI）技术和工作流程，帮助企业更快地采用人工智能并实现业务价值。
 
-<img src=https://opea.dev/wp-content/uploads/sites/9/2024/04/opea-horizontal-color.svg style="zoom:50%;" />
+<img src="/images/opea-logo.svg" style="zoom:50%;" alt="OPEA Logo" />
 
 根据OPEA负责人，Intel开源生态负责人Arun Gupta描述，OPEA的出现主要是为了简化目前GenAI领域的复杂的技术栈和多种多样的软件选择，为开发者和用户提供多个领域GenAI应用的端到端解决方案，让用户和开发者可以用一条简单的命令就能在多平台上快速运行GenAI应用。
 

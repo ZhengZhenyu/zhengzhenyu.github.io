@@ -2,6 +2,8 @@
 title: Claude Code 配置初探
 date: 2026-02-13 10:00:00
 tags: [AI, Claude, VS Code, 开发工具, 配置管理]
+categories: 开发工具
+description: Claude Code 核心配置详解，包含 VS Code 集成、权限管理、工作流钩子与沙箱安全等实用配置指南。
 ---
 
 Claude Code配置学习的第二篇文章，这次详细看看使用Claude过程中会用到的主要配置项，以及在VS Code中集成和使用Claude Code配置的方法。
@@ -27,7 +29,7 @@ VS Code 现在可以直接读取 Claude 的配置文件，实现了真正的配�
 
 VS Code 1.109 引入了 Claude Agent 集成（预览版），使用的是 Anthropic 官方的 Claude Agent SDK，确保了与其他实现的一致性。在Copilot使用时选择“Claude Agent”模式，就可以直接在 VS Code 中体验到 Claude Agent 的强大功能了。
 
-![开启Claude模式](./claude-config/image.png)
+![开启Claude模式](/images/claude-code-vscode.png)
 
 这个版本还为 Anthropic 模型增加了三项重要功能：
 - 推理能力的消息 API 集成

@@ -1,7 +1,9 @@
 ---
 title: Does Size Matters? From Alpine to Distroless, thoughts on OS distribution.
 date: 2024-10-19 20:44:38
-tags:
+tags: [容器, Docker, Alpine, 操作系统, 云原生, 软件分发]
+categories: 云原生
+description: 从容器化技术到操作系统发行版，深入探讨 Alpine Linux 与 Distroless 在容器镜像中的应用与选择。
 ---
 
 “首因效应“，是指人对人或事物的第一次印象对今后续认知的影响，虽然这些第一印象并非总是正确的，但却是最鲜明、最牢固的，并且决定着对于其认知的进程。软件分发(Software Distribution)是软件开发的最后一个环节，也是终端用户(End Users)使用软件的第一个环节，对于用户体验有关键影响，很大程度决定着用户对于软件的长期认知。易用性、易获得性以及内容和服务是否与用户所期望的一致，极大的影响着用户对于软件的整体印象。
@@ -43,5 +45,5 @@ P.S. `Docker Official Images`所提供的应用容器镜像所使用的基础系
 
 # Alpine Linux
 
-TBA
+Alpine Linux 凭借其极小的体积（基础镜像约 5MB）和注重安全的设计理念（使用 musl libc 和 BusyBox），已经成为容器生态中最受欢迎的基础镜像之一。相比于传统的 Ubuntu 或 Debian 镜像，Alpine 极大地减少了攻击面和镜像传输时间。然而，musl libc 与 glibc 的兼容性问题也时常给开发者带来困扰。选择 Alpine 还是 Distroless、还是传统的完整发行版镜像，核心取决于应用场景：安全敏感且依赖简单的服务适合 Alpine/Distroless；依赖复杂、兼容性要求高的应用则更适合标准发行版镜像。在实际项目中，建议根据具体需求进行权衡，而非盲目追求「最小镜像」。
 

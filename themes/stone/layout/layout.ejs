@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="HandheldFriendly" content="True">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- FOUC prevention: set data-theme before body renders -->
+  <script>
+    (function() {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else if (!t) {
+        try {
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+        } catch(e) {}
+      }
+    })();
+  </script>
+
+
+  <!-- SEO -->
+  <%- open_graph({}) %>
+  <meta name="generator" content="Hexo">
+
+  <% if (page.description) { %>
+  <meta name="description" content="<%= page.description %>">
+  <% } else if (config.description) { %>
+  <meta name="description" content="<%= config.description %>">
+  <% } %>
+  <meta name="keywords" content="<%= config.keywords %>">
+
+  <!-- Title -->
+  <title><%= page.title ? page.title + ' · ' + config.title : config.title %></title>
+
+  <!-- RSS -->
+  <% if (theme.rss) { %>
+  <link rel="alternate" href="<%= url_for(theme.rss) %>" title="<%= config.title %>" type="application/atom+xml">
+  <% } %>
+
+  <!-- Theme CSS -->
+  <link rel="stylesheet" href="<%= url_for('/css/theme.css') %>">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <% if (theme.logo && theme.logo.enabled) { %>
+      <a href="<%= url_for('/') %>" class="site-logo">
+        <img src="<%= url_for(theme.logo.url) %>" alt="<%= config.title %>"
+             width="<%= theme.logo.width %>" height="<%= theme.logo.height %>">
+      </a>
+      <% } %>
+      <a href="<%= url_for('/') %>" class="site-title"><%= config.title %></a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="site-nav" id="site-nav">
+        <ul>
+          <% for (var key in theme.nav) { %>
+          <li><a href="<%= url_for(theme.nav[key]) %>" <% if (theme.nav[key].startsWith('http')) { %>target="_blank" rel="noopener"<% } %>><%= key %></a></li>
+          <% } %>
+          <li class="theme-toggle-li">
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="切换亮/暗模式">
+              <span class="icon-sun">☀️</span>
+              <span class="icon-moon">🌙</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-wrapper">
+
+    <%- body %>
+
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        &copy; <%= theme.copyright.start_year %>-<%= date(new Date(), 'YYYY') %> <%= config.author %>.
+      </div>
+      <div class="footer-right">
+        <% for (var key in theme.nav) { %>
+        <a href="<%= url_for(theme.nav[key]) %>" <% if (theme.nav[key].startsWith('http')) { %>target="_blank" rel="noopener"<% } %>><%= key %></a>
+        <% } %>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Theme JS -->
+  <script src="<%= url_for('/js/main.js') %>"></script>
+
+  <!-- Utterances Comments -->
+  <% if (is_post() && theme.utterances && theme.utterances.enabled) { %>
+  <div id="utterances-wrap">
+    <script>
+      (function() {
+        var s = document.createElement('script');
+        s.src = 'https://utteranc.es/client.js';
+        s.setAttribute('repo', '<%= theme.utterances.repo %>');
+        s.setAttribute('issue-term', '<%= theme.utterances.issue_term %>');
+        s.setAttribute('label', '<%= theme.utterances.label %>');
+        s.setAttribute('theme', '<%= theme.utterances.theme %>');
+        s.setAttribute('crossorigin', 'anonymous');
+        s.async = true;
+        document.getElementById('utterances-wrap').appendChild(s);
+      })();
+    </script>
+  </div>
+  <% } %>
+
+</body>
+</html>

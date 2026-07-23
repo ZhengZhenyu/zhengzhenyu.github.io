@@ -8,7 +8,7 @@ subtitle: 'Thoughts on Cloud Native, AI, and Software Engineering'
 description: 'A personal blog sharing insights on container technology, cloud native architecture, AI platforms, and software engineering practices.'
 keywords: 'Cloud Native, Kubernetes, Docker, Container, AI, OPEA, Software Engineering, DevOps, Alpine Linux'
 author: Zheng Zhenyu
-language: en
+language: zh-CN
 timezone: 'Asia/Shanghai'
 
 # URL
@@ -45,7 +45,7 @@ relative_link: false
 future: true
 syntax_highlighter: highlight.js
 highlight:
-  line_number: true
+  line_number: false
   auto_detect: false
   tab_replace: ''
   wrap: true
@@ -97,7 +97,7 @@ ignore:
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 #theme: landscape
-theme: cactus
+theme: stone
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
