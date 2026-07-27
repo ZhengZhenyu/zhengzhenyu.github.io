@@ -251,7 +251,7 @@ OpenShell 的代码库由 24 个 Rust crate 组成，按职责分为五层：
   </div>
   <div class="arch-card arch-driver">
     <div class="arch-card-title">计算后端</div>
-    <div class="arch-card-items">Docker &nbsp;·&nbsp; Podman &nbsp;·&nbsp; Kubernetes &nbsp;·&nbsp; Firecracker</div>
+    <div class="arch-card-items">Docker &nbsp;·&nbsp; Podman &nbsp;·&nbsp; Kubernetes &nbsp;·&nbsp; MicroVM</div>
     <div class="arch-card-desc">创建沙箱外壳（容器 / MicroVM），OpenShell 在壳内施加精细策略</div>
   </div>
 </div>
@@ -310,7 +310,7 @@ OpenShell 的代码库由 24 个 Rust crate 组成，按职责分为五层：
   <p>假设你用 Docker 后端创建一个 OpenShell 沙箱：</p>
   <p>① <strong>Docker 做「壳」</strong>：创建一个独立容器——独立的 PID namespace、网络栈、根文件系统。此时容器里的 <code>curl</code> 可以访问任意外网地址。</p>
   <p>② <strong>OpenShell Supervisor 做「锁」</strong>：在容器内启动，接管网络代理、加载 Landlock + seccomp 策略。同一个 <code>curl</code> 再发请求时，OPA 引擎逐连接裁决，只放行 YAML 中声明的目标。</p>
-  <p>如果换成 Firecracker 后端，① 换成了 MicroVM（硬件虚拟化、独立内核），但 ② 的工作内容不变——Supervisor 照样在里面跑 Landlock、seccomp 和 OPA 代理。</p>
+  <p>如果换成 MicroVM 后端，① 换成了虚拟机（硬件虚拟化、独立内核），但 ② 的工作内容不变——Supervisor 照样在里面跑 Landlock、seccomp 和 OPA 代理。</p>
 </div>
 
 换句话说：<strong>计算后端决定「盒子有多厚」（容器隔离 / 硬件虚拟化），OpenShell 决定「盒子里能做什么」（哪些文件、网络、进程、推理调用是允许的）。</strong>
@@ -322,7 +322,7 @@ OpenShell 将系统分为两部分：
 - **Gateway**（控制平面）：运行在宿主机或集群中，负责策略持久化、Provider 配置、凭据管理和沙箱元数据。拥有平台级全局状态。
 - **Supervisor**（数据平面）：运行在每个沙箱内部（无论底层是容器还是 MicroVM），主动向 Gateway 发起 gRPC 长连接，拉取策略配置并在本地执行。Supervisor 本身不持有凭据。
 
-Supervisor 通过出站连接主动报到，不依赖容器编排层的网络配置（Pod IP、端口映射、NAT）。这意味着 OpenShell 可以在 Docker、Podman、Kubernetes、Firecracker 等多种计算后端上一致工作，策略层的逻辑无需随底层隔离机制变化而调整。
+Supervisor 通过出站连接主动报到，不依赖容器编排层的网络配置（Pod IP、端口映射、NAT）。这意味着 OpenShell 可以在 Docker、Podman、Kubernetes、MicroVM 等多种计算后端上一致工作，策略层的逻辑无需随底层隔离机制变化而调整。
 
 ### 4.3 纵深防御：四层安全体系
 
@@ -582,7 +582,7 @@ Supervisor 在每个沙箱内部署了轻量级 HTTP 服务（`policy.local`）�
 
 OpenShell 通过 `openshell-vfio` crate 支持 VFIO GPU 直通——在 sysfs 层面管理 PCI 设备与驱动的绑定/解绑，支持按 UUID 或 PCI 地址选择 GPU。GPU 设备通过 CDI（Container Device Interface）注入沙箱。
 
-Firecracker MicroVM 后端支持在 MicroVM 级别分配 GPU，通过 vsock 与宿主机通信。这使得在硬件虚拟化隔离的同时跑 GPU 推理成为可能，适合 DGX 等本地 AI 硬件的 air-gapped 部署场景。
+MicroVM 后端（基于 libkrun，使用 Linux KVM 或 macOS Hypervisor）支持在虚拟机级别分配 GPU，通过 vsock 与宿主机通信。这使得在硬件虚拟化隔离的同时跑 GPU 推理成为可能，适合 DGX 等本地 AI 硬件的 air-gapped 部署场景。
 
 ### 4.7 可观测性
 
@@ -594,42 +594,70 @@ Firecracker MicroVM 后端支持在 MicroVM 级别分配 GPU，通过 vsock 与�
 
 日志在返回给 Agent 前会做**查询字符串脱敏**——将 URL 中的 `?<query>` 替换为 `?[redacted]`，避免凭据经 URL 泄露到 Agent 上下文。
 
-## 五、与其他方案的对比
+## 五、与同类工具的对比——品类差异
 
-### 5.1 与 E2B、Daytona、CodeSandbox
+把 OpenShell 和 E2B、Daytona、gVisor 等放在一起对比，容易产生一个误解：以为它们是同一类东西，只是实现方式不同。实际上，它们分属两个不同的品类。
+
+### 5.1 执行沙箱 vs 治理运行时
+
+<div class="phase-card">
+  <h4>执行沙箱（Execution Sandbox）</h4>
+  <p><strong>回答「代码跑在哪」：</strong>E2B、Daytona、CodeSandbox 属于这一类。它们创建隔离环境（Firecracker MicroVM 或 Docker 容器）让 Agent 的代码在其中执行。核心能力是<strong>快速供给隔离环境</strong>——E2B 的 Firecracker MicroVM ~150ms 冷启动，Daytona 的容器在秒级。</p>
+</div>
+
+<div class="phase-card">
+  <h4>治理运行时（Governance Runtime）</h4>
+  <p><strong>回答「代码能做什么」：</strong>OpenShell 属于这一类。它不创建隔离环境（依赖计算后端来创建），而是在已有的隔离环境内部，对所有行为进行<strong>逐次权限裁决</strong>——哪个二进制能访问哪个网络地址、哪个进程能调用哪个系统调用、哪个推理请求能发往哪个 Provider。</p>
+</div>
+
+两者的关系不是竞争，而是叠加：可以用 E2B 的 Firecracker MicroVM 做隔离，用 OpenShell 做策略治理——OpenShell 的 MicroVM 后端也可以自己提供隔离。或者换一种方式说：**执行沙箱是从物理上限制 Agent 能触碰什么，治理运行时是从逻辑上裁决 Agent 能做什么。**
+
+### 5.2 与执行沙箱的对比
 
 <div class="table-wrap">
 <table>
-  <thead><tr><th>维度</th><th>OpenShell</th><th>E2B</th><th>Daytona</th><th>CodeSandbox</th></tr></thead>
+  <thead><tr><th>维度</th><th>OpenShell</th><th>E2B</th><th>Daytona</th></tr></thead>
   <tbody>
-    <tr><td><strong>定位</strong></td><td>Agent 安全运行时</td><td>云沙箱即服务</td><td>开发环境管理</td><td>在线 IDE + 沙箱</td></tr>
-    <tr><td><strong>隔离机制</strong></td><td>依赖计算后端（Docker / Firecracker）+ 自建策略层</td><td>Firecracker MicroVM</td><td>Docker 容器</td><td>Firecracker MicroVM</td></tr>
-    <tr><td><strong>策略粒度</strong></td><td>Per-binary，L7 路径级</td><td>API 级别</td><td>基本网络隔离</td><td>沙箱级别</td></tr>
-    <tr><td><strong>凭据管理</strong></td><td>网关代理注入</td><td>外部管理</td><td>SDK 层</td><td>平台管理</td></tr>
-    <tr><td><strong>推理控制</strong></td><td>内置推理路由</td><td>—</td><td>—</td><td>—</td></tr>
-    <tr><td><strong>形式化验证</strong></td><td>Z3 SMT</td><td>—</td><td>—</td><td>—</td></tr>
-    <tr><td><strong>GPU 直通</strong></td><td>VFIO + CDI</td><td>—</td><td>—</td><td>—</td></tr>
+    <tr><td><strong>品类</strong></td><td>治理运行时</td><td>执行沙箱</td><td>执行沙箱</td></tr>
+    <tr><td><strong>隔离机制</strong></td><td>不提供，依赖计算后端（Docker / MicroVM）</td><td>Firecracker MicroVM（硬件虚拟化）</td><td>Docker 容器（共享内核）</td></tr>
+    <tr><td><strong>网络控制粒度</strong></td><td>Per-binary + L7 路径级</td><td>沙箱级别（domain allow-list）</td><td>沙箱级别（iptables）</td></tr>
+    <tr><td><strong>网络策略引擎</strong></td><td>OPA 引擎 + 声明式 YAML + 热加载</td><td>—</td><td>—</td></tr>
+    <tr><td><strong>凭据管理</strong></td><td>Gateway 代理注入，不落沙箱</td><td>环境变量注入沙箱</td><td>组织级 API Key</td></tr>
+    <tr><td><strong>推理路由</strong></td><td>内置 inference.local + 多 Provider 适配</td><td>—</td><td>—</td></tr>
+    <tr><td><strong>策略验证</strong></td><td>Z3 SMT 形式化验证</td><td>—</td><td>—</td></tr>
+    <tr><td><strong>Agent 策略提案</strong></td><td>policy.local API + 人工审批闭环</td><td>—</td><td>—</td></tr>
+    <tr><td><strong>GPU 直通</strong></td><td>VFIO + CDI</td><td>—</td><td>—</td></tr>
+    <tr><td><strong>审计日志</strong></td><td>OCSF 标准格式</td><td>平台自有格式</td><td>平台自有格式</td></tr>
   </tbody>
 </table>
 </div>
 
-### 5.2 与 gVisor、Firecracker
+值得说明的是，E2B 和 Daytona 在它们各自的品类中都做得很好——E2B 的 Firecracker MicroVM 启动速度和隔离强度、Daytona 的快照和持久化工作区，都是优秀的能力。它们缺少策略引擎、推理路由、形式化验证等能力，不是因为做得不够好，而是因为**它们品类的工作不是这个**。
+
+### 5.3 与纯隔离技术的对比
+
+gVisor 和 Firecracker 是更纯粹的隔离层——它们甚至不解决「代码跑在哪」的业务问题（那是 E2B 这类执行沙箱的活），只解决最底层的安全边界问题。
 
 <div class="table-wrap">
 <table>
   <thead><tr><th>维度</th><th>OpenShell</th><th>gVisor</th><th>Firecracker</th></tr></thead>
   <tbody>
-    <tr><td><strong>隔离机制</strong></td><td>依赖计算后端 + 自建策略层</td><td>用户态内核</td><td>独立内核 MicroVM</td></tr>
-    <tr><td><strong>启动速度</strong></td><td>秒级</td><td>~417ms</td><td>~125ms</td></tr>
-    <tr><td><strong>策略层</strong></td><td>OPA + Prover</td><td>—</td><td>—</td></tr>
-    <tr><td><strong>定位</strong></td><td>Agent 工作负载</td><td>通用隔离</td><td>通用隔离</td></tr>
+    <tr><td><strong>品类</strong></td><td>治理运行时</td><td>纯隔离技术</td><td>纯隔离技术</td></tr>
+    <tr><td><strong>隔离方式</strong></td><td>不提供（依赖计算后端）</td><td>用户态内核（Sentry）</td><td>独立内核 MicroVM（KVM）</td></tr>
+    <tr><td><strong>冷启动</strong></td><td>取决于后端（秒级）</td><td>~100–150ms</td><td>~125ms</td></tr>
+    <tr><td><strong>策略引擎</strong></td><td>OPA + Prover</td><td>—</td><td>—</td></tr>
+    <tr><td><strong>主要使用者</strong></td><td>Agent 工作负载</td><td>GKE Sandbox、Cloud Run、Modal</td><td>AWS Lambda、E2B</td></tr>
   </tbody>
 </table>
 </div>
 
 <div class="verdict">
-  <p class="verdict-title">定位差异</p>
-  <p>gVisor 和 Firecracker 是成熟的通用隔离技术。OpenShell 可以在 Firecracker MicroVM 上运行（通过 <code>openshell-driver-vm</code>），它在隔离层之上叠加了策略引擎、凭据管理、推理路由和形式化验证——这些是面向 AI Agent 工作负载的补充，关注的是 Agent 行为治理而非通用容器隔离。</p>
+  <p class="verdict-title">品类关系</p>
+  <p>这三者之间的关系是分层叠加，不是互斥替代：</p>
+  <p><strong>Firecracker / gVisor</strong> → 提供最底层的安全边界（独立内核或用户态内核）</p>
+  <p><strong>E2B / Daytona</strong> → 在隔离层之上提供快速环境供给、快照、API（解决「代码跑在哪」）</p>
+  <p><strong>OpenShell</strong> → 在上面再加一层权限治理（解决「代码能做什么」）</p>
+  <p>OpenShell 的定位决定了它<strong>不替代下面任何一层</strong>，也不和它们竞争。它的价值是补上了从「有隔离环境」到「Agent 能安全地在里面干活」之间的空白。</p>
 </div>
 
 ## 六、NVIDIA 的战略出发点
@@ -655,7 +683,7 @@ Agent 不是一次性推理——Agent 是持续数小时甚至数天的自主�
 
 三大云厂商（AWS Trainium、Google TPU、Azure Maia）都在推自有 AI 芯片，试图减少对 NVIDIA 的依赖。但云厂商的 Agent 方案有一个共同问题：**企业敏感数据和凭据必须经过云端**。
 
-OpenShell 的定位恰好切入了这个缝隙。它支持完全离线的 air-gapped 部署——DGX Spark/Station 本地运行，Firecracker MicroVM 隔离，GPU 直通，推理流量可以在本地 NIM 或 Ollama 上完成。对于金融、医疗、国防等受监管行业，这意味着一件事：**你可以用 Agent，且数据不出机房**。
+OpenShell 的定位恰好切入了这个缝隙。它支持完全离线的 air-gapped 部署——DGX Spark/Station 本地运行，MicroVM 隔离，GPU 直通，推理流量可以在本地 NIM 或 Ollama 上完成。对于金融、医疗、国防等受监管行业，这意味着一件事：**你可以用 Agent，且数据不出机房**。
 
 <div class="verdict">
   <p class="verdict-title">战略意图</p>
