@@ -333,7 +333,7 @@ OpenShell 在四个层面施加安全约束：
   <thead><tr><th>防护层</th><th>技术</th><th>策略变更</th></tr></thead>
   <tbody>
     <tr><td><strong>文件系统</strong></td><td>Landlock LSM，限制 Agent 只能访问声明路径</td><td>静态</td></tr>
-    <tr><td><strong>网络</strong></td><td>OPA 引擎 + HTTP CONNECT 代理，默认拒绝</td><td>动态热加载</td></tr>
+    <tr><td><strong>网络</strong></td><td>OPA 引擎（Open Policy Agent，通用策略引擎）+ HTTP CONNECT 代理，默认拒绝</td><td>动态热加载</td></tr>
     <tr><td><strong>进程</strong></td><td>seccomp BPF 系统调用过滤 + 特权丢弃</td><td>静态</td></tr>
     <tr><td><strong>推理</strong></td><td>推理路由器（inference.local），代理注入凭据</td><td>动态热加载</td></tr>
   </tbody>
