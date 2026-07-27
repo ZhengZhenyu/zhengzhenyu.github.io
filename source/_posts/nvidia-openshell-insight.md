@@ -38,7 +38,7 @@ description: 从源码出发，分析 AI Agent 安全运行时 OpenShell 的架�
 
 <div class="verdict">
   <p class="verdict-title">核心矛盾</p>
-  <p>Agent 的能力和安全性之间存在一个本质张力：<strong>安全 + 自主</strong> → Agent 权限受限；<strong>能力 + 安全</strong> → 频繁人工审批；<strong>能力 + 自主</strong> → 无有效护栏。如何在三者之间找到平衡，是这类系统要解决的核心问题。</p>
+  <p>Agent 的能力和安全性之间存在一个难以绕过的矛盾：<strong>安全 + 自主</strong> → Agent 权限受限；<strong>能力 + 安全</strong> → 频繁人工审批；<strong>能力 + 自主</strong> → 无有效护栏。如何在三者之间找到平衡，是这类系统要解决的核心问题。</p>
 </div>
 
 ## 三、业界 Agent 方案与安全现状
