@@ -179,7 +179,7 @@ OpenShell 不做一个新的 Agent 框架去和 LangChain、CrewAI 竞争，而�
 
 > **"The safe, private runtime for autonomous AI agents."**
 
-- **Safe**：内核级隔离（Landlock + seccomp + 网络命名空间）
+- **Safe**：进程外策略执行（Landlock 文件访问控制 + seccomp 系统调用过滤），限制 Agent 在沙箱内的行为边界
 - **Private**：凭据不存储在沙箱内部，推理流量可路由到指定后端
 - **Runtime**：面向长时间运行 Agent 的持续性环境，而非一次性执行沙箱
 
@@ -303,7 +303,7 @@ OpenShell 的代码库由 24 个 Rust crate 组成，按职责分为五层：
 :root[data-theme="dark"] .arch-driver .arch-card-title { color: #a1a1aa; }
 </style>
 
-最底层的「计算后端」值得单独说明——它容易让人误解 OpenShell 是否自己不做隔离。实际上两层各有分工：
+最底层的「计算后端」值得单独说明——容易误解 OpenShell 是不是自己提供隔离。实际上两层分工明确：
 
 <div class="phase-card">
   <h4>一个具体的例子</h4>
@@ -382,7 +382,7 @@ network_policies:
 
 L7 中间件在此基础上进一步匹配 HTTP 方法和 URL 路径，例如「允许 `POST /user/repos` 但拒绝 `DELETE /user/repos`」。被拦截的请求返回 403 并附带 `next_steps` 提示，引导 Agent 提交策略放宽提案（见 4.5 节）。
 
-#### 进程隔离
+#### 进程管控
 
 seccomp BPF 过滤器限制 Agent 可执行的系统调用（`mount`、`kexec_load`、`bpf` 等在 Agent 场景中通常没有合法用途）。沙箱进程以非 root 用户（`uid: 10000`）运行，所有特权能力在 exec 前丢弃。
 
@@ -603,7 +603,7 @@ Firecracker MicroVM 后端支持在 MicroVM 级别分配 GPU，通过 vsock 与�
   <thead><tr><th>维度</th><th>OpenShell</th><th>E2B</th><th>Daytona</th><th>CodeSandbox</th></tr></thead>
   <tbody>
     <tr><td><strong>定位</strong></td><td>Agent 安全运行时</td><td>云沙箱即服务</td><td>开发环境管理</td><td>在线 IDE + 沙箱</td></tr>
-    <tr><td><strong>隔离技术</strong></td><td>Landlock + seccomp + OPA</td><td>Firecracker MicroVM</td><td>Docker 容器</td><td>Firecracker MicroVM</td></tr>
+    <tr><td><strong>隔离机制</strong></td><td>依赖计算后端（Docker / Firecracker）+ 自建策略层</td><td>Firecracker MicroVM</td><td>Docker 容器</td><td>Firecracker MicroVM</td></tr>
     <tr><td><strong>策略粒度</strong></td><td>Per-binary，L7 路径级</td><td>API 级别</td><td>基本网络隔离</td><td>沙箱级别</td></tr>
     <tr><td><strong>凭据管理</strong></td><td>网关代理注入</td><td>外部管理</td><td>SDK 层</td><td>平台管理</td></tr>
     <tr><td><strong>推理控制</strong></td><td>内置推理路由</td><td>—</td><td>—</td><td>—</td></tr>
@@ -619,7 +619,7 @@ Firecracker MicroVM 后端支持在 MicroVM 级别分配 GPU，通过 vsock 与�
 <table>
   <thead><tr><th>维度</th><th>OpenShell</th><th>gVisor</th><th>Firecracker</th></tr></thead>
   <tbody>
-    <tr><td><strong>隔离级别</strong></td><td>容器 + 内核 LSM</td><td>用户态内核</td><td>独立内核 MicroVM</td></tr>
+    <tr><td><strong>隔离机制</strong></td><td>依赖计算后端 + 自建策略层</td><td>用户态内核</td><td>独立内核 MicroVM</td></tr>
     <tr><td><strong>启动速度</strong></td><td>秒级</td><td>~417ms</td><td>~125ms</td></tr>
     <tr><td><strong>策略层</strong></td><td>OPA + Prover</td><td>—</td><td>—</td></tr>
     <tr><td><strong>定位</strong></td><td>Agent 工作负载</td><td>通用隔离</td><td>通用隔离</td></tr>
@@ -714,7 +714,7 @@ OpenShell 并非稳赢。有几个值得注意的风险：
 
 ## 七、结语
 
-OpenShell 反映了一个趋势：**将安全控制从 Agent 内部逻辑转移到 Agent 的运行环境中**。它在内核级隔离之上叠加了策略引擎、凭据管理和推理路由，形成面向 Agent 工作负载的运行时约束层。
+OpenShell 反映了一个趋势：**将安全控制从 Agent 内部逻辑转移到 Agent 的运行环境中**。它的本质不是提供一套新的资源隔离方案，而是在已有的隔离环境（容器或 MicroVM）内部，通过 Landlock、seccomp、OPA 和推理路由，对 Agent 的每一次文件访问、网络请求、系统调用和模型推理进行权限裁决。
 
 从技术角度看，几个设计选择值得关注：
 
