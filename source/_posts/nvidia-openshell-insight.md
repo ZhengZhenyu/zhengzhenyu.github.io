@@ -252,7 +252,7 @@ OpenShell 的代码库由 24 个 Rust crate 组成，按职责分为五层：
   <div class="arch-card arch-driver">
     <div class="arch-card-title">计算后端</div>
     <div class="arch-card-items">Docker &nbsp;·&nbsp; Podman &nbsp;·&nbsp; Kubernetes &nbsp;·&nbsp; Firecracker</div>
-    <div class="arch-card-desc">多运行时支持，按需选择隔离级别</div>
+    <div class="arch-card-desc">创建沙箱外壳（容器 / MicroVM），OpenShell 在壳内施加精细策略</div>
   </div>
 </div>
 
@@ -303,14 +303,26 @@ OpenShell 的代码库由 24 个 Rust crate 组成，按职责分为五层：
 :root[data-theme="dark"] .arch-driver .arch-card-title { color: #a1a1aa; }
 </style>
 
+最底层的「计算后端」值得单独说明——它容易让人误解 OpenShell 是否自己不做隔离。实际上两层各有分工：
+
+<div class="phase-card">
+  <h4>一个具体的例子</h4>
+  <p>假设你用 Docker 后端创建一个 OpenShell 沙箱：</p>
+  <p>① <strong>Docker 做「壳」</strong>：创建一个独立容器——独立的 PID namespace、网络栈、根文件系统。此时容器里的 <code>curl</code> 可以访问任意外网地址。</p>
+  <p>② <strong>OpenShell Supervisor 做「锁」</strong>：在容器内启动，接管网络代理、加载 Landlock + seccomp 策略。同一个 <code>curl</code> 再发请求时，OPA 引擎逐连接裁决，只放行 YAML 中声明的目标。</p>
+  <p>如果换成 Firecracker 后端，① 换成了 MicroVM（硬件虚拟化、独立内核），但 ② 的工作内容不变——Supervisor 照样在里面跑 Landlock、seccomp 和 OPA 代理。</p>
+</div>
+
+换句话说：<strong>计算后端决定「盒子有多厚」（容器隔离 / 硬件虚拟化），OpenShell 决定「盒子里能做什么」（哪些文件、网络、进程、推理调用是允许的）。</strong>
+
 #### Gateway-Supervisor 分离
 
 OpenShell 将系统分为两部分：
 
-- **Gateway**（控制平面）：运行在宿主机或集群中，负责策略持久化、Provider 配置、凭据管理和沙箱索引。拥有平台级全局状态。
-- **Supervisor**（数据平面）：运行在每个沙箱内部，主动向 Gateway 发起出站 gRPC 长连接，拉取策略配置并在本地执行。Supervisor 本身不持有凭据。
+- **Gateway**（控制平面）：运行在宿主机或集群中，负责策略持久化、Provider 配置、凭据管理和沙箱元数据。拥有平台级全局状态。
+- **Supervisor**（数据平面）：运行在每个沙箱内部（无论底层是容器还是 MicroVM），主动向 Gateway 发起 gRPC 长连接，拉取策略配置并在本地执行。Supervisor 本身不持有凭据。
 
-Supervisor 通过出站连接向 Gateway 报到，这意味着不依赖容器编排层的网络配置（Pod IP、端口映射、NAT）。因此 OpenShell 可以运行在 Docker、Podman、Kubernetes、Firecracker MicroVM 等多种后端上——只要沙箱能访问网络。
+Supervisor 通过出站连接主动报到，不依赖容器编排层的网络配置（Pod IP、端口映射、NAT）。这意味着 OpenShell 可以在 Docker、Podman、Kubernetes、Firecracker 等多种计算后端上一致工作，策略层的逻辑无需随底层隔离机制变化而调整。
 
 ### 4.3 纵深防御：四层安全体系
 
