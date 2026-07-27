@@ -193,7 +193,7 @@ code, pre, kbd {
   line-height: 0;
 }
 .site-logo img {
-  border-radius: 20%;
+  border-radius: 8px;
   transition: transform 0.2s;
 }
 .site-logo:hover img { transform: scale(1.05); }
