@@ -552,10 +552,52 @@ code, pre, kbd {
   overflow-y: auto;
   padding-right: 20px;
   border-right: 1px solid var(--border);
+
+  /* Thin elegant scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* WebKit scrollbar — light mode */
+.post-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+.post-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.post-sidebar::-webkit-scrollbar-thumb {
+  background: #d6d3d1;
+  border-radius: 2px;
+}
+.post-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #a8a29e;
+}
+
+/* WebKit scrollbar — dark mode */
+:root[data-theme="dark"] .post-sidebar {
+  scrollbar-color: var(--border) transparent;
+}
+:root[data-theme="dark"] .post-sidebar::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+}
+:root[data-theme="dark"] .post-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .post-sidebar {
+    scrollbar-color: var(--border) transparent;
+  }
+  :root:not([data-theme="light"]) .post-sidebar::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+  }
+  :root:not([data-theme="light"]) .post-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #52525b;
+  }
 }
 
 .toc-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -568,8 +610,8 @@ code, pre, kbd {
 .toc-nav a {
   display: block;
   padding: 5px 16px 5px 0;
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
   color: var(--text-soft);
   transition: all 0.15s;
   line-height: 1.5;
