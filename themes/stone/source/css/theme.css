@@ -192,7 +192,6 @@ code, pre, kbd {
   flex-shrink: 0;
   line-height: 0;
   border-radius: 8px;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 40%, #5b21b6 100%);
 }
 .site-logo img {
   display: block;
@@ -201,15 +200,13 @@ code, pre, kbd {
 }
 .site-logo:hover img { transform: scale(1.05); }
 
-/* Dark mode logo — slightly brighter gradient */
-:root[data-theme="dark"] .site-logo {
-  background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 40%, #8b5cf6 100%);
-  box-shadow: 0 0 12px rgba(139, 92, 246, 0.25);
+/* Dark mode — subtle glow to lift logo from dark header */
+:root[data-theme="dark"] .site-logo img {
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .site-logo {
-    background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 40%, #8b5cf6 100%);
-    box-shadow: 0 0 12px rgba(139, 92, 246, 0.25);
+  :root:not([data-theme="light"]) .site-logo img {
+    box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
   }
 }
 
