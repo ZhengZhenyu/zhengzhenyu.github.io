@@ -100,15 +100,18 @@
       <% } %>
       <h1 class="post-title"><%= page.title %></h1>
       <div class="post-meta">
-        <time datetime="<%= date(page.date, 'YYYY-MM-DD') %>">📅 <%= date(page.date, 'YYYY-MM-DD') %></time>
-        <% if (theme.post.show_updated && page.updated) { %>
-        <span class="post-updated">✏️ <%= date(page.updated, 'YYYY-MM-DD') %></span>
+        <time datetime="<%= date(page.date, 'YYYY-MM-DD') %>"><%= date(page.date, 'YYYY-MM-DD') %></time>
+        <% if (theme.post.show_reading_stats !== false) { %>
+        <%
+          var wordCount = page.content.replace(/<[^>]*>/g, '').replace(/\s+/g, '').length;
+          var minutes = Math.max(1, Math.round(wordCount / 500));
+        %>
+        <span class="post-reading-stats"><%= wordCount.toLocaleString() %> 字 · 约 <%= minutes %> 分钟</span>
         <% } %>
         <% if (page.tags && page.tags.length) { %>
         <span class="post-tags-meta">
-          🏷️
           <% page.tags.each(function(tag, i) { %>
-          <a href="<%= url_for(tag.path) %>"><%= tag.name %></a><%= i < page.tags.length - 1 ? ', ' : '' %>
+          <a href="<%= url_for(tag.path) %>">#<%= tag.name %></a><%= i < page.tags.length - 1 ? ' ' : '' %>
           <% }) %>
         </span>
         <% } %>

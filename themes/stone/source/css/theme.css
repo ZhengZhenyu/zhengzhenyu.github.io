@@ -550,7 +550,7 @@ code, pre, kbd {
   align-self: start;
   max-height: calc(100vh - 96px);
   overflow-y: auto;
-  padding-right: 0;
+  padding-right: 20px;
   border-right: 1px solid var(--border);
 }
 
@@ -560,14 +560,14 @@ code, pre, kbd {
   font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--text-muted);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border);
 }
 
 .toc-nav a {
   display: block;
-  padding: 4px 12px 4px 0;
+  padding: 5px 16px 5px 0;
   font-family: var(--font-mono);
   font-size: 0.74rem;
   color: var(--text-soft);
