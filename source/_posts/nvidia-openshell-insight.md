@@ -14,6 +14,15 @@ description: 从源码出发，分析 AI Agent 安全运行时 OpenShell 的架�
 
 这引出一个问题：**当一个程序的行为不再由确定的代码定义，而是由一个概率模型动态生成时，传统的信任机制如何适配？**
 
+<div class="callout callout-amber">
+  <div class="callout-label">核心术语速览（非专业读者可先读此节）</div>
+  <p><strong>Landlock LSM</strong>：Linux 5.13+ 内核的安全模块（Linux Security Module），允许非特权进程通过声明式规则限制自身能访问哪些文件路径。比 chroot 更细粒度，比 seccomp 更面向文件系统。</p>
+  <p><strong>OPA</strong>（Open Policy Agent）：CNCF 毕业的开源策略引擎，使用 Rego 语言编写策略规则。OpenShell 用 OPA 对每次网络连接和文件访问进行逐请求裁决。</p>
+  <p><strong>seccomp / BPF</strong>：Linux 内核的系统调用过滤机制。BPF（Berkeley Packet Filter）是内核中安全执行用户定义过滤程序的技术，seccomp-bpf 即用 BPF 程序表达「允许哪些 syscall」。</p>
+  <p><strong>microVM</strong>：极简虚拟机（如 Firecracker），仅实现最少设备，启动 &lt;125ms。OpenShell 支持两种沙箱后端：Docker 容器（轻量）和 microVM（强隔离）。</p>
+  <p><strong>OCSF</strong>（Open Cybersecurity Schema Framework）：统一的安全事件格式标准。OpenShell 将所有安全审计日志以 OCSF 格式输出，便于接入 SIEM/SOAR 系统。</p>
+</div>
+
 ## 二、为什么 AI Agent 需要沙箱运行时
 
 <div class="verdict">
@@ -228,6 +237,10 @@ GTC 2026 上宣布的采用方覆盖企业软件、安全和基础设施三个�
 
 OpenShell 的代码库由 24 个 Rust crate 组成，按职责分为五层：
 
+<div class="growth-chart">
+  <img src="arch-diagram.svg" alt="OpenShell 架构：Gateway-Supervisor 分离设计，gRPC 长连接 + 沙箱内四层防御" style="width:100%">
+</div>
+
 <div class="arch-grid">
   <div class="arch-card arch-ui">
     <div class="arch-card-title">用户界面</div>
@@ -327,6 +340,10 @@ Supervisor 通过出站连接主动报到，不依赖容器编排层的网络配
 ### 4.3 纵深防御：四层安全体系
 
 OpenShell 在四个层面施加安全约束：
+
+<div class="growth-chart">
+  <img src="defense-layers.svg" alt="OpenShell 四层纵深防御：Landlock 文件系统 → OPA 网络策略 → seccomp 进程管控 → inference.local 推理路由" style="width:100%">
+</div>
 
 <div class="table-wrap">
 <table>

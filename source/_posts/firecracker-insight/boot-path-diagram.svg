@@ -1,0 +1,123 @@
+<svg viewBox="0 0 780 330" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="s" x="-4%" y="-8%" width="108%" height="124%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#78716c" flood-opacity="0.08"/>
+    </filter>
+    <marker id="aGray" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="#a8a29e"/>
+    </marker>
+    <marker id="aOrange" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <style>
+    .sec-label  { font-family: system-ui,-apple-system,sans-serif; font-size: 12px; font-weight: 650; fill: #57534e; letter-spacing: .02em; }
+    .box-slow   { fill: #fafaf9; stroke: #d6d3d1; stroke-width: 1; rx: 6; }
+    .box-fast   { fill: #fffbeb; stroke: #fed7aa; stroke-width: 1.2; rx: 6; }
+    .box-skip   { fill: none; stroke: #d6d3d1; stroke-width: .8; rx: 5; stroke-dasharray: 5,3; }
+    .box-green  { fill: #f0fdf4; stroke: #bbf7d0; stroke-width: 1; rx: 5; }
+    .bt-title   { font-family: system-ui,-apple-system,sans-serif; font-size: 12.5px; font-weight: 650; fill: #292524; }
+    .bt-title-slow { fill: #57534e; }
+    .bt-title-fast { fill: #c2410c; }
+    .bt-sub     { font-family: 'SF Mono','Cascadia Code',monospace; font-size: 9px; fill: #78716c; }
+    .bt-time    { font-family: system-ui,-apple-system,sans-serif; font-size: 12px; font-weight: 650; }
+    .bt-time-slow { fill: #a8a29e; }
+    .bt-time-fast { fill: #b45309; }
+    .bt-arrow   { stroke-width: 1.2; fill: none; }
+    .bt-arrow-slow { stroke: #d6d3d1; }
+    .bt-arrow-fast { stroke: #fed7aa; }
+    .bt-cross   { stroke: #d6d3d1; stroke-width: 1; fill: none; }
+    .bt-skip-t  { font-family: system-ui,-apple-system,sans-serif; font-size: 10px; fill: #a8a29e; }
+    .bt-green-t { font-family: system-ui,-apple-system,sans-serif; font-size: 10.5px; fill: #166534; font-weight: 550; }
+    .divider    { stroke: #e7e5e4; stroke-width: .8; }
+
+    @media (prefers-color-scheme: dark) {
+      .sec-label  { fill: #a8a29e; }
+      .box-slow   { fill: #1c1917; stroke: #57534e; }
+      .box-fast   { fill: #2d1f0c; stroke: #78350f; }
+      .box-skip   { stroke: #57534e; }
+      .box-green  { fill: #0a2e1a; stroke: #166534; }
+      .bt-title   { fill: #e7e5e4; }
+      .bt-title-slow { fill: #a8a29e; }
+      .bt-title-fast { fill: #f97316; }
+      .bt-sub     { fill: #a8a29e; }
+      .bt-time-slow { fill: #78716c; }
+      .bt-time-fast { fill: #d97706; }
+      .bt-arrow-slow { stroke: #57534e; }
+      .bt-arrow-fast { stroke: #78350f; }
+      .bt-cross   { stroke: #57534e; }
+      .bt-skip-t  { fill: #78716c; }
+      .bt-green-t { fill: #4ade80; }
+      .divider    { stroke: #44403c; }
+    }
+  </style>
+
+  <!-- Traditional VM Boot -->
+  <text x="20" y="24" class="sec-label">传统 VM 启动</text>
+  <text x="700" y="24" text-anchor="end" class="bt-time bt-time-slow">~500ms+</text>
+
+  <rect x="20" y="38" width="108" height="48" class="box-slow" filter="url(#s)"/>
+  <text x="74" y="60" text-anchor="middle" class="bt-title bt-title-slow">QEMU</text>
+  <text x="74" y="77" text-anchor="middle" class="bt-sub">VMM 进程</text>
+  <line x1="128" y1="62" x2="156" y2="62" class="bt-arrow bt-arrow-slow" marker-end="url(#aGray)"/>
+
+  <rect x="160" y="38" width="110" height="48" class="box-slow" filter="url(#s)"/>
+  <text x="215" y="60" text-anchor="middle" class="bt-title bt-title-slow">BIOS / UEFI</text>
+  <text x="215" y="77" text-anchor="middle" class="bt-sub">固件初始化</text>
+  <line x1="270" y1="62" x2="298" y2="62" class="bt-arrow bt-arrow-slow" marker-end="url(#aGray)"/>
+
+  <rect x="302" y="38" width="96" height="48" class="box-slow" filter="url(#s)"/>
+  <text x="350" y="60" text-anchor="middle" class="bt-title bt-title-slow">GRUB</text>
+  <text x="350" y="77" text-anchor="middle" class="bt-sub">bootloader</text>
+  <line x1="398" y1="62" x2="426" y2="62" class="bt-arrow bt-arrow-slow" marker-end="url(#aGray)"/>
+
+  <rect x="430" y="38" width="108" height="48" class="box-slow" filter="url(#s)"/>
+  <text x="484" y="60" text-anchor="middle" class="bt-title bt-title-slow">模式切换</text>
+  <text x="484" y="77" text-anchor="middle" class="bt-sub">16→32→64 bit</text>
+  <line x1="538" y1="62" x2="566" y2="62" class="bt-arrow bt-arrow-slow" marker-end="url(#aGray)"/>
+
+  <rect x="570" y="38" width="96" height="48" class="box-slow" filter="url(#s)"/>
+  <text x="618" y="60" text-anchor="middle" class="bt-title bt-title-slow">Kernel</text>
+  <text x="618" y="77" text-anchor="middle" class="bt-sub">startup_64</text>
+
+  <line x1="20" y1="118" x2="760" y2="118" class="divider"/>
+
+  <!-- Firecracker Direct Boot -->
+  <text x="20" y="146" class="sec-label">Firecracker 直通路径</text>
+  <text x="700" y="146" text-anchor="end" class="bt-time bt-time-fast">&lt;125ms</text>
+
+  <rect x="20" y="160" width="132" height="50" class="box-fast" filter="url(#s)"/>
+  <text x="86" y="183" text-anchor="middle" class="bt-title bt-title-fast">Firecracker</text>
+  <text x="86" y="201" text-anchor="middle" class="bt-sub">Linux Boot Protocol</text>
+  <line x1="152" y1="185" x2="180" y2="185" class="bt-arrow bt-arrow-fast" marker-end="url(#aOrange)"/>
+
+  <rect x="184" y="160" width="140" height="50" class="box-fast" filter="url(#s)"/>
+  <text x="254" y="183" text-anchor="middle" class="bt-title bt-title-fast">解析 bzImage</text>
+  <text x="254" y="201" text-anchor="middle" class="bt-sub">读取 setup_header</text>
+  <line x1="324" y1="185" x2="352" y2="185" class="bt-arrow bt-arrow-fast" marker-end="url(#aOrange)"/>
+
+  <rect x="356" y="160" width="140" height="50" class="box-fast" filter="url(#s)"/>
+  <text x="426" y="183" text-anchor="middle" class="bt-title bt-title-fast">设置 boot_params</text>
+  <text x="426" y="201" text-anchor="middle" class="bt-sub">cmdline · initrd</text>
+  <line x1="496" y1="185" x2="524" y2="185" class="bt-arrow bt-arrow-fast" marker-end="url(#aOrange)"/>
+
+  <rect x="528" y="160" width="110" height="50" class="box-fast" filter="url(#s)"/>
+  <text x="583" y="183" text-anchor="middle" class="bt-title bt-title-fast">Kernel</text>
+  <text x="583" y="201" text-anchor="middle" class="bt-sub">保护模式直接入口</text>
+
+  <!-- Skipped -->
+  <text x="20" y="258" class="bt-skip-t">跳过的组件：</text>
+  <rect x="156" y="244" width="110" height="32" class="box-skip"/>
+  <text x="211" y="258" text-anchor="middle" class="bt-skip-t">BIOS / UEFI</text>
+  <line x1="166" y1="250" x2="256" y2="266" class="bt-cross"/>
+  <rect x="298" y="244" width="96" height="32" class="box-skip"/>
+  <text x="346" y="258" text-anchor="middle" class="bt-skip-t">GRUB</text>
+  <line x1="308" y1="250" x2="384" y2="266" class="bt-cross"/>
+  <rect x="426" y="244" width="108" height="32" class="box-skip"/>
+  <text x="480" y="258" text-anchor="middle" class="bt-skip-t">模式切换</text>
+  <line x1="436" y1="250" x2="524" y2="266" class="bt-cross"/>
+
+  <rect x="20" y="296" width="740" height="26" class="box-green"/>
+  <text x="390" y="314" text-anchor="middle" class="bt-green-t">直接解析 bzImage → 跳转到内核入口，省掉整个固件层，从 ~500ms 降至 &lt;125ms</text>
+</svg>

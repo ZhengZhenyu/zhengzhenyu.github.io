@@ -1,0 +1,92 @@
+<svg viewBox="0 0 760 210" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="s" x="-4%" y="-6%" width="108%" height="118%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#78716c" flood-opacity="0.06"/>
+    </filter>
+    <marker id="aArrow" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="#a8a29e"/>
+    </marker>
+  </defs>
+
+  <style>
+    .title   { font-family: system-ui,-apple-system,sans-serif; font-size: 13px; font-weight: 650; fill: #44403c; letter-spacing: .01em; }
+    .box     { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; rx: 7; }
+    .box-o   { fill: #fffbeb; stroke: #fed7aa; stroke-width: 1.2; rx: 7; }
+    .hdr-t   { font-family: system-ui,-apple-system,sans-serif; font-size: 10.5px; fill: #fff; font-weight: 600; }
+    .hdr-o   { fill: #c2410c; }
+    .hdr-s   { fill: #57534e; }
+    .body    { font-family: system-ui,-apple-system,sans-serif; font-size: 10px; fill: #57534e; }
+    .mono    { font-family: 'SF Mono',monospace; font-size: 8.5px; fill: #a8a29e; }
+    .flow    { stroke: #d6d3d1; stroke-width: 1; fill: none; }
+    .num     { font-family: system-ui,-apple-system,sans-serif; font-size: 9px; font-weight: 700; fill: #fff; }
+    .time    { font-family: system-ui,-apple-system,sans-serif; font-size: 9px; fill: #a8a29e; }
+
+    @media (prefers-color-scheme: dark) {
+      .title   { fill: #d6d3d1; }
+      .box     { fill: #1c1917; stroke: #44403c; }
+      .box-o   { fill: #2d1f0c; stroke: #78350f; }
+      .body    { fill: #a8a29e; }
+      .mono    { fill: #78716c; }
+      .flow    { stroke: #57534e; }
+      .time    { fill: #78716c; }
+    }
+  </style>
+
+  <text x="380" y="22" text-anchor="middle" class="title">沙箱创建全链路——从 SDK 调用到 envd 就绪</text>
+
+  <!-- Row 1: External → Internal -->
+  <!-- Step 1: SDK -->
+  <rect x="14" y="42" width="112" height="62" class="box-o" filter="url(#s)"/>
+  <rect x="14" y="42" width="112" height="20" class="hdr-o"/>
+  <text x="70" y="56" text-anchor="middle" class="hdr-t">① SDK.create()</text>
+  <text x="70" y="78" text-anchor="middle" class="body">Python / JS SDK</text>
+  <text x="70" y="93" text-anchor="middle" class="mono">模板 ID + 配置</text>
+
+  <line x1="126" y1="73" x2="148" y2="73" class="flow" marker-end="url(#aArrow)"/>
+
+  <!-- Step 2: API Gateway -->
+  <rect x="152" y="42" width="112" height="62" class="box" filter="url(#s)"/>
+  <rect x="152" y="42" width="112" height="20" class="hdr-s"/>
+  <text x="208" y="56" text-anchor="middle" class="hdr-t">② API Gateway</text>
+  <text x="208" y="78" text-anchor="middle" class="body">认证 · 限流</text>
+  <text x="208" y="93" text-anchor="middle" class="mono">请求路由</text>
+
+  <line x1="264" y1="73" x2="286" y2="73" class="flow" marker-end="url(#aArrow)"/>
+
+  <!-- Step 3: Orchestrator -->
+  <rect x="290" y="42" width="112" height="62" class="box" filter="url(#s)"/>
+  <rect x="290" y="42" width="112" height="20" class="hdr-s"/>
+  <text x="346" y="56" text-anchor="middle" class="hdr-t">③ Orchestrator</text>
+  <text x="346" y="78" text-anchor="middle" class="body">调度决策</text>
+  <text x="346" y="93" text-anchor="middle" class="mono">选择节点</text>
+
+  <line x1="402" y1="73" x2="424" y2="73" class="flow" marker-end="url(#aArrow)"/>
+
+  <!-- Step 4: Nomad -->
+  <rect x="428" y="42" width="112" height="62" class="box" filter="url(#s)"/>
+  <rect x="428" y="42" width="112" height="20" class="hdr-s"/>
+  <text x="484" y="56" text-anchor="middle" class="hdr-t">④ Nomad 调度</text>
+  <text x="484" y="78" text-anchor="middle" class="body">分配节点资源</text>
+  <text x="484" y="93" text-anchor="middle" class="mono">启动任务</text>
+
+  <line x1="540" y1="73" x2="562" y2="73" class="flow" marker-end="url(#aArrow)"/>
+
+  <!-- Step 5: Firecracker -->
+  <rect x="566" y="42" width="112" height="62" class="box-o" filter="url(#s)"/>
+  <rect x="566" y="42" width="112" height="20" class="hdr-o"/>
+  <text x="622" y="56" text-anchor="middle" class="hdr-t">⑤ Firecracker</text>
+  <text x="622" y="78" text-anchor="middle" class="body">创建 microVM</text>
+  <text x="622" y="93" text-anchor="middle" class="mono">&lt;125ms 启动</text>
+
+  <!-- Row 2: Internal handshake -->
+  <path d="M622,104 L622,124 L380,124 L380,138" class="flow" marker-end="url(#aArrow)"/>
+
+  <!-- Step 6: envd handshake -->
+  <rect x="252" y="142" width="256" height="50" class="box-o" filter="url(#s)"/>
+  <rect x="252" y="142" width="256" height="20" class="hdr-o"/>
+  <text x="380" y="156" text-anchor="middle" class="hdr-t">⑥ vsock 握手 → envd 就绪 → SDK 返回</text>
+  <text x="380" y="177" text-anchor="middle" class="body">双通道认证（MMDS 获取令牌 + envd 验证）</text>
+
+  <text x="380" y="206" text-anchor="middle" class="time">端到端：~300ms · 支持快照加速克隆</text>
+
+</svg>

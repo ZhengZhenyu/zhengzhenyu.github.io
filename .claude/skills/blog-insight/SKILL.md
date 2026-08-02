@@ -149,7 +149,8 @@ Phase 1 ────▶ Phase 1.5 ──▶ Phase 2 ────▶ Phase 3 ─�
 2. **每节标注**：
    - 核心论点（一句话）
    - 关键数据和引用来源
-   - 适合的视觉元素类型（arch-grid / table-wrap / verdict / callout / phase-card / stats-grid 等）
+   - 适合的视觉元素类型（arch-grid / table-wrap / verdict / callout / phase-card / stats-grid / **SVG 图解** 等）
+   - 是否需要术语速览 callout（见 base-style.md §六）
    - 估计字数
 
 3. **逻辑检查**：每节之间的递进关系是什么？是否存在断裂？
@@ -182,11 +183,14 @@ Phase 1 ────▶ Phase 1.5 ──▶ Phase 2 ────▶ Phase 3 ─�
    - 对比数据 → table-wrap > table
    - 核心判断 → verdict
    - 列举要点 → callout
+   - 术语速览 → callout-amber（见 base-style.md §六，引言末尾）
    - 机制详解 → phase-card
    - 闭环流程 → policy-flow
    - 有序步骤 → workflow
+   - **架构/流程/层次图解 → growth-chart + SVG（见 base-style.md §七）**
    - 每个元素必须提供 :root[data-theme="dark"] 适配
    - CSS 使用主题变量：--border, --radius, --surface, --text, --text-muted, --text-soft, --bg, --primary, --shadow-sm, --font-mono
+   - **SVG 图解走外部文件**：存入 `source/_posts/<slug>/` 目录，文章内用 `<img>` 引用。SVG 内所有颜色通过 CSS 类定义，含 `@media (prefers-color-scheme: dark)` 暗色适配
 
 3. **深度硬指标**：
    - 项目基本信息表（仓库、版本、许可、语言、社区数据）
@@ -232,8 +236,10 @@ Phase 1 ────▶ Phase 1.5 ──▶ Phase 2 ────▶ Phase 3 ─�
 1. 哪些内容适合但尚未使用视觉元素？
 2. 哪些现有元素可以增强？
 3. 每处建议给出完整 HTML+CSS（含 dark mode 适配）
+4. **架构/流程/层次概念是否适合加 SVG 图解**（见 base-style.md §七）：若适合，描述图解内容和插入位置
+5. **是否需要术语速览 callout**（见 base-style.md §六）：检查文中 ≥5 次出现且未定义的核心术语
 
-输出格式：「在哪插入什么元素」+ 完整 HTML+CSS 代码。
+输出格式：「在哪插入什么元素」+ 完整 HTML+CSS 代码（或 SVG 图解描述）。
 ```
 
 ### Agent 4c: 暗色模式验证

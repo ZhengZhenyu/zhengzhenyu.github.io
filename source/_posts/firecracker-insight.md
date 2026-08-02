@@ -19,6 +19,16 @@ description: 深度拆解 Firecracker 架构设计与极简安全哲学，分析
   <p>Serverless 平台的隔离需求存在一个三角困境：<strong>容器共享内核，不安全；QEMU 全虚拟化，太重太慢；中间地带长期空白。</strong> Firecracker 的定位是第三种选择——以 KVM 硬件虚拟化获得强隔离，以极简设计和 Linux Boot Protocol 直通车获得容器级速度，以 Rust 和 seccomp 系统调用过滤压缩攻击面。</p>
 </div>
 
+<div class="callout callout-amber">
+  <div class="callout-label">核心术语速览（非专业读者可先读此节）</div>
+  <p><strong>KVM</strong>（Kernel-based Virtual Machine）：Linux 内核内置的硬件虚拟化模块，利用 CPU 的 Intel VT-x / AMD-V 扩展在物理 CPU 上直接执行虚拟机代码，性能接近裸金属。</p>
+  <p><strong>seccomp</strong>（secure computing mode）：Linux 内核的安全机制——限制进程能调用的<strong>系统调用（syscall）</strong>。syscall 是用户程序请求内核服务的接口，如读写文件、网络通信等操作都必须通过它。seccomp 过滤器可以精确控制一个进程允许使用哪些 syscall，越界即被内核强制终止。</p>
+  <p><strong>virtio</strong>：虚拟机 I/O 设备的标准化协议。Guest 通过 virtio 驱动与 Host 的设备模拟层通信，避免了模拟真实物理硬件（如物理网卡芯片）的复杂性和性能开销。可以理解为「为虚拟机量身定制的设备语言」。</p>
+  <p><strong>VMM</strong>（Virtual Machine Monitor）：虚拟机管理器，即 Firecracker 本身——运行在宿主机用户态，负责管理 microVM 的生命周期（创建、启动、暂停）和模拟硬件设备。</p>
+  <p><strong>cgroup & namespace</strong>：Linux 内核的两大隔离基元。cgroup 负责资源限制（CPU、内存、I/O 上限），namespace 负责资源视图隔离（独立 PID 空间、文件系统、网络栈）。Docker 容器的底层基础就是这二者。</p>
+  <p><strong>BPF</strong>（Berkeley Packet Filter）：一种在内核中安全执行用户定义程序的技术。seccomp-bpf 即用 BPF 程序表达「允许哪些 syscall」的过滤规则，内核在执行前先检查 BPF 过滤器。</p>
+</div>
+
 ## 二、为什么需要 Firecracker：容器不够安全，QEMU 太重
 
 ### 2.1 共享内核的安全代价
@@ -63,7 +73,7 @@ Firecracker 做的事情本质上是**重新定义虚拟机的「最小可行产
   <thead><tr><th>维度</th><th>信息</th></tr></thead>
   <tbody>
     <tr><td><strong>仓库</strong></td><td><a href="https://github.com/firecracker-microvm/firecracker" target="_blank">firecracker-microvm/firecracker</a></td></tr>
-    <tr><td><strong>首次发布</strong></td><td>2018.11.26（AWS re:Invent），源于 Google crosvm 的 Rust VMM fork</td></tr>
+    <tr><td><strong>首次发布</strong></td><td>2018.11.26（AWS re:Invent），源于 Google crosvm（Chrome OS 的 Rust VMM）的 fork</td></tr>
     <tr><td><strong>最新版本</strong></td><td>v1.16.1（2026.07.02），v1.17.0-dev 开发中</td></tr>
     <tr><td><strong>发布节奏</strong></td><td>每 1-2 个月一个版本</td></tr>
     <tr><td><strong>许可</strong></td><td>Apache 2.0</td></tr>
@@ -96,7 +106,11 @@ Firecracker 做的事情本质上是**重新定义虚拟机的「最小可行产
 
 ## 四、架构全景
 
-Firecracker 的代码库由 7 个核心 Rust crate 和一个独立二进制（jailer）组成，加上 snapshot-editor 和 cpu-template-helper 等辅助工具。通过源码阅读，可按职责分为五层：
+Firecracker 的代码库由 7 个核心 Rust crate（crate 是 Rust 的编译和分发单元，即软件包/库）和一个独立二进制（jailer）组成，加上 snapshot-editor 和 cpu-template-helper 等辅助工具。通过源码阅读，可按职责分为五层：
+
+<div class="growth-chart">
+  <img src="arch-diagram.svg" alt="Firecracker 架构全景图：三线程模型与五层设备结构" style="width:100%">
+</div>
 
 <div class="arch-grid">
   <div class="arch-card arch-api">
@@ -184,15 +198,15 @@ Firecracker 内部使用极简的三线程模型：
 
 <div class="phase-card">
   <h4>VMM 线程</h4>
-  <p>主事件循环。接收来自 API Server 的配置事件（添加磁盘、配置网络、设定启动参数等），管理所有 virtio 设备的模拟、内存映射和中断路由。运行一个 epoll-based 事件循环处理设备 I/O。当虚拟机启动后，VMM 线程通过 <code>KVM_RUN</code> ioctl 将 vCPU 交给 KVM 内核模块。</p>
+  <p>主事件循环。接收来自 API Server 的配置事件（添加磁盘、配置网络、设定启动参数等），管理所有 virtio 设备的模拟、内存映射和中断路由。运行一个 epoll-based 事件循环处理设备 I/O。当虚拟机启动后，VMM 线程通过 <code>KVM_RUN</code> ioctl（ioctl 是 Linux 系统调用，用于向设备驱动发送控制命令）将 vCPU 交给 KVM 内核模块。</p>
 </div>
 
 <div class="phase-card">
   <h4>vCPU 线程</h4>
-  <p>每个 vCPU 一个独立线程，核心循环是调用 <code>KVM_RUN</code> ioctl——将 CPU 控制权交给 KVM，由硬件直接执行 Guest 代码（Intel VT-x / AMD-V）。仅在 Guest 触发 VM-exit（如设备 I/O 访问、缺页异常、halt 指令）时才退出到用户态 Firecracker 处理。</p>
+  <p>每个 vCPU 一个独立线程，核心循环是调用 <code>KVM_RUN</code> ioctl——将 CPU 控制权交给 KVM，由硬件直接执行 Guest 代码（Intel VT-x / AMD-V）。仅在 Guest 触发 VM-exit（即 CPU 从虚拟机执行模式退出到宿主机管理模式，如设备 I/O 访问、缺页异常、halt 指令）时才退出到用户态 Firecracker 处理。</p>
 </div>
 
-这个线程模型的关键特性：**vCPU 线程不直接处理任何 I/O**。当 Guest 发起 virtio 请求时，vCPU 线程仅仅将请求指针写入共享内存队列，通过 eventfd 通知 VMM 线程，然后立即返回 Guest 继续执行。实际的 I/O 处理全部在 VMM 线程中完成。这避免了 I/O 延迟阻塞 Guest 的计算进度。
+这个线程模型的关键特性：**vCPU 线程不直接处理任何 I/O**。当 Guest 发起 virtio 请求时，vCPU 线程仅仅将请求指针写入共享内存队列，通过 eventfd（Linux 的事件通知文件描述符，用于线程间信号传递）通知 VMM 线程，然后立即返回 Guest 继续执行。实际的 I/O 处理全部在 VMM 线程中完成。这避免了 I/O 延迟阻塞 Guest 的计算进度。
 
 ### 4.2 极简设备模型
 
@@ -200,11 +214,11 @@ Firecracker 仅实现了 5 个 virtio 设备，外加 x86 架构必需的两个�
 
 <div class="callout callout-rose">
   <div class="callout-label">5 个 Virtio 设备 + 2 个传统设备</div>
-  <p><strong>① virtio-net</strong>：网络设备。通过 tap 接口连接宿主机网桥，支持多队列和 TSO/UFO 卸载。单个 microVM 可达 14.5 Gbps 吞吐。</p>
+  <p><strong>① virtio-net</strong>：网络设备。通过 tap 接口（Linux 虚拟以太网接口，用于连接虚拟机和宿主机网络）连接宿主机网桥，支持多队列和 TSO/UFO 卸载。单个 microVM 可达 14.5 Gbps 吞吐。</p>
   <p><strong>② virtio-block</strong>：块存储设备。后端可以是 raw 文件、qcow2 镜像或宿主机块设备。支持 DISCARD（trim）和 FLUSH。单设备可达 1 GiB/s 顺序读写。</p>
   <p><strong>③ virtio-vsock</strong>：宿主机-Guest 通信通道。基于 AF_VSOCK 地址族，提供 CID 寻址和端口模型。是 Firecracker 与宿主机通信的唯一标准通道。</p>
-  <p><strong>④ virtio-rng</strong>：随机数生成器。从宿主机 <code>/dev/urandom</code> 熵源提供 Guest 内部的随机数需求（TLS/SSH 密钥生成、ASLR 等）。</p>
-  <p><strong>⑤ virtio-pmem</strong>：持久内存设备。为 Guest 提供 DAX（Direct Access）映射，绕过 Guest 页缓存直读，减少 Guest 内存开销。</p>
+  <p><strong>④ virtio-rng</strong>：随机数生成器。从宿主机 <code>/dev/urandom</code> 熵源提供 Guest 内部的随机数需求（TLS/SSH 密钥生成、ASLR 地址随机化等安全机制）。</p>
+  <p><strong>⑤ virtio-pmem</strong>：持久内存设备。为 Guest 提供 DAX（Direct Access，直接访问）映射——绕过 Guest 页缓存直接读写存储，减少 Guest 内存开销。</p>
   <p><strong>⑥ 串口（16550A UART）</strong>：Guest 内核日志和控制台输出。实际运行中通常连接到一个 FIFO 文件或 /dev/null。</p>
   <p><strong>⑦ i8042 键盘控制器</strong>：仅用于 Guest 内 ACPI 关机信号——Guest 向 i8042 端口写入特定值触发 reset/shutdown。没有图形输出，没有 USB 控制器，没有声卡。i8042 的存在仅因 Linux 内核依赖它触发 ACPI power-off。</p>
 </div>
@@ -290,6 +304,10 @@ Firecracker 实现 &lt;125ms 冷启动（从 InstanceStart API 调用到 Guest �
 
 这不仅是性能优化，也是安全设计。BIOS/UEFI 固件历史上是虚拟机逃逸的高危攻击面（CVE-2015-3456、CVE-2019-14378 等）。Firecracker 跳过固件，意味着这些攻击面**根本不存在于 microVM 的启动过程中**。
 
+<div class="growth-chart">
+  <img src="boot-path-diagram.svg" alt="启动路径对比：传统 VM 启动 vs Firecracker 直通启动" style="width:100%">
+</div>
+
 > **Linux Boot Protocol** 是 Linux 内核定义的一种启动接口规范（参见内核源码 `Documentation/x86/boot.rst`）。内核的 bzImage 文件不仅包含压缩的内核代码，还包含一段 setup 代码和元数据头（`setup_header`）。bootloader（或 Firecracker 这类直接加载器）通过读取 setup_header 中的 `kernel_alignment`、`initrd_addr_max`、`cmdline_size` 等字段，就能直接完成内核加载和参数传递，无需经过固件层。
 
 ### 5.2 Jailer：独立二进制，14 步安全启动
@@ -303,6 +321,10 @@ Jailer 是 Firecracker 项目中一个关键的独立 crate，编译为独立二
   <p><strong>③ cgroups v1/v2</strong>：CPU、内存、I/O 限制通过 cgroup 强制执行，防止 microVM 资源滥用影响宿主机</p>
   <p><strong>④ seccomp-bpf（via seccompiler）</strong>：per-thread 安装白名单过滤器，VMM 线程允许约 30 个系统调用，vCPU 线程允许更少</p>
   <p><strong>⑤ 特权降级 + 能力裁剪</strong>：root 启动后，在 exec Firecracker 前切换到非特权 UID/GID，并清空所有 Linux capabilities</p>
+</div>
+
+<div class="growth-chart">
+  <img src="jailer-sandbox.svg" alt="Jailer 五层安全沙箱：从 cgroup 到 capabilities 的同心防护" style="width:100%">
 </div>
 
 Jailer 的启动流程可分解为 14 个有序步骤：
@@ -415,6 +437,10 @@ Firecracker 的 seccomp 过滤器通过 **seccompiler** crate 预编译。seccom
   <p>VMM 线程的核心操作是与 KVM 内核模块通信——通过 <code>ioctl</code> 系统调用传递 KVM API 命令。seccomp 过滤器不仅允许 <code>ioctl</code> 系统调用，而且<strong>对 ioctl 的第一个参数（request number）进行匹配</strong>，仅放行 KVM 相关的 ioctl cmd：</p>
   <p><code>KVM_CREATE_VM</code>、<code>KVM_CREATE_VCPU</code>、<code>KVM_SET_USER_MEMORY_REGION</code>、<code>KVM_RUN</code>、<code>KVM_SET_REGS</code>、<code>KVM_GET_VCPU_MMAP_SIZE</code>、<code>KVM_IRQFD</code>、<code>KVM_IOEVENTFD</code> 等约 20 个命令——任何其他 ioctl 被调用时，进程直接被 SIGSYS 终止。</p>
   <p>类似地，vCPU 线程仅允许 <code>KVM_RUN</code> 一个 ioctl 命令，因为其他 KVM 操作都应在 VMM 线程中完成。</p>
+</div>
+
+<div class="growth-chart">
+  <img src="seccomp-bars.svg" alt="seccomp 三级过滤对比：各线程允许的系统调用数量" style="width:100%">
 </div>
 
 ### 5.4 vsock：唯一的宿主机通信通道

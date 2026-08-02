@@ -1,0 +1,107 @@
+<svg viewBox="0 0 760 240" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="s" x="-4%" y="-6%" width="108%" height="118%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#78716c" flood-opacity="0.07"/>
+    </filter>
+    <marker id="arrow" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="#a8a29e"/>
+    </marker>
+  </defs>
+
+  <style>
+    .gate       { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; rx: 8; }
+    .gate-final { fill: #fffbeb; stroke: #d97706; stroke-width: 1.8; rx: 8; }
+    .num-dot    { fill: #57534e; }
+    .num-dot-f  { fill: #c2410c; }
+    .num-dot-4  { fill: #b45309; }
+    .num-t      { font-family: system-ui,-apple-system,sans-serif; font-size: 11px; font-weight: 700; fill: #fff; }
+    .g-title    { font-family: system-ui,-apple-system,sans-serif; font-size: 13px; font-weight: 650; fill: #292524; }
+    .g-desc     { font-family: system-ui,-apple-system,sans-serif; font-size: 10px; fill: #78716c; }
+    .g-tag      { font-family: system-ui,-apple-system,sans-serif; font-size: 10px; }
+    .g-tag-muted { fill: #a8a29e; }
+    .g-tag-4    { fill: #b45309; }
+    .g-tag-5    { fill: #c2410c; }
+    .fc-title   { font-family: system-ui,-apple-system,sans-serif; font-size: 14px; font-weight: 700; fill: #c2410c; }
+    .fc-sub     { font-family: 'SF Mono','Cascadia Code',monospace; font-size: 9px; fill: #a8a29e; }
+    .arrow-line { stroke: #d6d3d1; stroke-width: 1; fill: none; }
+    .top-title  { font-family: system-ui,-apple-system,sans-serif; font-size: 13px; font-weight: 650; fill: #44403c; letter-spacing: .01em; }
+    .phase-label { font-family: system-ui,-apple-system,sans-serif; font-size: 9px; fill: #a8a29e; letter-spacing: .04em; }
+
+    @media (prefers-color-scheme: dark) {
+      .gate       { fill: #1c1917; stroke: #44403c; }
+      .gate-final { fill: #2d1f0c; stroke: #d97706; }
+      .num-dot    { fill: #78716c; }
+      .num-dot-f  { fill: #f97316; }
+      .num-dot-4  { fill: #d97706; }
+      .num-t      { fill: #fafaf9; }
+      .g-title    { fill: #e7e5e4; }
+      .g-desc     { fill: #a8a29e; }
+      .g-tag-muted { fill: #78716c; }
+      .g-tag-4    { fill: #d97706; }
+      .g-tag-5    { fill: #f97316; }
+      .fc-title   { fill: #f97316; }
+      .fc-sub     { fill: #78716c; }
+      .arrow-line { stroke: #57534e; }
+      .top-title  { fill: #d6d3d1; }
+      .phase-label { fill: #78716c; }
+    }
+  </style>
+
+  <text x="380" y="22" text-anchor="middle" class="top-title">Jailer 安全沙箱——五道闸门，逐层收紧</text>
+  <text x="16" y="36" class="phase-label">启动顺序 →</text>
+
+  <!-- Gate 1: cgroup -->
+  <rect x="16" y="44" width="122" height="108" class="gate" filter="url(#s)"/>
+  <circle cx="36" cy="64" r="11" class="num-dot"/>
+  <text x="36" y="68" text-anchor="middle" class="num-t">1</text>
+  <text x="77" y="80" text-anchor="middle" class="g-title">cgroup</text>
+  <text x="77" y="100" text-anchor="middle" class="g-desc">CPU / 内存</text>
+  <text x="77" y="116" text-anchor="middle" class="g-desc">I/O 资源限制</text>
+  <text x="77" y="136" text-anchor="middle" class="g-tag g-tag-muted">资源隔离</text>
+  <line x1="138" y1="98" x2="154" y2="98" class="arrow-line" marker-end="url(#arrow)"/>
+
+  <!-- Gate 2: namespace -->
+  <rect x="158" y="44" width="122" height="108" class="gate" filter="url(#s)"/>
+  <circle cx="178" cy="64" r="11" class="num-dot"/>
+  <text x="178" y="68" text-anchor="middle" class="num-t">2</text>
+  <text x="219" y="80" text-anchor="middle" class="g-title">namespace</text>
+  <text x="219" y="100" text-anchor="middle" class="g-desc">PID / 挂载点</text>
+  <text x="219" y="116" text-anchor="middle" class="g-desc">独立命名空间</text>
+  <text x="219" y="136" text-anchor="middle" class="g-tag g-tag-muted">进程隔离</text>
+  <line x1="280" y1="98" x2="296" y2="98" class="arrow-line" marker-end="url(#arrow)"/>
+
+  <!-- Gate 3: chroot -->
+  <rect x="300" y="44" width="122" height="108" class="gate" filter="url(#s)"/>
+  <circle cx="320" cy="64" r="11" class="num-dot"/>
+  <text x="320" y="68" text-anchor="middle" class="num-t">3</text>
+  <text x="361" y="80" text-anchor="middle" class="g-title">chroot</text>
+  <text x="361" y="100" text-anchor="middle" class="g-desc">根文件系统</text>
+  <text x="361" y="116" text-anchor="middle" class="g-desc">切换到 Jail 目录</text>
+  <text x="361" y="136" text-anchor="middle" class="g-tag g-tag-muted">文件系统隔离</text>
+  <line x1="422" y1="98" x2="438" y2="98" class="arrow-line" marker-end="url(#arrow)"/>
+
+  <!-- Gate 4: seccomp-bpf -->
+  <rect x="442" y="44" width="122" height="108" class="gate" filter="url(#s)"/>
+  <circle cx="462" cy="64" r="11" class="num-dot-4"/>
+  <text x="462" y="68" text-anchor="middle" class="num-t">4</text>
+  <text x="503" y="80" text-anchor="middle" class="g-title">seccomp-bpf</text>
+  <text x="503" y="100" text-anchor="middle" class="g-desc">syscall 白名单</text>
+  <text x="503" y="116" text-anchor="middle" class="g-desc">每线程独立过滤</text>
+  <text x="503" y="136" text-anchor="middle" class="g-tag g-tag-4">系统调用控制</text>
+  <line x1="564" y1="98" x2="580" y2="98" class="arrow-line" marker-end="url(#arrow)"/>
+
+  <!-- Gate 5: capabilities -->
+  <rect x="584" y="44" width="122" height="108" class="gate" filter="url(#s)"/>
+  <circle cx="604" cy="64" r="11" class="num-dot-f"/>
+  <text x="604" y="68" text-anchor="middle" class="num-t">5</text>
+  <text x="645" y="80" text-anchor="middle" class="g-title">capabilities</text>
+  <text x="645" y="100" text-anchor="middle" class="g-desc">清空所有特权</text>
+  <text x="645" y="116" text-anchor="middle" class="g-desc">setuid 非特权用户</text>
+  <text x="645" y="136" text-anchor="middle" class="g-tag g-tag-5">特权降级</text>
+
+  <!-- Firecracker -->
+  <rect x="200" y="176" width="360" height="44" class="gate-final" filter="url(#s)"/>
+  <text x="380" y="196" text-anchor="middle" class="fc-title">Firecracker 进程</text>
+  <text x="380" y="212" text-anchor="middle" class="fc-sub">所有闸门就位后 exec 启动 · fail-fast，不存在「半隔离」</text>
+  <path d="M645,152 L645,166 L380,166 L380,174" class="arrow-line" marker-end="url(#arrow)"/>
+</svg>

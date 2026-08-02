@@ -1,0 +1,98 @@
+<svg viewBox="0 0 680 290" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="s" x="-4%" y="-4%" width="108%" height="116%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#78716c" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <style>
+    .title   { font-family: system-ui,-apple-system,sans-serif; font-size: 13px; font-weight: 650; fill: #44403c; letter-spacing: .01em; }
+    .gate    { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; rx: 7; }
+    .gate-o  { fill: #fffbeb; stroke: #fed7aa; stroke-width: 1.2; rx: 7; }
+    .num-dot { fill: #57534e; }
+    .num-dot-o { fill: #c2410c; }
+    .num-t   { font-family: system-ui,-apple-system,sans-serif; font-size: 10px; font-weight: 700; fill: #fff; }
+    .g-title { font-family: system-ui,-apple-system,sans-serif; font-size: 13px; font-weight: 650; fill: #292524; }
+    .g-desc  { font-family: system-ui,-apple-system,sans-serif; font-size: 10.5px; fill: #57534e; }
+    .g-tag   { font-family: system-ui,-apple-system,sans-serif; font-size: 9px; fill: #a8a29e; }
+    .arrow   { stroke: #d6d3d1; stroke-width: 1; fill: none; }
+    .pill    { font-family: system-ui,-apple-system,sans-serif; font-size: 8.5px; font-weight: 550; }
+    .pill-s  { fill: #a8a29e; }
+    .pill-d  { fill: #c2410c; }
+
+    @media (prefers-color-scheme: dark) {
+      .title   { fill: #d6d3d1; }
+      .gate    { fill: #1c1917; stroke: #44403c; }
+      .gate-o  { fill: #2d1f0c; stroke: #78350f; }
+      .num-dot { fill: #78716c; }
+      .num-dot-o { fill: #f97316; }
+      .g-title { fill: #e7e5e4; }
+      .g-desc  { fill: #a8a29e; }
+      .g-tag   { fill: #78716c; }
+      .arrow   { stroke: #57534e; }
+    }
+  </style>
+
+  <text x="340" y="22" text-anchor="middle" class="title">OpenShell 纵深防御——四层安全体系</text>
+
+  <!-- Layer 1: Landlock -->
+  <rect x="16" y="42" width="152" height="100" class="gate" filter="url(#s)"/>
+  <circle cx="36" cy="62" r="11" class="num-dot"/>
+  <text x="36" y="67" text-anchor="middle" class="num-t">1</text>
+  <text x="92" y="70" text-anchor="middle" class="g-title">文件系统</text>
+  <text x="92" y="90" text-anchor="middle" class="g-desc">Landlock LSM</text>
+  <text x="92" y="108" text-anchor="middle" class="g-desc">声明式路径白名单</text>
+  <rect x="45" y="118" width="94" height="16" fill="#f5f5f4" rx="4"/>
+  <text x="92" y="130" text-anchor="middle" class="pill pill-s">内核强制</text>
+
+  <line x1="168" y1="92" x2="188" y2="92" class="arrow" marker-end="url(#a)"/>
+  <defs><marker id="a" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><path d="M0,0 L6,2.5 L0,5" fill="#d6d3d1"/></marker></defs>
+
+  <!-- Layer 2: Network -->
+  <rect x="192" y="42" width="152" height="100" class="gate" filter="url(#s)"/>
+  <circle cx="212" cy="62" r="11" fill="#0f766e"/>
+  <text x="212" y="67" text-anchor="middle" class="num-t">2</text>
+  <text x="268" y="70" text-anchor="middle" class="g-title">网络</text>
+  <text x="268" y="90" text-anchor="middle" class="g-desc">OPA 策略引擎</text>
+  <text x="268" y="108" text-anchor="middle" class="g-desc">TOFU + Per-binary 身份</text>
+  <rect x="221" y="118" width="94" height="16" fill="#f0fdfa" stroke="#99f6e4" stroke-width=".8" rx="4"/>
+  <text x="268" y="130" text-anchor="middle" class="pill" fill="#0f766e">热加载策略</text>
+
+  <line x1="344" y1="92" x2="364" y2="92" class="arrow" marker-end="url(#a)"/>
+
+  <!-- Layer 3: Process -->
+  <rect x="368" y="42" width="152" height="100" class="gate" filter="url(#s)"/>
+  <circle cx="388" cy="62" r="11" fill="#b45309"/>
+  <text x="388" y="67" text-anchor="middle" class="num-t">3</text>
+  <text x="444" y="70" text-anchor="middle" class="g-title">进程</text>
+  <text x="444" y="90" text-anchor="middle" class="g-desc">seccomp BPF</text>
+  <text x="444" y="108" text-anchor="middle" class="g-desc">syscall 白名单过滤</text>
+  <rect x="397" y="118" width="94" height="16" fill="#f5f5f4" rx="4"/>
+  <text x="444" y="130" text-anchor="middle" class="pill pill-s">静态策略</text>
+
+  <line x1="520" y1="92" x2="540" y2="92" class="arrow" marker-end="url(#a)"/>
+
+  <!-- Layer 4: Inference -->
+  <rect x="544" y="42" width="120" height="100" class="gate-o" filter="url(#s)"/>
+  <circle cx="564" cy="62" r="11" class="num-dot-o"/>
+  <text x="564" y="67" text-anchor="middle" class="num-t">4</text>
+  <text x="604" y="70" text-anchor="middle" class="g-title" fill="#c2410c">推理路由</text>
+  <text x="604" y="90" text-anchor="middle" class="g-desc">inference.local</text>
+  <text x="604" y="108" text-anchor="middle" class="g-desc">凭证自动注入</text>
+  <rect x="573" y="118" width="62" height="16" fill="#fffbeb" stroke="#fde68a" stroke-width=".8" rx="4"/>
+  <text x="604" y="130" text-anchor="middle" class="pill pill-d">透明代理</text>
+
+  <!-- Bottom -->
+  <rect x="16" y="170" width="648" height="36" fill="none" stroke="#e7e5e4" stroke-width="1" rx="6" stroke-dasharray="4,3"/>
+  <text x="340" y="186" text-anchor="middle" class="g-desc">攻击路径：恶意代码 → Landlock 阻断文件读写 → OPA 阻断异常网络 → seccomp 阻断危险 syscall → inference.local 阻断凭据泄露</text>
+  <text x="340" y="202" text-anchor="middle" class="g-tag">前三层由 Supervisor 执行 · 第四层由推理路由器透明代理 · 策略由 Gateway 通过 gRPC 下发</text>
+
+  <!-- Legend -->
+  <rect x="200" y="232" width="12" height="12" fill="#f5f5f4" stroke="#e7e5e4" stroke-width=".8" rx="2"/>
+  <text x="218" y="242" class="g-tag">静态/内核级</text>
+  <rect x="300" y="232" width="12" height="12" fill="#f0fdfa" stroke="#99f6e4" stroke-width=".8" rx="2"/>
+  <text x="318" y="242" class="g-tag">热加载（OPA 策略）</text>
+  <rect x="430" y="232" width="12" height="12" fill="#fffbeb" stroke="#fde68a" stroke-width=".8" rx="2"/>
+  <text x="448" y="242" class="g-tag">透明代理（凭证注入）</text>
+
+</svg>

@@ -1,0 +1,79 @@
+<svg viewBox="0 0 720 300" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="s" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#78716c" flood-opacity="0.06"/>
+    </filter>
+    <marker id="aArrow" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="#a8a29e"/>
+    </marker>
+  </defs>
+
+  <style>
+    .title   { font-family: system-ui,-apple-system,sans-serif; font-size: 13px; font-weight: 650; fill: #44403c; letter-spacing: .01em; }
+    .box     { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; rx: 8; }
+    .box-o   { fill: #fffbeb; stroke: #fed7aa; stroke-width: 1.2; rx: 8; }
+    .subtle  { fill: #f5f5f4; stroke: #e7e5e4; stroke-width: 1; rx: 6; }
+    .hdr-t   { font-family: system-ui,-apple-system,sans-serif; font-size: 11px; fill: #fff; font-weight: 600; letter-spacing: .02em; }
+    .hdr-o   { fill: #c2410c; }
+    .hdr-s   { fill: #57534e; }
+    .hdr-g   { fill: #0f766e; }
+    .body    { font-family: system-ui,-apple-system,sans-serif; font-size: 10.5px; fill: #57534e; }
+    .mono    { font-family: 'SF Mono',monospace; font-size: 9px; fill: #78716c; }
+    .accent  { font-family: system-ui,-apple-system,sans-serif; font-size: 10.5px; font-weight: 600; fill: #0f766e; }
+    .label   { font-family: system-ui,-apple-system,sans-serif; font-size: 9px; fill: #a8a29e; letter-spacing: .04em; }
+    .flow    { stroke: #d6d3d1; stroke-width: 1; fill: none; stroke-dasharray: 4,3; }
+    .dash    { fill: none; stroke: #d6d3d1; stroke-width: 1; stroke-dasharray: 5,4; rx: 8; }
+
+    @media (prefers-color-scheme: dark) {
+      .title   { fill: #d6d3d1; }
+      .box     { fill: #1c1917; stroke: #44403c; }
+      .box-o   { fill: #2d1f0c; stroke: #78350f; }
+      .subtle  { fill: #292524; stroke: #44403c; }
+      .body    { fill: #a8a29e; }
+      .mono    { fill: #78716c; }
+      .accent  { fill: #2dd4bf; }
+      .label   { fill: #78716c; }
+      .flow    { stroke: #57534e; }
+      .dash    { stroke: #57534e; }
+    }
+  </style>
+
+  <text x="360" y="22" text-anchor="middle" class="title">OpenShell 架构——Gateway-Supervisor 分离设计</text>
+
+  <!-- Host side -->
+  <rect x="14" y="38" width="320" height="100" class="box" filter="url(#s)"/>
+  <rect x="14" y="38" width="320" height="22" class="hdr-s"/>
+  <text x="174" y="53" text-anchor="middle" class="hdr-t">Gateway（宿主机 / 集群侧）</text>
+  <text x="34" y="78" class="body">• 管理多个沙箱的 Supervisor 连接</text>
+  <text x="34" y="96" class="body">• 策略引擎：OPA 裁决 + Rego 规则</text>
+  <text x="34" y="114" class="body">• 形式化验证集成：Z3 SMT Prover</text>
+  <text x="34" y="130" class="mono">监听 policy.local · 长轮询推送策略更新</text>
+
+  <!-- gRPC connection -->
+  <line x1="334" y1="80" x2="364" y2="80" class="flow"/>
+  <text x="350" y="74" class="label">gRPC</text>
+  <line x1="364" y1="96" x2="334" y2="96" class="flow"/>
+
+  <!-- Sandbox side -->
+  <rect x="370" y="38" width="336" height="100" class="box-o" filter="url(#s)"/>
+  <rect x="370" y="38" width="336" height="22" class="hdr-o"/>
+  <text x="538" y="53" text-anchor="middle" class="hdr-t">Supervisor（沙箱内部）</text>
+  <text x="390" y="78" class="body">• Per-sandbox 代理进程</text>
+  <text x="390" y="96" class="body">• 拦截并裁决文件/网络/进程操作</text>
+  <text x="390" y="114" class="body">• 注入推理凭证 → inference.local</text>
+  <text x="390" y="130" class="mono">热加载策略 · 离线时使用缓存策略</text>
+
+  <!-- Sandbox boundary -->
+  <rect x="368" y="34" width="342" height="112" class="dash"/>
+  <text x="378" y="46" class="label">沙箱边界</text>
+
+  <!-- Compute backends -->
+  <rect x="14" y="164" width="692" height="52" class="subtle"/>
+  <text x="360" y="186" text-anchor="middle" class="body" font-weight="600">支持的计算后端</text>
+  <text x="360" y="206" text-anchor="middle" class="mono">Docker 容器（轻量） · Firecracker microVM（强隔离） · GPU 直通（NVIDIA CDI）</text>
+
+  <!-- Defense layers inside sandbox -->
+  <text x="360" y="250" text-anchor="middle" class="label">沙箱内四层防御：Landlock 文件系统 → OPA 网络策略 → seccomp 进程 → inference.local 路由</text>
+  <text x="360" y="272" text-anchor="middle" class="mono">策略来源：Gateway 下发 OPA · 本地 Landlock 声明 · Supervisor 进程管控 · 推理凭证注入</text>
+
+</svg>

@@ -1,0 +1,109 @@
+<svg viewBox="0 0 720 340" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="s" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#78716c" flood-opacity="0.06"/>
+    </filter>
+    <marker id="aArrow" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="#a8a29e"/>
+    </marker>
+    <marker id="aOrange" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <style>
+    .title   { font-family: system-ui,-apple-system,sans-serif; font-size: 13px; font-weight: 650; fill: #44403c; letter-spacing: .01em; }
+    .box     { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; rx: 8; }
+    .box-o   { fill: #fffbeb; stroke: #fed7aa; stroke-width: 1.2; rx: 8; }
+    .box-s   { fill: #f5f5f4; stroke: #e7e5e4; stroke-width: 1; rx: 6; }
+    .hdr-t   { font-family: system-ui,-apple-system,sans-serif; font-size: 11px; fill: #fff; font-weight: 600; letter-spacing: .02em; }
+    .hdr-o   { fill: #c2410c; }
+    .hdr-s   { fill: #57534e; }
+    .hdr-g   { fill: #78716c; }
+    .body    { font-family: system-ui,-apple-system,sans-serif; font-size: 10.5px; fill: #57534e; }
+    .mono    { font-family: 'SF Mono',monospace; font-size: 9px; fill: #78716c; }
+    .num     { font-family: system-ui,-apple-system,sans-serif; font-size: 11px; font-weight: 700; fill: #fff; }
+    .step    { font-family: system-ui,-apple-system,sans-serif; font-size: 10px; fill: #a8a29e; }
+    .dot-o   { fill: #c2410c; }
+    .dot-s   { fill: #78716c; }
+
+    @media (prefers-color-scheme: dark) {
+      .title   { fill: #d6d3d1; }
+      .box     { fill: #1c1917; stroke: #44403c; }
+      .box-o   { fill: #2d1f0c; stroke: #78350f; }
+      .box-s   { fill: #292524; stroke: #44403c; }
+      .body    { fill: #a8a29e; }
+      .mono    { fill: #a8a29e; }
+      .step    { fill: #78716c; }
+    }
+  </style>
+
+  <text x="360" y="22" text-anchor="middle" class="title">systrap 系统调用拦截流程</text>
+
+  <!-- Step 1 -->
+  <rect x="20" y="44" width="160" height="60" class="box-o" filter="url(#s)"/>
+  <circle cx="40" cy="64" r="11" class="dot-o"/>
+  <text x="40" y="69" text-anchor="middle" class="num">1</text>
+  <text x="100" y="66" text-anchor="middle" class="body">应用调用 syscall</text>
+  <text x="100" y="84" text-anchor="middle" class="mono">open("/etc/hosts")</text>
+  <text x="100" y="96" text-anchor="middle" class="step">seccomp 拦截 → SIGSYS</text>
+
+  <line x1="180" y1="74" x2="210" y2="74" stroke="#d6d3d1" stroke-width="1" marker-end="url(#aOrange)"/>
+
+  <!-- Step 2 -->
+  <rect x="215" y="44" width="160" height="60" class="box" filter="url(#s)"/>
+  <circle cx="235" cy="64" r="11" class="dot-s"/>
+  <text x="235" y="69" text-anchor="middle" class="num">2</text>
+  <text x="295" y="66" text-anchor="middle" class="body">共享内存写入</text>
+  <text x="295" y="84" text-anchor="middle" class="mono">sysmsg 结构体</text>
+  <text x="295" y="96" text-anchor="middle" class="step">syscall 号 + 参数</text>
+
+  <line x1="375" y1="74" x2="405" y2="74" stroke="#d6d3d1" stroke-width="1" marker-end="url(#aArrow)"/>
+
+  <!-- Step 3 -->
+  <rect x="410" y="44" width="180" height="60" class="box" filter="url(#s)"/>
+  <circle cx="430" cy="64" r="11" class="dot-s"/>
+  <text x="430" y="69" text-anchor="middle" class="num">3</text>
+  <text x="500" y="66" text-anchor="middle" class="body">Sentry goroutine 处理</text>
+  <text x="500" y="84" text-anchor="middle" class="mono">解析路径 · 权限检查</text>
+  <text x="500" y="96" text-anchor="middle" class="step">→ 若需要文件：RPC Gofer</text>
+
+  <line x1="590" y1="74" x2="620" y2="74" stroke="#d6d3d1" stroke-width="1" marker-end="url(#aArrow)"/>
+
+  <!-- Step 4 -->
+  <rect x="540" y="44" width="160" height="60" class="box" filter="url(#s)"/>
+  <circle cx="560" cy="64" r="11" class="dot-s"/>
+  <text x="560" y="69" text-anchor="middle" class="num">4</text>
+  <text x="620" y="66" text-anchor="middle" class="body">结果写回共享内存</text>
+  <text x="620" y="84" text-anchor="middle" class="mono">fd 号或错误码</text>
+  <text x="620" y="96" text-anchor="middle" class="step">→ 恢复应用执行</text>
+
+  <!-- Platform context -->
+  <rect x="20" y="138" width="680" height="72" class="box-s"/>
+  <text x="360" y="158" text-anchor="middle" class="body" font-weight="600">三种 Platform 实现对比</text>
+
+  <!-- systrap -->
+  <rect x="36" y="168" width="210" height="32" class="box" fill="#fffbeb"/>
+  <text x="141" y="189" text-anchor="middle" class="mono" font-weight="600" fill="#b45309">systrap（默认）</text>
+
+  <!-- KVM -->
+  <rect x="255" y="168" width="210" height="32" class="box"/>
+  <text x="360" y="189" text-anchor="middle" class="mono">KVM（Ring 0 模式）</text>
+
+  <!-- ptrace -->
+  <rect x="474" y="168" width="210" height="32" class="box"/>
+  <text x="579" y="189" text-anchor="middle" class="mono">ptrace（已废弃）</text>
+
+  <!-- Description row -->
+  <text x="141" y="222" text-anchor="middle" class="step" fill="#b45309">seccomp + SIGSYS + 共享内存</text>
+  <text x="360" y="222" text-anchor="middle" class="step">硬件辅助虚拟化 · 仍需 KVM 可用</text>
+  <text x="579" y="222" text-anchor="middle" class="step">每条指令两次上下文切换 · 极慢</text>
+
+  <!-- Bottom note -->
+  <text x="360" y="268" text-anchor="middle" class="body" fill="#78716c">×86_64 支持跳板优化：Sentry 预先替换 syscall 指令为跳板，绕过 seccomp 开销，直接跳入 Sentry 处理</text>
+
+  <!-- Sentry goroutine detail -->
+  <rect x="160" y="290" width="400" height="30" fill="none" stroke="#d6d3d1" stroke-width="1" rx="6" stroke-dasharray="4,3"/>
+  <text x="360" y="310" text-anchor="middle" class="mono">Sentry 自身仅暴露 ~55 个 syscall 给宿主机内核（seccomp 限制）</text>
+
+</svg>

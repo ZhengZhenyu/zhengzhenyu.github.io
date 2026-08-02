@@ -21,6 +21,15 @@ E2B 用 Firecracker microVM 回答了这个问题。这家由两个捷克发小�
   <p>E2B 的定位不是「更好的 Docker」，也不是「更快的 Lambda」。它是在 AI Agent 技术栈中定义了一个新品类——<strong>代码执行沙箱（Code Execution Sandbox）</strong>，专门解决「模型实时生成的代码在哪里安全、快速地执行」这一问题。</p>
 </div>
 
+<div class="callout callout-amber">
+  <div class="callout-label">核心术语速览（非专业读者可先读此节）</div>
+  <p><strong>Firecracker</strong>：AWS 开源的轻量级虚拟机管理器（VMM），用 Rust 编写。E2B 用它为每个沙箱创建一个独立的 microVM，实现硬件级隔离。</p>
+  <p><strong>microVM</strong>：极简虚拟机——只实现网络、块存储等最少设备，启动时间 &lt;125ms，内存开销 &lt;5MiB。介于容器（共享内核）和传统虚拟机（太重）之间的第三条路。</p>
+  <p><strong>KVM</strong>（Kernel-based Virtual Machine）：Linux 内核的硬件虚拟化模块，利用 CPU 硬件扩展直接运行虚拟机代码。Firecracker 依赖 KVM 创建 microVM。</p>
+  <p><strong>vsock</strong>（虚拟 socket）：基于 Linux AF_VSOCK 地址族的虚拟机-宿主机通信通道，不经过网络栈，无法被 iptables 拦截。E2B 用它实现沙箱内 envd 守护进程与宿主机之间的安全通信。</p>
+  <p><strong>Nomad / Consul</strong>：HashiCorp 的集群调度器和服务发现工具。E2B 用 Nomad 负责在集群中选择合适节点创建沙箱，用 Consul 做服务注册和健康检查。</p>
+</div>
+
 ## 二、为什么 AI Agent 需要专用执行沙箱
 
 在 Docker 容器或 Kubernetes Pod 中执行 Agent 生成的代码，技术上完全可行。问题不在于「能不能」，而在于「设计目标是否匹配」。
@@ -271,6 +280,10 @@ E2B 的架构是典型的「从 SDK 到硬件」的垂直整合，每一层有�
 
 #### 沙箱创建完整链路
 
+<div class="growth-chart">
+  <img src="create-flow.svg" alt="E2B 沙箱创建全链路：SDK → API → Orchestrator → Nomad → Firecracker → vsock → envd" style="width:100%">
+</div>
+
 <div class="phase-card">
   <h4>沙箱创建：从 SDK 调用到 microVM 就绪</h4>
   <p>① <strong>SDK 发起请求</strong>：用户调用 <code>Sandbox.create(template="base")</code>，SDK 将请求序列化为 HTTP POST 发送到 API Gateway。</p>
@@ -285,6 +298,10 @@ E2B 的架构是典型的「从 SDK 到硬件」的垂直整合，每一层有�
 ### 4.3 五层安全模型
 
 AI Agent 代码执行的安全风险有一层特殊的维度：**代码作者是概率模型，而非人类工程师**。这意味着代码审查、静态分析、签名验证这些传统安全手段全部失效。E2B 的安全策略是在隔离层面「纵深防御」，让攻击者即使控制了沙箱内部的 root 权限，也难以突破到底层基础设施。
+
+<div class="growth-chart">
+  <img src="security-model.svg" alt="E2B 五层纵深防御：网络隔离 → 设备最小化 → seccomp-bpf → cgroup+memguard → Firecracker Jailer" style="width:100%">
+</div>
 
 <div class="arch-grid">
   <div class="arch-card arch-s1">

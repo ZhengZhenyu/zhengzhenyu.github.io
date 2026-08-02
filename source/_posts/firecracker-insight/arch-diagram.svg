@@ -1,0 +1,141 @@
+<svg viewBox="0 0 780 460" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="s" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#78716c" flood-opacity="0.08"/>
+    </filter>
+    <linearGradient id="gOrange" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#c2410c" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#d97706" stop-opacity="0.88"/>
+    </linearGradient>
+    <linearGradient id="gSlate" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57534e" stop-opacity="0.88"/>
+      <stop offset="100%" stop-color="#44403c" stop-opacity="0.88"/>
+    </linearGradient>
+    <marker id="aWarm" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="#a8a29e"/>
+    </marker>
+    <marker id="aOrange" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="#b45309"/>
+    </marker>
+    <marker id="aDown" markerWidth="5" markerHeight="7" refX="2.5" refY="7" orient="auto">
+      <path d="M0,0 L5,0 L2.5,7" fill="#a8a29e"/>
+    </marker>
+  </defs>
+
+  <style>
+    .card     { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; rx: 8; }
+    .subtle   { fill: #f5f5f4; stroke: #e7e5e4; stroke-width: 1; rx: 6; }
+    .amber-bg { fill: #fffbeb; stroke: #fde68a; stroke-width: 1; rx: 6; }
+    .hdr-o    { fill: url(#gOrange); }
+    .hdr-s    { fill: url(#gSlate); }
+    .hdr-t    { font-family: system-ui,-apple-system,sans-serif; font-size: 11px; fill: #fff; font-weight: 600; letter-spacing: .02em; }
+    .title    { font-family: system-ui,-apple-system,sans-serif; font-size: 13px; font-weight: 650; fill: #292524; }
+    .title-sm { font-family: system-ui,-apple-system,sans-serif; font-size: 12px; font-weight: 650; fill: #292524; }
+    .body     { font-family: system-ui,-apple-system,sans-serif; font-size: 11px; fill: #57534e; }
+    .mono     { font-family: 'SF Mono','Cascadia Code',monospace; font-size: 9.5px; fill: #78716c; }
+    .mono-a   { font-family: 'SF Mono','Cascadia Code',monospace; font-size: 9.5px; font-weight: 600; fill: #b45309; }
+    .accent   { font-family: system-ui,-apple-system,sans-serif; font-size: 11px; font-weight: 600; fill: #b45309; }
+    .tag      { font-family: system-ui,-apple-system,sans-serif; font-size: 9.5px; fill: #a8a29e; }
+    .label    { font-family: system-ui,-apple-system,sans-serif; font-size: 9px; fill: #a8a29e; letter-spacing: .05em; }
+    .dash     { fill: none; stroke: #d6d3d1; stroke-width: 1; stroke-dasharray: 5,4; rx: 10; }
+    .flow-d   { stroke: #a8a29e; stroke-width: 1; fill: none; stroke-dasharray: 4,3; }
+    .flow-s   { stroke: #d6d3d1; stroke-width: 1; fill: none; }
+    .flow-orange { stroke: #d97706; stroke-width: 1; fill: none; stroke-dasharray: 4,3; }
+    .flow-purple { stroke: #7c3aed; stroke-width: 1; fill: none; stroke-dasharray: 4,3; }
+    .dot-o    { fill: #d97706; }
+    .dot-s    { fill: #a8a29e; }
+    .divider  { stroke: #e7e5e4; stroke-width: .8; }
+    .hw-bg    { fill: #fafaf9; }
+    .sec-foot { fill: none; stroke: #cbd5e1; stroke-width: 1; rx: 6; stroke-dasharray: 4,3; }
+    .sec-text { fill: #64748b; }
+    .text-purple { fill: #7c3aed; }
+    .text-orange-label { fill: #b45309; }
+
+    @media (prefers-color-scheme: dark) {
+      .card     { fill: #1c1917; stroke: #44403c; }
+      .subtle   { fill: #292524; stroke: #44403c; }
+      .amber-bg { fill: #2d1f0c; stroke: #78350f; }
+      .hdr-t    { fill: #fafaf9; }
+      .title,.title-sm { fill: #e7e5e4; }
+      .body     { fill: #a8a29e; }
+      .mono     { fill: #a8a29e; }
+      .mono-a   { fill: #d97706; }
+      .accent   { fill: #d97706; }
+      .tag      { fill: #78716c; }
+      .label    { fill: #78716c; }
+      .dash     { stroke: #57534e; }
+      .flow-d   { stroke: #78716c; }
+      .flow-s   { stroke: #57534e; }
+      .flow-orange { stroke: #d97706; }
+      .flow-purple { stroke: #a78bfa; }
+      .dot-o    { fill: #d97706; }
+      .dot-s    { fill: #78716c; }
+      .divider  { stroke: #44403c; }
+      .hw-bg    { fill: #1c1917; }
+      .sec-foot { stroke: #475569; }
+      .sec-text { fill: #94a3b8; }
+      .text-purple { fill: #a78bfa; }
+      .text-orange-label { fill: #d97706; }
+    }
+  </style>
+
+  <rect x="16" y="6" width="748" height="318" class="dash"/>
+  <text x="32" y="22" class="label">Firecracker Process</text>
+
+  <!-- API Server -->
+  <rect x="34" y="36" width="218" height="118" class="card" filter="url(#s)"/>
+  <rect x="34" y="36" width="218" height="26" class="hdr-s"/>
+  <text x="143" y="53" text-anchor="middle" class="hdr-t">API Server 线程</text>
+  <circle cx="50" cy="78" r="2.5" class="dot-s"/><text x="60" y="82" class="body">HTTP over Unix socket</text>
+  <circle cx="50" cy="98" r="2.5" class="dot-s"/><text x="60" y="102" class="body">17 个 RESTful 端点</text>
+  <circle cx="50" cy="118" r="2.5" class="dot-s"/><text x="60" y="122" class="body">请求序列化为事件下发</text>
+
+  <line x1="252" y1="92" x2="282" y2="92" class="flow-d" marker-end="url(#aWarm)"/>
+  <text x="268" y="84" text-anchor="middle" class="label">事件</text>
+
+  <!-- VMM -->
+  <rect x="288" y="36" width="218" height="200" class="card" filter="url(#s)"/>
+  <rect x="288" y="36" width="218" height="26" class="hdr-o"/>
+  <text x="397" y="53" text-anchor="middle" class="hdr-t">VMM 线程 · 主循环</text>
+  <circle cx="304" cy="78" r="2.5" class="dot-o"/><text x="314" y="82" class="body">epoll 事件驱动循环</text>
+  <circle cx="304" cy="98" r="2.5" class="dot-o"/><text x="314" y="102" class="body">设备生命周期协调</text>
+  <circle cx="304" cy="118" r="2.5" class="dot-o"/><text x="314" y="122" class="body">内存映射 &amp; 中断路由</text>
+
+  <rect x="302" y="136" width="190" height="90" class="amber-bg"/>
+  <text x="397" y="156" text-anchor="middle" class="accent">5 virtio 设备</text>
+  <text x="314" y="176" class="mono-a">virtio-net</text>
+  <text x="314" y="192" class="mono">virtio-block</text>
+  <text x="314" y="208" class="mono">virtio-vsock</text>
+  <text x="424" y="176" class="mono">virtio-rng</text>
+  <text x="424" y="192" class="mono">virtio-pmem</text>
+  <text x="424" y="208" class="tag">+ 串口 &amp; i8042</text>
+
+  <line x1="506" y1="82" x2="536" y2="82" class="flow-orange" marker-end="url(#aOrange)"/>
+  <text x="522" y="74" text-anchor="middle" class="text-orange-label">KVM_RUN</text>
+
+  <!-- vCPU -->
+  <rect x="542" y="36" width="218" height="118" class="card" filter="url(#s)"/>
+  <rect x="542" y="36" width="218" height="26" class="hdr-s"/>
+  <text x="651" y="53" text-anchor="middle" class="hdr-t">vCPU 线程 × N</text>
+  <circle cx="558" cy="78" r="2.5" class="dot-s"/><text x="568" y="82" class="body">执行 Guest 用户代码</text>
+  <circle cx="558" cy="98" r="2.5" class="dot-s"/><text x="568" y="102" class="body">KVM_RUN ioctl 循环</text>
+  <circle cx="558" cy="118" r="2.5" class="dot-s"/><text x="568" y="122" class="body">VM-exit 时交还 VMM</text>
+
+  <path d="M556,132 L556,172 L504,172 L504,132" class="flow-purple" marker-end="url(#aWarm)"/>
+  <text x="530" y="166" text-anchor="middle" class="text-purple">eventfd</text>
+
+  <line x1="34" y1="256" x2="746" y2="256" class="divider"/>
+
+  <rect x="34" y="268" width="712" height="44" class="subtle"/>
+  <text x="390" y="289" text-anchor="middle" class="title-sm">KVM 内核模块</text>
+  <text x="390" y="304" text-anchor="middle" class="body">硬件辅助虚拟化 · 内存虚拟化（EPT / NPT）· I/O 虚拟化</text>
+
+  <line x1="397" y1="236" x2="397" y2="266" class="flow-s"/>
+  <path d="M651,154 L651,246 L540,246 L540,266" class="flow-s"/>
+
+  <rect x="34" y="326" width="712" height="36" class="subtle hw-bg"/>
+  <text x="390" y="350" text-anchor="middle" class="body">CPU 硬件虚拟化扩展（Intel VT-x · AMD-V）</text>
+
+  <rect x="34" y="386" width="712" height="34" class="sec-foot"/>
+  <text x="390" y="408" text-anchor="middle" class="body sec-text">Jailer 安全沙箱：cgroup · namespace · seccomp-bpf · chroot · 特权降级（启动前已就绪）</text>
+</svg>

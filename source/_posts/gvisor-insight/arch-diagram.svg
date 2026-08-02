@@ -1,0 +1,112 @@
+<svg viewBox="0 0 720 400" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="s" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#78716c" flood-opacity="0.06"/>
+    </filter>
+    <marker id="aGray" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="#a8a29e"/>
+    </marker>
+    <marker id="aOrange" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <style>
+    .title   { font-family: system-ui,-apple-system,sans-serif; font-size: 13px; font-weight: 650; fill: #44403c; letter-spacing: .01em; }
+    .card    { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; rx: 8; }
+    .card-o  { fill: #fffbeb; stroke: #fed7aa; stroke-width: 1.2; rx: 8; }
+    .subtle  { fill: #f5f5f4; stroke: #e7e5e4; stroke-width: 1; rx: 6; }
+    .hdr-t   { font-family: system-ui,-apple-system,sans-serif; font-size: 11px; fill: #fff; font-weight: 600; letter-spacing: .02em; }
+    .body    { font-family: system-ui,-apple-system,sans-serif; font-size: 10.5px; fill: #57534e; }
+    .mono    { font-family: 'SF Mono',monospace; font-size: 9px; fill: #78716c; }
+    .accent  { font-family: system-ui,-apple-system,sans-serif; font-size: 10.5px; font-weight: 600; fill: #b45309; }
+    .label   { font-family: system-ui,-apple-system,sans-serif; font-size: 9px; fill: #a8a29e; letter-spacing: .04em; }
+    .flow    { stroke: #d6d3d1; stroke-width: 1; fill: none; stroke-dasharray: 4,3; }
+    .flow-s  { stroke: #a8a29e; stroke-width: 1; fill: none; }
+    .dash    { fill: none; stroke: #d6d3d1; stroke-width: 1; stroke-dasharray: 5,4; rx: 8; }
+    .num     { font-family: system-ui,-apple-system,sans-serif; font-size: 9px; font-weight: 700; fill: #fff; }
+    .hdr-o   { fill: #c2410c; }
+    .hdr-s   { fill: #57534e; }
+    .hdr-g   { fill: #78716c; }
+
+    @media (prefers-color-scheme: dark) {
+      .title   { fill: #d6d3d1; }
+      .card    { fill: #1c1917; stroke: #44403c; }
+      .card-o  { fill: #2d1f0c; stroke: #78350f; }
+      .subtle  { fill: #292524; stroke: #44403c; }
+      .body    { fill: #a8a29e; }
+      .mono    { fill: #a8a29e; }
+      .accent  { fill: #d97706; }
+      .label   { fill: #78716c; }
+      .flow    { stroke: #57534e; }
+      .flow-s  { stroke: #78716c; }
+      .dash    { stroke: #57534e; }
+    }
+  </style>
+
+  <text x="360" y="22" text-anchor="middle" class="title">gVisor 架构全景——一次 syscall 的完整旅程</text>
+
+  <!-- App Process -->
+  <rect x="200" y="36" width="320" height="46" class="card-o" filter="url(#s)"/>
+  <rect x="200" y="36" width="320" height="22" class="hdr-o"/>
+  <text x="360" y="51" text-anchor="middle" class="hdr-t">应用进程（沙箱内）</text>
+  <text x="360" y="72" text-anchor="middle" class="body">调用 Linux syscall（如 open / read / write）</text>
+
+  <!-- Syscall arrow down -->
+  <line x1="360" y1="82" x2="360" y2="104" class="flow" marker-end="url(#aOrange)"/>
+  <text x="378" y="96" class="label">syscall</text>
+
+  <!-- Sentry -->
+  <rect x="160" y="108" width="400" height="138" class="card" filter="url(#s)"/>
+  <rect x="160" y="108" width="400" height="22" class="hdr-s"/>
+  <text x="360" y="123" text-anchor="middle" class="hdr-t">Sentry（用户态内核 · Go 实现）</text>
+
+  <!-- Sentry sub-components -->
+  <rect x="176" y="138" width="116" height="44" class="subtle"/>
+  <text x="234" y="156" text-anchor="middle" class="accent">VFS</text>
+  <text x="234" y="173" text-anchor="middle" class="mono">虚拟文件系统</text>
+
+  <rect x="302" y="138" width="116" height="44" class="subtle"/>
+  <text x="360" y="156" text-anchor="middle" class="accent">Task</text>
+  <text x="360" y="173" text-anchor="middle" class="mono">进程/线程管理</text>
+
+  <rect x="428" y="138" width="116" height="44" class="subtle"/>
+  <text x="486" y="156" text-anchor="middle" class="accent">Netstack</text>
+  <text x="486" y="173" text-anchor="middle" class="mono">用户态 TCP/IP</text>
+
+  <!-- Sentry description -->
+  <text x="360" y="202" text-anchor="middle" class="mono">每个沙箱一个 Kernel 实例 · goroutine 调度 · ~200+ syscall 实现</text>
+  <text x="360" y="222" text-anchor="middle" class="label">→ 决策者：知道文件系统层级和权限模型，但不直接访问宿主机</text>
+
+  <!-- Platform arrow down -->
+  <line x1="360" y1="246" x2="360" y2="268" class="flow-s"/>
+
+  <!-- Platform -->
+  <rect x="220" y="272" width="280" height="40" class="subtle" filter="url(#s)"/>
+  <text x="360" y="290" text-anchor="middle" class="accent">Platform：systrap（默认）· KVM · ptrace</text>
+  <text x="360" y="305" text-anchor="middle" class="mono">seccomp 拦截 → SIGSYS → 共享内存传递 sysmsg</text>
+
+  <!-- Host kernel arrow -->
+  <line x1="360" y1="312" x2="360" y2="330" class="flow-s"/>
+
+  <!-- Host Kernel -->
+  <rect x="220" y="334" width="280" height="28" class="subtle" fill="#fafaf9"/>
+  <text x="360" y="353" text-anchor="middle" class="body">宿主机 Linux 内核（仅暴露 ~55 个 syscall）</text>
+
+  <!-- Gofer side -->
+  <rect x="20" y="170" width="128" height="68" class="card" filter="url(#s)"/>
+  <rect x="20" y="170" width="128" height="20" class="hdr-g"/>
+  <text x="84" y="185" text-anchor="middle" class="hdr-t">Gofer 进程</text>
+  <text x="84" y="206" text-anchor="middle" class="body">文件系统代理</text>
+  <text x="84" y="222" text-anchor="middle" class="mono">SCM_RIGHTS fd 传递</text>
+
+  <!-- Arrows Sentry ↔ Gofer -->
+  <line x1="160" y1="188" x2="150" y2="188" class="flow"/>
+  <line x1="148" y1="204" x2="160" y2="210" class="flow"/>
+  <text x="118" y="200" text-anchor="middle" class="label">RPC</text>
+
+  <!-- Host boundary -->
+  <rect x="14" y="140" width="692" height="240" class="dash"/>
+  <text x="24" y="156" class="label">宿主机边界</text>
+
+</svg>

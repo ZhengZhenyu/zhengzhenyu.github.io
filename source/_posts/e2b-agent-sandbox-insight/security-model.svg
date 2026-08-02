@@ -1,0 +1,78 @@
+<svg viewBox="0 0 660 340" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="s" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#78716c" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <style>
+    .title   { font-family: system-ui,-apple-system,sans-serif; font-size: 13px; font-weight: 650; fill: #44403c; letter-spacing: .01em; }
+    .layer   { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; rx: 8; }
+    .layer-o { fill: #fffbeb; stroke: #fed7aa; stroke-width: 1.2; rx: 8; }
+    .num-dot { fill: #57534e; }
+    .num-dot-o { fill: #c2410c; }
+    .num-t   { font-family: system-ui,-apple-system,sans-serif; font-size: 10px; font-weight: 700; fill: #fff; }
+    .l-title { font-family: system-ui,-apple-system,sans-serif; font-size: 13px; font-weight: 650; fill: #292524; }
+    .l-desc  { font-family: system-ui,-apple-system,sans-serif; font-size: 10.5px; fill: #57534e; }
+    .arrow   { stroke: #a8a29e; stroke-width: 1; fill: none; }
+    .tag     { font-family: system-ui,-apple-system,sans-serif; font-size: 9px; fill: #a8a29e; }
+
+    @media (prefers-color-scheme: dark) {
+      .title   { fill: #d6d3d1; }
+      .layer   { fill: #1c1917; stroke: #44403c; }
+      .layer-o { fill: #2d1f0c; stroke: #78350f; }
+      .num-dot { fill: #78716c; }
+      .num-dot-o { fill: #f97316; }
+      .l-title { fill: #e7e5e4; }
+      .l-desc  { fill: #a8a29e; }
+      .arrow   { stroke: #78716c; }
+      .tag     { fill: #78716c; }
+    }
+  </style>
+
+  <text x="330" y="22" text-anchor="middle" class="title">E2B 五层纵深防御——攻击面逐层收缩</text>
+
+  <!-- Layer 1: Network -->
+  <rect x="20" y="40" width="620" height="48" class="layer" filter="url(#s)"/>
+  <circle cx="44" cy="64" r="12" class="num-dot"/>
+  <text x="44" y="69" text-anchor="middle" class="num-t">1</text>
+  <text x="66" y="64" class="l-title">网络隔离</text>
+  <text x="66" y="80" class="l-desc">独立 TAP 接口 + /30 子网 · 无公网 IP · 入站/出站策略均可配置</text>
+
+  <line x1="330" y1="88" x2="330" y2="100" class="arrow"/>
+
+  <!-- Layer 2: Minimal devices -->
+  <rect x="48" y="104" width="564" height="48" class="layer" filter="url(#s)"/>
+  <circle cx="72" cy="128" r="12" class="num-dot"/>
+  <text x="72" y="133" text-anchor="middle" class="num-t">2</text>
+  <text x="94" y="128" class="l-title">设备最小化</text>
+  <text x="94" y="144" class="l-desc">Firecracker 仅暴露 5 个 virtio 设备 · 无 GPU / USB / VGA · 无固件层</text>
+
+  <line x1="330" y1="152" x2="330" y2="164" class="arrow"/>
+
+  <!-- Layer 3: seccomp-bpf -->
+  <rect x="76" y="168" width="508" height="48" class="layer" filter="url(#s)"/>
+  <circle cx="100" cy="192" r="12" fill="#b45309"/>
+  <text x="100" y="197" text-anchor="middle" class="num-t">3</text>
+  <text x="122" y="192" class="l-title">seccomp-bpf 系统调用过滤</text>
+  <text x="122" y="208" class="l-desc">Firecracker 每线程独立白名单 · VMM ~30 syscall · vCPU ~10 syscall</text>
+
+  <line x1="330" y1="216" x2="330" y2="228" class="arrow"/>
+
+  <!-- Layer 4: cgroup + memguard -->
+  <rect x="104" y="232" width="452" height="48" class="layer" filter="url(#s)"/>
+  <circle cx="128" cy="256" r="12" fill="#b45309"/>
+  <text x="128" y="261" text-anchor="middle" class="num-t">4</text>
+  <text x="150" y="256" class="l-title">cgroup v2 + memguard</text>
+  <text x="150" y="272" class="l-desc">CPU/内存硬限制 · 密钥内存 mlock + MADV_DONTDUMP 防换出</text>
+
+  <line x1="330" y1="280" x2="330" y2="292" class="arrow"/>
+
+  <!-- Layer 5: Firecracker jailer -->
+  <rect x="132" y="296" width="396" height="36" class="layer-o" filter="url(#s)"/>
+  <circle cx="156" cy="314" r="12" class="num-dot-o"/>
+  <text x="156" y="319" text-anchor="middle" class="num-t">5</text>
+  <text x="178" y="314" class="l-title" fill="#c2410c">Firecracker Jailer · 特权降级</text>
+  <text x="178" y="326" class="tag">chroot · namespace · capabilities 清空 · setuid 非特权用户</text>
+
+</svg>

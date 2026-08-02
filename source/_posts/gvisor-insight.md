@@ -19,6 +19,16 @@ description: 深度拆解 gVisor 用户态内核架构与软件隔离哲学
   <p>gVisor 解决的根本问题是：<strong>如何在不可信的多租户环境中运行任意 Linux 应用，同时避免共享内核的安全风险和独立内核的资源成本。</strong> 它的答案是在应用与内核之间插入一个用 Go 实现的用户态「syscall 代理层」——自身受 seccomp 限制，仅暴露约 55 个经过审查的系统调用给宿主机内核。这是一种软件隔离方案，安全边界小于硬件虚拟化，但灵活性和部署成本远优于后者。</p>
 </div>
 
+<div class="callout callout-amber">
+  <div class="callout-label">核心术语速览（非专业读者可先读此节）</div>
+  <p><strong>syscall（系统调用）</strong>：用户程序请求操作系统内核服务的接口，如读写文件、网络通信等。Linux 内核暴露约 400+ 个系统调用，每个都可能成为攻击入口。</p>
+  <p><strong>seccomp</strong>（secure computing mode）：Linux 内核的安全机制——限制进程能调用哪些系统调用。gVisor 自身进程被 seccomp 限制为仅约 55 个 syscall，远超 Docker 默认的 300+。</p>
+  <p><strong>Sentry</strong>：gVisor 的核心组件，用 Go 实现的用户态 Linux 内核。应用进程的 syscall 被 Sentry 拦截并处理，而非直达宿主机内核。</p>
+  <p><strong>Gofer</strong>：文件系统代理进程。Sentry 不直接访问宿主机文件——它通过 Gofer 间接执行文件操作，Gofer 只做被允许的最小操作集。</p>
+  <p><strong>KVM</strong>：Linux 内核的硬件虚拟化模块。gVisor 可选使用 KVM（Ring 0）模式运行，以获得更好的隔离和性能。注意：与 Firecracker 不同，gVisor 使用 KVM 不是为了虚拟化整个机器，而是为了将 Sentry 和应用进程切换到 Ring 0 执行。</p>
+  <p><strong>Platform（拦截平台）</strong>：Sentry 底层拦截 syscall 的具体实现方式。gVisor 支持 systrap（默认，seccomp + 共享内存）、KVM（硬件辅助）和 ptrace（已废弃）三种。</p>
+</div>
+
 ## 二、为什么需要 gVisor：容器安全的第三条路
 
 ### 2.1 容器的安全困境
@@ -175,6 +185,10 @@ spec:
 ## 四、架构全景
 
 gVisor 的代码库按职责可分为四个核心层：
+
+<div class="growth-chart">
+  <img src="arch-diagram.svg" alt="gVisor 架构全景：应用进程、Sentry、Gofer、Platform 与宿主机内核的交互关系" style="width:100%">
+</div>
 
 <div class="arch-grid">
   <div class="arch-card arch-sentry">
@@ -338,6 +352,10 @@ gVisor 使用 `runsc` 作为 OCI 兼容的容器运行时。当执行 `docker ru
 ### 5.2 systrap：Syscall 拦截的核心引擎
 
 systrap 是 gVisor 在 2023 年中引入的默认 syscall 拦截平台，替代了先前的 ptrace 平台。它解决了 ptrace 的核心瓶颈——每次 syscall 需要两次上下文切换（进入 Sentry、离开 Sentry）。
+
+<div class="growth-chart">
+  <img src="systrap-flow.svg" alt="systrap 系统调用拦截流程：seccomp 拦截 → 共享内存 sysmsg → Sentry 处理 → 结果返回" style="width:100%">
+</div>
 
 systrap 的工作机制可分解为四个步骤：
 
