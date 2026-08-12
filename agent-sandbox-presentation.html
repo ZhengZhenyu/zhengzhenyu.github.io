@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agent 沙箱技术全景</title>
+<title>Agent 沙箱技术初探</title>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth;scroll-snap-type:y mandatory;font-size:16px}
@@ -13,11 +13,11 @@
   .bg0{background:radial-gradient(ellipse at 25% 50%,#162032 0%,#0c1018 50%,#080c14 100%)}
   .bg1{background:radial-gradient(ellipse at 75% 25%,#162032 0%,#0c1018 50%,#080c14 100%)}
   .bg2{background:radial-gradient(ellipse at 50% 80%,#141e30 0%,#0c1018 50%,#080c14 100%)}
-  .bg-dark{background:#0a0e15}
+  .bg-dark{background:radial-gradient(ellipse at 50% 35%,#141c2e 0%,#0a0e15 55%,#070b12 100%)}
   h1{font-size:clamp(2.2rem,4.5vw,3.6rem);font-weight:800;letter-spacing:-0.02em;line-height:1.12;color:#e4e8f0}
   h2{font-size:clamp(1.5rem,2.6vw,2.2rem);font-weight:700;letter-spacing:-0.01em;line-height:1.25;color:#dce0e8}
   .page-num{position:absolute;bottom:28px;right:44px;font-size:0.7rem;color:rgba(110,130,150,.5);letter-spacing:.06em;z-index:2}
-  .accent{color:#d09130}.accent2{color:#6088a8}
+  .accent{color:#d09130}.accent-teal{color:#2eaab0}.accent2{color:#6088a8}
   .dim{color:#7a8a9e}.soft{color:#a2b0c0}.faint{color:#647488}
   .bright{color:#dde2ea}
   .flex-col{display:flex;flex-direction:column}.flex-row{display:flex;gap:clamp(18px,3vh,36px)}
@@ -36,15 +36,20 @@
   .tbl td{padding:9px 14px;border-bottom:1px solid rgba(60,80,100,.18);vertical-align:top}
   .tbl tr:nth-child(even) td{background:rgba(24,34,52,.45)}.tbl .hl{color:#d09130;font-weight:600}
   .tag{font-size:0.7rem;font-weight:600;padding:3px 9px;border-radius:3px;white-space:nowrap;background:rgba(208,145,48,.18);color:#d09130;letter-spacing:.02em}
+  .tag-teal{font-size:0.7rem;font-weight:600;padding:3px 9px;border-radius:3px;white-space:nowrap;background:rgba(46,170,176,.2);color:#2eaab0;letter-spacing:.02em}
   .tag2{font-size:0.7rem;font-weight:600;padding:3px 9px;border-radius:3px;white-space:nowrap;background:rgba(96,136,168,.2);color:#6088a8;letter-spacing:.02em}
   .tag3{font-size:0.7rem;font-weight:600;padding:3px 9px;border-radius:3px;white-space:nowrap;background:rgba(168,85,247,.2);color:#a855f7;letter-spacing:.02em}
   .callout{border-left:2px solid #d09130;padding:10px 16px;background:rgba(208,145,48,.12);border-radius:0 8px 8px 0;font-size:0.9rem;border-top:1px solid rgba(208,145,48,.2);border-right:1px solid rgba(208,145,48,.2);border-bottom:1px solid rgba(208,145,48,.2)}
+  .callout-teal{border-left:2px solid #2eaab0;padding:10px 16px;background:rgba(46,170,176,.12);border-radius:0 8px 8px 0;font-size:0.9rem;border-top:1px solid rgba(46,170,176,.2);border-right:1px solid rgba(46,170,176,.2);border-bottom:1px solid rgba(46,170,176,.2)}
   .callout2{border-left:2px solid #a855f7;padding:10px 16px;background:rgba(168,85,247,.2);border-radius:0 8px 8px 0;font-size:0.9rem;border-top:1px solid rgba(168,85,247,.2);border-right:1px solid rgba(168,85,247,.2);border-bottom:1px solid rgba(168,85,247,.2)}
   .big-stat{font-size:clamp(2.2rem,4.5vw,3.2rem);font-weight:800;letter-spacing:-0.02em;line-height:1.15}
   .term{color:#6088a8;cursor:help;border-bottom:1px dotted rgba(96,136,168,.3)}
   .nav-dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:1000}
   .nav-dot{width:6px;height:6px;border-radius:50%;background:rgba(130,150,170,.55);cursor:pointer;transition:all .3s}
   .nav-dot.active{background:#d09130;transform:scale(1.8)}
+  .scatter{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px 20px;padding:10px 6px}
+  .chip{display:inline-block;padding:10px 18px;border-radius:9px;border:1px solid rgba(96,136,168,.38);background:rgba(96,136,168,.08);color:#a8c7ea;font-weight:600;white-space:nowrap;line-height:1.3;box-shadow:0 2px 10px rgba(0,0,0,.22)}
+  .source-ref{font-size:0.7rem;color:#5e6e82;font-style:italic}
   @media(max-width:900px){.flex-row{flex-direction:column}.slide{padding:28px 18px}h1{font-size:1.8rem}h2{font-size:1.3rem}}
   @media print{
     @page{size:landscape;margin:0}
@@ -63,8 +68,8 @@
 <section class="slide bg0"><div class="slide-inner">
 <div class="flex-col gap-lg" style="max-width:900px;">
   <div class="flex-col gap-sm">
-    <div class="accent" style="font-size:0.7rem;font-weight:700;letter-spacing:.15em;">内部技术分享 · 2026.07</div>
-    <h1>Agent 沙箱<br>技术全景</h1>
+    <div class="accent" style="font-size:0.7rem;font-weight:700;letter-spacing:.15em;">内部技术分享 · 2026.08</div>
+    <h1>Agent 沙箱<br>技术初探</h1>
     <div class="soft" style="font-size:1.1rem;margin-top:6px;">从硬件虚拟化到用户态内核，从执行沙箱到策略治理——<br>聊聊这几个项目各自解决了什么问题，以及它们之间的关系。</div>
   </div>
   <div class="flex-row gap-md">
@@ -72,19 +77,53 @@
     <div class="stat-item"><div class="stat-val">4</div><div class="stat-lbl">层技术栈</div></div>
     <div class="stat-item"><div class="stat-val">2</div><div class="stat-lbl">类应用场景</div></div>
   </div>
+  <div style="margin-top:10px;padding-top:14px;border-top:1px solid rgba(90,110,140,.15);">
+    <span style="font-size:0.85rem;font-weight:600;color:#cacfd8;">Zhenyu Zheng</span>
+    <span class="faint" style="font-size:0.72rem;margin-left:10px;">zhengzhenyu.github.io</span>
+  </div>
 </div>
-</div><span class="page-num">1 / 27</span></section>
+</div><span class="page-num">1 / 31</span></section>
+<section class="slide bg1"><div class="slide-inner">
+<div class="flex-col gap-lg">
+  <div class="big-stat" style="text-align:center;">为什么想聊这个话题</div>
+  <div class="scatter">
+    <span class="chip" style="font-size:16px;transform:rotate(-2deg);margin-top:4px;">Firecracker</span>
+    <span class="chip" style="font-size:16px;transform:rotate(1deg);margin-top:0;">gVisor</span>
+    <span class="chip" style="font-size:16px;transform:rotate(-3deg);margin-top:8px;">E2B</span>
+    <span class="chip" style="font-size:16px;transform:rotate(2deg);margin-top:2px;">OpenShell</span>
+    <span class="chip" style="font-size:14px;transform:rotate(2deg);margin-top:10px;">Docker / runc</span>
+    <span class="chip" style="font-size:14px;transform:rotate(-1deg);margin-top:6px;">QEMU</span>
+    <span class="chip" style="font-size:13px;transform:rotate(1deg);margin-top:12px;">KVM</span>
+    <span class="chip" style="font-size:14px;transform:rotate(-2deg);margin-top:0;">Kata Containers</span>
+    <span class="chip" style="font-size:14px;transform:rotate(3deg);margin-top:8px;">Cloud Hypervisor</span>
+    <span class="chip" style="font-size:14px;transform:rotate(-2deg);margin-top:12px;">AWS Lambda</span>
+    <span class="chip" style="font-size:13px;transform:rotate(1deg);margin-top:2px;">Fly Machines</span>
+    <span class="chip" style="font-size:14px;transform:rotate(-1deg);margin-top:8px;">WASM / Wasmtime</span>
+    <span class="chip" style="font-size:13px;transform:rotate(2deg);margin-top:14px;">Wasmer</span>
+    <span class="chip" style="font-size:13px;transform:rotate(-3deg);margin-top:2px;">bubblewrap</span>
+    <span class="chip" style="font-size:13px;transform:rotate(1deg);margin-top:10px;">Firejail</span>
+    <span class="chip" style="font-size:14px;transform:rotate(-1deg);margin-top:4px;">Podman</span>
+    <span class="chip" style="font-size:13px;transform:rotate(2deg);margin-top:12px;">LXC / LXD</span>
+    <span class="chip" style="font-size:14px;transform:rotate(-2deg);margin-top:0;">Daytona</span>
+    <span class="chip" style="font-size:14px;transform:rotate(1deg);margin-top:6px;">CodeSandbox</span>
+    <span class="chip" style="font-size:14px;transform:rotate(-3deg);margin-top:12px;">Vercel Sandbox</span>
+    <span class="chip" style="font-size:13px;transform:rotate(2deg);margin-top:4px;">Modal</span>
+    <span class="chip" style="font-size:13px;transform:rotate(-1deg);margin-top:10px;">Replit</span>
+    <span class="chip" style="font-size:13px;transform:rotate(1deg);margin-top:0;">RunPod</span>
+  </div>
+</div>
+</div><span class="page-num">2 / 31</span></section>
 <section class="slide bg-dark"><div class="slide-inner">
 <div class="big-stat mb-md" style="max-width:1150px;">问题很简单：<br>模型生成的代码，<br><span class="accent">在哪跑？</span></div>
 <div class="flex-row gap-lg" style="max-width:1150px;">
   <div class="flex-1 prose">AI Agent 不再只是生成文本——它生成代码然后执行。用户说「帮我分析这份数据」，模型吐出一段 Python，这段代码总得有个地方跑。直觉上可以在用户本地、或者扔进 Docker 容器——但两个方案都有严重的安全隐患。</div>
   <div class="flex-1 flex-col gap-sm">
-    <div class="callout"><strong>本地执行？</strong> Agent 生成的 curl | bash 直接跑——本机文件、密钥、网络全暴露。已发现多个 Claude Code 相关的安全漏洞（含 CVE 编号）。Anthropic 内部红队测试：无沙箱时，Claude 在 25 次钓鱼攻击中成功泄露凭据 24 次。</div>
+    <div class="callout"><strong>本地执行？</strong> Agent 生成的 curl | bash 直接跑——本机文件、密钥、网络全暴露。已发现多个 Claude Code 相关的安全漏洞（含 CVE 编号）。Anthropic 内部红队测试：无沙箱时，Claude 在 25 次钓鱼攻击中成功泄露凭据 24 次。<span class="source-ref">（来源：Anthropic 2025 安全公开报告）</span></div>
     <div class="callout"><strong>Docker？</strong> 设计目标是长运行服务。默认 seccomp（内核级系统调用过滤器）放行 300+ 系统调用。共享内核——一个提权漏洞就能从容器逃逸到宿主机。</div>
     <div class="callout"><strong>Serverless 函数？</strong> 隔离到位，但传统 FaaS 按单次函数调用设计，缺乏完整 Linux 环境的持久性和交互性。</div>
   </div>
 </div>
-</div><span class="page-num">2 / 27</span></section>
+</div><span class="page-num">3 / 31</span></section>
 <section class="slide bg1"><div class="slide-inner">
 <div class="flex-col gap-md" style="max-width:1150px;">
   <h2>先搞清楚：沙箱到底是什么？</h2>
@@ -103,7 +142,7 @@
     </div>
   </div>
 </div>
-</div><span class="page-num">3 / 27</span></section>
+</div><span class="page-num">4 / 31</span></section>
 <section class="slide bg2"><div class="slide-inner">
 <div class="flex-col gap-lg" style="max-width:1250px;">
   <h2>原来那套不够用——三个对不上的地方</h2>
@@ -116,7 +155,7 @@
     <div class="flex-1 flex-col gap-sm">
       <div style="font-size:1.2rem;font-weight:700;">安全假设</div>
       <div class="prose-sm">CI/CD 代码来自审查过的 Git 仓库，有作者有 PR 有测试。Agent 代码来自概率模型——同一条 prompt，上下文不同，输出可能完全不同。没法对每次输出做安全审查。</div>
-      <div class="callout mt-sm">Linux 内核作为 CVE Numbering Authority 每年处理数千个漏洞报告。共享内核模型下，一个提权漏洞就能从容器逃逸到宿主机。（数据来源：linuxkernelcves.com，高危及以上级别）</div>
+      <div class="callout mt-sm">Linux 内核作为 CVE Numbering Authority 每年处理数千个漏洞报告。共享内核模型下，一个提权漏洞就能从容器逃逸到宿主机。<span class="source-ref">（数据来源：linuxkernelcves.com，高危及以上级别）</span></div>
     </div>
     <div class="flex-1 flex-col gap-sm">
       <div style="font-size:1.2rem;font-weight:700;">多租户粒度</div>
@@ -124,8 +163,12 @@
       <div class="flex-row gap-md mt-sm"><div><span class="dim" style="font-size:0.7rem;">K8s namespace</span><br><span style="font-size:1.2rem;font-weight:700;">~10K</span></div><div><span class="accent" style="font-size:0.7rem;">Agent 用户</span><br><span class="accent" style="font-size:1.2rem;font-weight:700;">可达百万</span></div></div>
     </div>
   </div>
+  <div style="margin-top:8px;padding:12px 18px;background:rgba(46,170,176,.06);border:1px solid rgba(46,170,176,.15);border-radius:8px;">
+    <span style="color:#2eaab0;font-weight:700;font-size:0.9rem;">▸ 这些问题催生了一种新的分层思路——</span>
+    <span class="prose-sm">把「隔离怎么实现」「代码在哪跑」「能做什么操作」「谁生成代码」拆成四个独立层，每层专注解决一个问题。下面展开讲。</span>
+  </div>
 </div>
-</div><span class="page-num">4 / 27</span></section>
+</div><span class="page-num">5 / 31</span></section>
 <section class="slide bg0"><div class="slide-inner">
 <div class="flex-row gap-lg" style="max-width:1360px;">
   <div class="flex-1 flex-col gap-md">
@@ -134,12 +177,12 @@
     <div class="flex-col gap-sm">
       <div style="padding:8px 12px;border-left:3px solid #8795a8;"><span style="font-weight:700;">① Agent 层</span><br><span class="prose-sm">生成代码。不负责安全执行。</span></div>
       <div style="padding:8px 12px;border-left:3px solid #a855f7;background:rgba(168,85,247,.03);"><span style="font-weight:700;">② 治理运行时</span><br><span class="prose-sm">包裹在执行层外面。回答「能做什么」——逐操作策略裁决（Supervisor 跑在沙箱内部）、凭据路由。</span></div>
-      <div style="padding:8px 12px;border-left:3px solid #d09130;background:rgba(208,145,48,.04);"><span style="font-weight:700;">③ 执行沙箱</span><br><span class="prose-sm">回答「跑在哪」——隔离供给、快照、SDK。治理层的 Supervisor 就运行在这个沙箱里。</span></div>
-      <div style="padding:8px 12px;border-left:3px solid #5e6e82;"><span style="font-weight:700;">④ 隔离层</span><br><span class="prose-sm">隔离的具体实现——硬件虚拟化（KVM）还是用户态内核（gVisor）。</span></div>
+      <div style="padding:8px 12px;border-left:3px solid #2eaab0;background:rgba(46,170,176,.04);"><span style="font-weight:700;">③ 执行沙箱</span><br><span class="prose-sm">回答「跑在哪」——隔离供给、快照、SDK。治理层的 Supervisor 就运行在这个沙箱里。</span></div>
+      <div style="padding:8px 12px;border-left:3px solid #6088a8;"><span style="font-weight:700;">④ 隔离层</span><br><span class="prose-sm">隔离的具体实现——硬件虚拟化（KVM）还是用户态内核（gVisor）。</span></div>
     </div>
   </div>
   <div class="flex-1">
-    <svg viewBox="0 0 560 480" width="100%" height="auto" style="max-height:460px">
+    <svg viewBox="0 0 560 460" width="100%" height="auto" style="max-height:460px">
       <text x="15" y="22" fill="#96a4b6" font-size="14" font-weight="700">四层之间的关系</text>
       <rect x="15" y="38" width="530" height="60" rx="8" fill="rgba(24,32,46,.85)" stroke="rgba(85,100,120,.35)"/>
       <text x="35" y="64" fill="#96a4b6" font-size="14" font-weight="700">Agent 层</text>
@@ -148,13 +191,14 @@
       <line x1="280" y1="100" x2="280" y2="118" stroke="rgba(168,85,247,.3)" stroke-width="1.5"/><polygon points="276,114 280,122 284,114" fill="rgba(168,85,247,.3)"/>
       <text x="295" y="116" fill="#a855f7" font-size="11">包裹</text>
       <rect x="15" y="126" width="530" height="60" rx="8" fill="rgba(168,85,247,.04)" stroke="rgba(168,85,247,.2)"/>
-      <text x="35" y="152" fill="#a855f7" font-size="14" font-weight="700">治理层 · Supervisor 跑在沙箱内（用户态）· MCPGuard 跑在宿主机内核（eBPF）</text>
-      <text x="35" y="172" fill="#aeb8c4" font-size="12">裁决每次操作——允许？拒绝？需要用户确认？</text>
-      <text x="280" y="152" fill="#6e7e92" font-size="12">OpenShell · MCPGuard</text>
-      <line x1="280" y1="188" x2="280" y2="206" stroke="rgba(208,145,48,.3)" stroke-width="1.5"/><polygon points="276,202 280,210 284,202" fill="rgba(208,145,48,.3)"/>
-      <text x="295" y="204" fill="#d09130" font-size="11">依赖</text>
-      <rect x="15" y="214" width="530" height="60" rx="8" fill="rgba(208,145,48,.05)" stroke="rgba(208,145,48,.25)"/>
-      <text x="35" y="240" fill="#d09130" font-size="14" font-weight="700">执行层</text>
+      <text x="35" y="152" fill="#a855f7" font-size="14" font-weight="700">治理层</text>
+      <text x="120" y="152" fill="#a855f7" font-size="12">逐操作裁决 · 允许/拒绝/确认</text>
+      <text x="330" y="152" fill="#6e7e92" font-size="12">OpenShell · MCPGuard</text>
+      <text x="35" y="172" fill="#aeb8c4" font-size="12">Supervisor 跑在沙箱内（用户态）· MCPGuard 跑在宿主机内核（eBPF）</text>
+      <line x1="280" y1="188" x2="280" y2="206" stroke="rgba(46,170,176,.3)" stroke-width="1.5"/><polygon points="276,202 280,210 284,202" fill="rgba(46,170,176,.3)"/>
+      <text x="295" y="204" fill="#2eaab0" font-size="11">依赖</text>
+      <rect x="15" y="214" width="530" height="60" rx="8" fill="rgba(46,170,176,.05)" stroke="rgba(46,170,176,.25)"/>
+      <text x="35" y="240" fill="#2eaab0" font-size="14" font-weight="700">执行层</text>
       <text x="35" y="260" fill="#aeb8c4" font-size="12">提供隔离环境——创建沙箱、执行代码、返回结果</text>
       <text x="280" y="240" fill="#6e7e92" font-size="12">E2B · Daytona</text>
       <line x1="280" y1="276" x2="280" y2="294" stroke="rgba(96,136,168,.3)" stroke-width="1.5"/>
@@ -163,14 +207,10 @@
       <text x="35" y="328" fill="#96a4b6" font-size="14" font-weight="700">隔离层</text>
       <text x="35" y="348" fill="#aeb8c4" font-size="12">具体怎么隔离——硬件虚拟化（KVM MicroVM）、用户态内核、还是容器</text>
       <text x="280" y="328" fill="#6e7e92" font-size="12">Firecracker · gVisor · KVM</text>
-      <rect x="15" y="382" width="530" height="88" rx="8" fill="rgba(24,32,46,.65)" stroke="rgba(85,100,120,.3)"/>
-      <text x="35" y="408" fill="#cacfd8" font-size="13" font-weight="600">各项目在四层中的位置</text>
-      <text x="35" y="432" fill="#aeb8c4" font-size="12">Firecracker → 隔离层（硬件虚拟化 · 需要 KVM）| gVisor → 隔离层（用户态内核 · 不需要 KVM）</text>
-      <text x="35" y="454" fill="#aeb8c4" font-size="12">E2B → 执行层+隔离层（Firecracker 之上平台化）| OpenShell → 治理层</text>
     </svg>
   </div>
 </div>
-</div><span class="page-num">5 / 27</span></section>
+</div><span class="page-num">6 / 31</span></section>
 <section class="slide bg1"><div class="slide-inner">
 <div class="flex-row gap-lg" style="max-width:1360px;align-items:flex-start;">
   <div class="flex-1 flex-col gap-md">
@@ -185,9 +225,9 @@
       <rect x="15" y="38" width="490" height="52" rx="8" fill="rgba(24,32,46,.85)" stroke="rgba(135,149,168,.12)"/>
       <text x="30" y="60" fill="#96a4b6" font-size="13" font-weight="600">Agent 层：模型生成代码</text>
       <text x="30" y="78" fill="#aeb8c4" font-size="11"><tspan font-family="monospace" fill="#d09130">import pandas; df.to_csv('result.csv')</tspan></text>
-      <polygon points="260,92 268,100 252,100" fill="rgba(208,145,48,.3)"/>
-      <rect x="15" y="108" width="490" height="52" rx="8" fill="rgba(208,145,48,.05)" stroke="rgba(208,145,48,.22)"/>
-      <text x="30" y="130" fill="#d09130" font-size="13" font-weight="600">执行层：E2B 创建沙箱</text>
+      <polygon points="260,92 268,100 252,100" fill="rgba(46,170,176,.3)"/>
+      <rect x="15" y="108" width="490" height="52" rx="8" fill="rgba(46,170,176,.05)" stroke="rgba(46,170,176,.22)"/>
+      <text x="30" y="130" fill="#2eaab0" font-size="13" font-weight="600">执行层：E2B 创建沙箱</text>
       <text x="30" y="148" fill="#aeb8c4" font-size="11">启动 Firecracker microVM，装好 pandas，挂载工作目录，注入 OpenShell Supervisor</text>
       <polygon points="260,162 268,170 252,170" fill="rgba(168,85,247,.3)"/>
       <rect x="15" y="178" width="490" height="52" rx="8" fill="rgba(168,85,247,.04)" stroke="rgba(168,85,247,.18)"/>
@@ -197,17 +237,18 @@
       <rect x="15" y="248" width="490" height="52" rx="8" fill="rgba(24,32,46,.85)" stroke="rgba(135,149,168,.12)"/>
       <text x="30" y="270" fill="#96a4b6" font-size="13" font-weight="600">隔离层：Firecracker 硬件边界</text>
       <text x="30" y="288" fill="#aeb8c4" font-size="11">KVM 独立内核——沙箱里 root 也碰不到宿主机内存。CPU 硬件保证。</text>
-      <rect x="15" y="320" width="490" height="50" rx="8" fill="rgba(208,145,48,.04)" stroke="rgba(208,145,48,.15)"/>
-      <text x="30" y="342" fill="#d09130" font-size="12" font-weight="600">如果合并会怎样？</text>
-      <text x="30" y="360" fill="#aeb8c4" font-size="11">Firecracker 做策略裁决 → 每次改规则得重建 VM（太慢）| gVisor 管生命周期 → Sentry 膨胀到不可维护</text>
+      <rect x="15" y="314" width="490" height="58" rx="8" fill="rgba(46,170,176,.04)" stroke="rgba(46,170,176,.15)"/>
+      <text x="30" y="336" fill="#2eaab0" font-size="12" font-weight="600">如果合并会怎样？</text>
+      <text x="30" y="354" fill="#aeb8c4" font-size="11">FC 做策略裁决 → 每次改规则得重建 VM</text>
+      <text x="30" y="368" fill="#aeb8c4" font-size="11">gVisor 管生命周期 → Sentry 膨胀到不可维护</text>
     </svg>
   </div>
   <div class="flex-1 flex-col gap-md" style="justify-content:center;">
-    <div class="callout"><strong>类比一下网络协议栈就清楚了。</strong><br>物理层（光纤）→ 链路层（Ethernet）→ 网络层（IP）→ 传输层（TCP）→ 应用层（HTTP）。没人会把 TCP 和 HTTP 合并——因为它们解决不同的问题。Agent 沙箱同理（类比，非精确对应）：隔离层类似物理传输层——只负责安全边界；执行层类似路由层——调度和供给；治理层类似流控层——权限和审计。分层让每层独立演进，互不干扰。</div>
+    <div class="callout"><strong>类比网络协议栈：</strong><br>物理层→链路层→网络层→传输层→应用层，没人会合并 TCP 和 HTTP。Agent 沙箱同理：隔离层=安全边界，执行层=调度供给，治理层=权限审计。分层让每层独立演进。</div>
     <div class="prose-sm" style="margin-top:8px;">业界的实际情况也印证了这个分层——执行沙箱（E2B/Daytona）和治理运行时（OpenShell/MCPGuard）已经被当成两个独立品类在发展了。它们不是竞品，是上下游。</div>
   </div>
 </div>
-</div><span class="page-num">6 / 27</span></section>
+</div><span class="page-num">7 / 31</span></section>
 <section class="slide bg2"><div class="slide-inner">
 <div class="flex-col gap-md" style="max-width:1360px;">
   <h2>一张图看清这些项目之间的关系</h2>
@@ -225,32 +266,66 @@
     <text x="580" y="130" text-anchor="middle" fill="#a855f7" font-size="13" font-weight="600">MCPGuard (Meta)</text>
     <text x="580" y="148" text-anchor="middle" fill="#aeb8c4" font-size="10">eBPF 内核级拦截(非 Supervisor 模式)</text>
     <text x="600" y="182" text-anchor="middle" fill="#647488" font-size="14">↓ 策略通过后，调度沙箱执行 ↓</text>
-    <rect x="20" y="196" width="1160" height="80" rx="8" fill="rgba(208,145,48,.05)" stroke="rgba(208,145,48,.25)"/>
-    <text x="42" y="222" fill="#d09130" font-size="14" font-weight="700">执行沙箱</text>
-    <rect x="42" y="232" width="260" height="36" rx="7" fill="rgba(208,145,48,.08)" stroke="rgba(208,145,48,.18)"/>
-    <text x="172" y="255" text-anchor="middle" fill="#d09130" font-size="13" font-weight="600">E2B · Firecracker 之上平台化</text>
-    <rect x="320" y="232" width="260" height="36" rx="7" fill="rgba(208,145,48,.03)" stroke="rgba(208,145,48,.1)"/>
+    <rect x="20" y="196" width="1160" height="80" rx="8" fill="rgba(46,170,176,.05)" stroke="rgba(46,170,176,.25)"/>
+    <text x="42" y="222" fill="#2eaab0" font-size="14" font-weight="700">执行沙箱</text>
+    <rect x="42" y="232" width="260" height="36" rx="7" fill="rgba(46,170,176,.08)" stroke="rgba(46,170,176,.18)"/>
+    <text x="172" y="255" text-anchor="middle" fill="#2eaab0" font-size="13" font-weight="600">E2B · Firecracker 之上平台化</text>
+    <rect x="320" y="232" width="260" height="36" rx="7" fill="rgba(46,170,176,.03)" stroke="rgba(46,170,176,.1)"/>
     <text x="450" y="255" text-anchor="middle" fill="#aeb8c4" font-size="12">Daytona · Docker 之上平台化</text>
-    <rect x="598" y="232" width="260" height="36" rx="7" fill="rgba(208,145,48,.03)" stroke="rgba(208,145,48,.1)"/>
+    <rect x="598" y="232" width="260" height="36" rx="7" fill="rgba(46,170,176,.03)" stroke="rgba(46,170,176,.1)"/>
     <text x="728" y="255" text-anchor="middle" fill="#aeb8c4" font-size="12">CodeSandbox · 闭源，被收购</text>
     <text x="600" y="294" text-anchor="middle" fill="#647488" font-size="14">↓ 依赖底层隔离实现 ↓</text>
-    <rect x="20" y="308" width="1160" height="80" rx="8" fill="rgba(24,32,46,.85)" stroke="rgba(85,100,120,.32)"/>
+    <rect x="20" y="308" width="1160" height="78" rx="8" fill="rgba(24,32,46,.85)" stroke="rgba(85,100,120,.32)"/>
     <text x="42" y="334" fill="#96a4b6" font-size="14" font-weight="700">隔离层</text>
-    <rect x="42" y="344" width="270" height="36" rx="7" fill="rgba(208,145,48,.04)" stroke="rgba(208,145,48,.15)"/>
-    <text x="177" y="367" text-anchor="middle" fill="#d09130" font-size="13" font-weight="600">gVisor · 用户态内核 · 无需KVM</text>
-    <rect x="325" y="344" width="270" height="36" rx="7" fill="rgba(96,136,168,.06)" stroke="rgba(96,136,168,.15)"/>
-    <text x="460" y="367" text-anchor="middle" fill="#6088a8" font-size="13" font-weight="600">Firecracker · MicroVM · 需KVM</text>
-    <rect x="608" y="344" width="270" height="36" rx="7" fill="rgba(24,32,46,.65)" stroke="rgba(85,100,120,.3)"/>
-    <text x="743" y="367" text-anchor="middle" fill="#96a4b6" font-size="12">Kata Containers · K8s RuntimeClass</text>
-    <rect x="900" y="344" width="270" height="36" rx="7" fill="rgba(24,32,46,.65)" stroke="rgba(85,100,120,.3)"/>
-    <text x="1035" y="367" text-anchor="middle" fill="#96a4b6" font-size="12">WASM · 轻量工具调用</text>
-    <text x="300" y="414" text-anchor="middle" fill="#a855f7" font-size="11">OpenShell Supervisor 跑在沙箱内（用户态）· MCPGuard 跑在宿主机内核（eBPF）——两种治理实现方式</text>
+    <rect x="42" y="344" width="270" height="34" rx="7" fill="rgba(208,145,48,.04)" stroke="rgba(208,145,48,.15)"/>
+    <text x="177" y="365" text-anchor="middle" fill="#d09130" font-size="13" font-weight="600">gVisor · 用户态内核</text>
+    <rect x="325" y="344" width="270" height="34" rx="7" fill="rgba(96,136,168,.06)" stroke="rgba(96,136,168,.15)"/>
+    <text x="460" y="365" text-anchor="middle" fill="#6088a8" font-size="13" font-weight="600">Firecracker · MicroVM</text>
+    <rect x="608" y="344" width="270" height="34" rx="7" fill="rgba(24,32,46,.65)" stroke="rgba(85,100,120,.3)"/>
+    <text x="743" y="365" text-anchor="middle" fill="#96a4b6" font-size="12">Kata · K8s RuntimeClass</text>
+    <rect x="900" y="344" width="270" height="34" rx="7" fill="rgba(24,32,46,.65)" stroke="rgba(85,100,120,.3)"/>
+    <text x="1035" y="365" text-anchor="middle" fill="#96a4b6" font-size="12">WASM · 轻量工具调用</text>
+    <text x="300" y="396" text-anchor="middle" fill="#a855f7" font-size="11">OpenShell Supervisor 跑在沙箱内（用户态）· MCPGuard 跑在宿主机内核（eBPF）——两种治理实现方式</text>
   </svg>
 </div>
-</div><span class="page-num">7 / 27</span></section>
+</div><span class="page-num">8 / 31</span></section>
+<section class="slide bg1"><div class="slide-inner">
+<div class="flex-col gap-md" style="max-width:1360px;">
+  <h2>为什么聚焦这四个项目？</h2>
+  <div class="flex-row gap-md" style="margin-bottom:6px;align-items:stretch;">
+    <div class="flex-1 flex-col gap-sm" style="background:rgba(22,30,46,.92);border:1px solid rgba(90,110,140,.25);border-radius:12px;padding:18px;border-top:3px solid #6088a8;">
+      <div style="font-size:1.1rem;font-weight:700;color:#6088a8;margin-bottom:2px;">Firecracker</div>
+      <div class="prose-sm" style="font-size:0.82rem;">AWS Lambda + Fargate 的隔离引擎——<strong>万亿次/月函数调用</strong>背后的基础设施。35.8K stars，NSDI '20 论文。E2B、Fly.io 在其上构建平台。</div>
+      <div class="flex-row gap-md" style="margin-top:6px;"><div><span style="font-size:1.4rem;font-weight:800;color:#6088a8;">万亿</span><br><span class="faint" style="font-size:0.65rem;">月调用(AWS)</span></div><div><span style="font-size:1.4rem;font-weight:800;color:#6088a8;">150</span><br><span class="faint" style="font-size:0.65rem;">微VM/秒/主机</span></div><div><span style="font-size:1.4rem;font-weight:800;color:#6088a8;">&lt;125ms</span><br><span class="faint" style="font-size:0.65rem;">冷启动</span></div></div>
+    </div>
+    <div class="flex-1 flex-col gap-sm" style="background:rgba(22,30,46,.92);border:1px solid rgba(90,110,140,.25);border-radius:12px;padding:18px;border-top:3px solid #d09130;">
+      <div style="font-size:1.1rem;font-weight:700;color:#d09130;margin-bottom:2px;">gVisor</div>
+      <div class="prose-sm" style="font-size:0.82rem;"><strong>OpenAI ChatGPT Code Interpreter</strong> 在跑它。<strong>Anthropic Claude.ai</strong> 在跑它。<strong>腾讯 Agentic-RL</strong> 每日数百万沙箱。18.8K stars。</div>
+      <div class="flex-row gap-md" style="margin-top:6px;"><div><span style="font-size:1.4rem;font-weight:800;color:#d09130;">数百万</span><br><span class="faint" style="font-size:0.65rem;">日沙箱(腾讯)</span></div><div><span style="font-size:1.4rem;font-weight:800;color:#d09130;">~55</span><br><span class="faint" style="font-size:0.65rem;">宿主机syscall</span></div><div><span style="font-size:1.4rem;font-weight:800;color:#d09130;">~50ms</span><br><span class="faint" style="font-size:0.65rem;">冷启动</span></div></div>
+    </div>
+    <div class="flex-1 flex-col gap-sm" style="background:rgba(22,30,46,.92);border:1px solid rgba(90,110,140,.25);border-radius:12px;padding:18px;border-top:3px solid #2eaab0;">
+      <div style="font-size:1.1rem;font-weight:700;color:#2eaab0;margin-bottom:2px;">E2B</div>
+      <div class="prose-sm" style="font-size:0.82rem;"><strong>88% 财富 100</strong> 已注册，50+ 财富 500 活跃使用。<strong>2 亿+ 沙箱会话</strong>，$32M 融资（Insight Partners 领投）。</div>
+      <div class="flex-row gap-md" style="margin-top:6px;"><div><span style="font-size:1.4rem;font-weight:800;color:#2eaab0;">88%</span><br><span class="faint" style="font-size:0.65rem;">财富100覆盖</span></div><div><span style="font-size:1.4rem;font-weight:800;color:#2eaab0;">2亿+</span><br><span class="faint" style="font-size:0.65rem;">累计沙箱</span></div><div><span style="font-size:1.4rem;font-weight:800;color:#2eaab0;">$32M</span><br><span class="faint" style="font-size:0.65rem;">融资</span></div></div>
+    </div>
+    <div class="flex-1 flex-col gap-sm" style="background:rgba(22,30,46,.92);border:1px solid rgba(90,110,140,.25);border-radius:12px;padding:18px;border-top:3px solid #a855f7;">
+      <div style="font-size:1.1rem;font-weight:700;color:#a855f7;margin-bottom:2px;">OpenShell</div>
+      <div class="prose-sm" style="font-size:0.82rem;">GTC 2026 发布，<strong>5 个月 7.7K stars</strong>。17 家企业合作伙伴（Adobe、Atlassian、SAP、Cisco）。增长最快。</div>
+      <div class="flex-row gap-md" style="margin-top:6px;"><div><span style="font-size:1.4rem;font-weight:800;color:#a855f7;">7.7K</span><br><span class="faint" style="font-size:0.65rem;">stars/5个月</span></div><div><span style="font-size:1.4rem;font-weight:800;color:#a855f7;">17</span><br><span class="faint" style="font-size:0.65rem;">企业合作伙伴</span></div><div><span style="font-size:1.4rem;font-weight:800;color:#a855f7;">~77/天</span><br><span class="faint" style="font-size:0.65rem;">star增速</span></div></div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:18px;background:rgba(22,30,46,.92);border:1px solid rgba(90,110,140,.25);border-radius:10px;padding:14px 20px;">
+    <div style="display:flex;align-items:baseline;gap:6px;"><span style="font-size:1.8rem;font-weight:800;color:#2eaab0;">$150-200M</span><span style="font-size:0.7rem;color:#6e7e92;">2026 市场规模</span></div>
+    <div style="width:1px;height:28px;background:rgba(90,110,140,.2);"></div>
+    <div style="display:flex;align-items:baseline;gap:6px;"><span style="font-size:1.8rem;font-weight:800;color:#2eaab0;">~60%</span><span style="font-size:0.7rem;color:#6e7e92;">年增长率</span></div>
+    <div style="width:1px;height:28px;background:rgba(90,110,140,.2);"></div>
+    <div class="prose-sm" style="flex:1;">这四个项目构成完整技术栈——从基础设施层到安全策略层的完整光谱。<span class="source-ref">（市场数据来源：行业分析综合，2026.07）</span></div>
+  </div>
+</div>
+</div><span class="page-num">9 / 31</span></section>
 <section class="slide bg0"><div class="slide-inner">
 <div class="flex-col gap-md" style="max-width:1360px;">
-  <h2>隔离不是一个开关，是一条光谱</h2>
+  <h2>隔离不是非黑即白，是一个光谱</h2>
   <div class="flex-row gap-md" style="margin-top:8px;">
     <!-- Docker -->
     <div class="flex-1 flex-col gap-sm" style="background:rgba(22,30,46,.92);border:1px solid rgba(90,110,140,.25);border-radius:12px;padding:20px 18px;border-top:3px solid #34d399;">
@@ -310,7 +385,7 @@
     </div>
   </div>
 </div>
-</div><span class="page-num">8 / 27</span></section>
+</div><span class="page-num">10 / 31</span></section>
 <section class="slide bg1"><div class="slide-inner">
 <div class="flex-row gap-lg" style="max-width:1250px;align-items:center;">
   <div class="flex-1">
@@ -335,8 +410,50 @@
     </div>
   </div>
 </div>
-</div><span class="page-num">9 / 27</span></section>
+</div><span class="page-num">11 / 31</span></section>
 <section class="slide bg-dark"><div class="slide-inner">
+<div class="flex-col gap-md" style="max-width:1250px;">
+  <h2>训练场景——RL 为什么要求更高</h2>
+  <div class="prose-sm mb-sm dim">有了前面的技术地基，现在看具体场景怎么选。先看最苛刻的 RL 训练——它对沙箱的要求比推理高一个数量级。</div>
+  <div class="flex-row gap-lg">
+    <div class="flex-1 flex-col gap-sm">
+      <div class="prose">RL Agent 的探索性行为<strong>必然包含危险操作</strong>——这不是 bug，是机制。策略为了最大化 reward 会尝试一切路径。训练场景对沙箱的要求比推理高一个数量级。</div>
+      <div class="callout mt-sm"><strong>真实案例：腾讯 × MiniMax（2026.03）</strong><br>腾讯云 Agent Runtime 沙箱支撑 MiniMax 的 RL 框架 Forge，每日运行<strong>百万级沙箱</strong>（CubeSandbox, RustVMM+KVM 自研）。58 秒内启动 3 万个 4C8G 沙箱实例，单镜像每分钟创建 60 万沙箱。冷启动 80ms 级（快照恢复），P99 延迟 &lt;1s。原生兼容 E2B 协议。<span class="source-ref">（来源：腾讯云公开技术博客，2026.03）</span></div>
+    </div>
+    <div class="flex-1 flex-col gap-sm">
+      <div class="callout"><strong>真实案例：OpenAI RL 基础设施演进</strong><br>OpenAI 在 2026 年公开分享了其 RL 训练沙箱的演进路径：fork-exec → Linux 容器 → <strong>gVisor</strong> → <strong>硬件虚拟化 MicroVM</strong>（Cloud Hypervisor / CrosVM）。使用增量块级快照（XFS + copy-on-write）+ 快照感知调度路由，支撑 Agent 任务运行 3 天以上。<span class="source-ref">（来源：OpenAI 工程博客，2026）</span></div>
+      <div class="prose-sm"><strong>RL 训练的四个特殊需求：</strong>① 高并发 rollout——每训练步数千沙箱 ② 快照/恢复——MCTS 减少 40-64% token ③ 环境状态持久化——脏环境污染 reward ④ 严格租户隔离——共享环境破坏马尔可夫假设。</div>
+      <div class="prose-sm">选型：对抗性探索 → Firecracker/Kata · 受限环境 → gVisor · 模型评估 → 容器+seccomp</div>
+    </div>
+  </div>
+</div>
+</div><span class="page-num">12 / 31</span></section>
+<section class="slide bg1"><div class="slide-inner">
+<div class="flex-col gap-md" style="max-width:1250px;">
+  <h2>推理场景——延迟决定方案</h2>
+  <div class="prose-sm mb-sm">不同推理场景的延迟容忍度跨度极大——从微秒级到秒级。这不是碎片化，是场景差异的必然。</div>
+  <div class="flex-row gap-md">
+    <div class="flex-2">
+      <table class="tbl">
+        <thead><tr><th>场景</th><th>延迟</th><th>方案</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td><strong>编码 Agent</strong><br><span class="dim">Claude Code · Cursor</span></td><td>秒级</td><td>gVisor / FC</td><td>需完整 Linux</td></tr>
+          <tr><td><strong>数据分析</strong><br><span class="dim">ChatGPT Code Interpreter</span></td><td>秒级</td><td class="hl">gVisor</td><td>云VM无KVM</td></tr>
+          <tr><td><strong>浏览器操作</strong><br><span class="dim">Perplexity · Manus</span></td><td>毫秒级</td><td>E2B / FC</td><td>完整浏览器</td></tr>
+          <tr><td><strong>MCP 工具调用</strong></td><td class="hl">毫秒级</td><td>eBPF / WASM</td><td>极低延迟</td></tr>
+          <tr><td><strong>多 Agent 协作</strong></td><td>秒~分钟</td><td>E2B Fork</td><td>状态共享</td></tr>
+          <tr><td><strong>轻量 Python</strong></td><td class="hl">微秒级</td><td>Monty</td><td>4.5μs</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="flex-1 flex-col gap-sm">
+      <div class="callout"><strong>ChatGPT Code Interpreter（OpenAI）</strong><br>gVisor (runsc) on K8s/Azure · 9GB/4vCPU · FastAPI+Jupyter+ZeroMQ · 网络全锁定 · <strong>2026 年支持 11 种语言</strong></div>
+      <div class="callout"><strong>Claude 系列（Anthropic）</strong><br>三种产品三种方案：Claude.ai → ephemeral gVisor · Claude Code → Seatbelt/Bubblewrap OS 沙箱 · Claude Cowork → 完整本地 VM。核心原则：<strong>用环境控制设硬边界</strong>，而非仅依赖模型安全策略。</div>
+    </div>
+  </div>
+</div>
+</div><span class="page-num">13 / 31</span></section>
+<section class="slide bg2"><div class="slide-inner">
 <div class="flex-row gap-lg" style="max-width:1360px;align-items:flex-start;">
   <div class="flex-2 flex-col gap-md">
     <div class="flex-col gap-sm">
@@ -350,7 +467,7 @@
       <div class="stat-item"><div class="stat-val">~50K</div><div class="stat-lbl">行 Rust</div></div>
       <div class="stat-item"><div class="stat-val">NSDI '20</div><div class="stat-lbl">论文</div></div>
     </div>
-    <div class="flex-row gap-sm"><span class="tag">AWS Lambda</span><span class="tag">Fargate</span><span class="tag">Fly.io</span><span class="tag">E2B</span><span class="tag">CodeSandbox</span></div>
+    <div class="flex-row gap-sm"><span class="tag">AWS Lambda</span><span class="tag">Fargate</span><span class="tag">Fly.io</span><span class="tag-teal">E2B</span><span class="tag">CodeSandbox</span></div>
     <div class="prose-sm dim">风险：11 位维护者全是 Amazon 员工，外部贡献 2021Q3 后持续下降。无公开路线图。Cloud Hypervisor（同源 crosvm，多厂商治理）在 GPU/热迁移场景在蚕食份额。</div>
   </div>
   <div class="flex-1 flex-col gap-sm">
@@ -369,51 +486,133 @@
     </svg>
   </div>
 </div>
-</div><span class="page-num">10 / 27</span></section>
+</div><span class="page-num">14 / 31</span></section>
 <section class="slide bg1"><div class="slide-inner">
 <div class="flex-col gap-md" style="max-width:1360px;">
-  <h2>Firecracker · 三线程 + 直通启动 = &lt;125ms</h2>
+  <h2>Firecracker · 三线程架构 + 直通启动 = &lt;125ms</h2>
   <div class="flex-row gap-lg">
-    <div class="flex-1 flex-col gap-md">
-      <svg viewBox="0 0 540 300" width="100%" height="auto">
-        <text x="15" y="22" fill="#cacfd8" font-size="15" font-weight="700">三线程模型 · vCPU 不处理 I/O</text>
-        <rect x="15" y="36" width="160" height="82" rx="8" fill="rgba(24,32,46,.85)" stroke="rgba(85,100,120,.38)"/><text x="95" y="64" text-anchor="middle" fill="#96a4b6" font-size="14" font-weight="700">API Server</text><text x="95" y="84" text-anchor="middle" fill="#aeb8c4" font-size="11">Unix socket</text><text x="95" y="100" text-anchor="middle" fill="#6e7e92" font-size="10">配置下发 · 不接触 KVM</text>
-        <rect x="200" y="36" width="160" height="82" rx="8" fill="rgba(24,32,46,.85)" stroke="rgba(208,145,48,.25)"/><text x="280" y="64" text-anchor="middle" fill="#d09130" font-size="14" font-weight="700">VMM 线程</text><text x="280" y="84" text-anchor="middle" fill="#aeb8c4" font-size="11">epoll 主循环</text><text x="280" y="100" text-anchor="middle" fill="#6e7e92" font-size="10">设备 I/O · 内存映射 · 快照</text>
-        <rect x="385" y="36" width="140" height="82" rx="8" fill="rgba(24,32,46,.85)" stroke="rgba(85,100,120,.35)"/><text x="455" y="64" text-anchor="middle" fill="#96a4b6" font-size="14" font-weight="700">vCPU × N</text><text x="455" y="84" text-anchor="middle" fill="#aeb8c4" font-size="11">KVM_RUN 循环</text><text x="455" y="100" text-anchor="middle" fill="#6e7e92" font-size="10">VM-exit 时退出</text>
-        <line x1="175" y1="77" x2="195" y2="77" stroke="rgba(100,120,140,.4)" stroke-width="1.5"/><line x1="360" y1="77" x2="380" y2="77" stroke="rgba(100,120,140,.4)" stroke-width="1.5"/>
-        <rect x="15" y="134" width="510" height="40" rx="7" fill="rgba(208,145,48,.04)" stroke="rgba(208,145,48,.12)"/><text x="30" y="152" fill="#d09130" font-size="12" font-weight="600">I/O 路径</text><text x="30" y="168" fill="#aeb8c4" font-size="11">vCPU 写共享内存 → eventfd 通知 VMM → 立即返回执行。I/O 不阻塞 Guest 计算</text>
-        <text x="15" y="204" fill="#cacfd8" font-size="15" font-weight="700">启动路径对比</text>
-        <rect x="15" y="216" width="250" height="44" rx="7" fill="rgba(244,63,94,.03)" stroke="rgba(244,63,94,.1)"/><text x="140" y="236" text-anchor="middle" fill="#f87171" font-size="12" font-weight="600">传统：BIOS→GRUB→模式切换</text><text x="140" y="253" text-anchor="middle" fill="#6e7e92" font-size="10">~500ms · 含固件攻击面</text>
-        <rect x="280" y="216" width="245" height="44" rx="7" fill="rgba(16,185,129,.04)" stroke="rgba(16,185,129,.12)"/><text x="402" y="236" text-anchor="middle" fill="#34d399" font-size="12" font-weight="600">FC：读 bzImage → 直接跳转</text><text x="402" y="253" text-anchor="middle" fill="#6e7e92" font-size="10">&lt;125ms · 零固件攻击面</text>
+    <div class="flex-2 flex-col gap-md">
+      <svg viewBox="0 0 780 460" width="100%" height="auto" style="max-height:440px" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="fs" x="-4%" y="-4%" width="108%" height="112%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.15"/></filter>
+        </defs>
+        <style>
+          .fc-card{fill:rgba(24,32,46,.88);stroke:rgba(85,100,120,.38);stroke-width:1;rx:8}
+          .fc-subtle{fill:rgba(24,32,46,.7);stroke:rgba(85,100,120,.3);stroke-width:1;rx:6}
+          .fc-amber{fill:rgba(208,145,48,.08);stroke:rgba(208,145,48,.22);stroke-width:1;rx:6}
+          .fc-hdr-o{fill:#d09130}
+          .fc-hdr-s{fill:rgba(96,136,168,.65)}
+          .fc-hdr-t{font-family:system-ui,-apple-system,sans-serif;font-size:11px;fill:#fafaf9;font-weight:600;letter-spacing:.02em}
+          .fc-title{font-family:system-ui,-apple-system,sans-serif;font-size:13px;font-weight:650;fill:#cacfd8}
+          .fc-body{font-family:system-ui,-apple-system,sans-serif;font-size:11px;fill:#aeb8c4}
+          .fc-mono{font-family:'SF Mono','Cascadia Code',monospace;font-size:9.5px;fill:#aeb8c4}
+          .fc-mono-a{font-family:'SF Mono','Cascadia Code',monospace;font-size:9.5px;font-weight:600;fill:#d09130}
+          .fc-accent{font-family:system-ui,-apple-system,sans-serif;font-size:11px;font-weight:600;fill:#d09130}
+          .fc-tag{font-family:system-ui,-apple-system,sans-serif;font-size:9.5px;fill:#6e7e92}
+          .fc-label{font-family:system-ui,-apple-system,sans-serif;font-size:9px;fill:#6e7e92;letter-spacing:.05em}
+          .fc-dash{fill:none;stroke:rgba(85,100,120,.3);stroke-width:1;stroke-dasharray:5,4;rx:10}
+          .fc-flow-d{stroke:#6e7e92;stroke-width:1;fill:none;stroke-dasharray:4,3}
+          .fc-flow-s{stroke:rgba(85,100,120,.3);stroke-width:1;fill:none}
+          .fc-flow-o{stroke:#d09130;stroke-width:1;fill:none;stroke-dasharray:4,3}
+          .fc-flow-p{stroke:#a855f7;stroke-width:1;fill:none;stroke-dasharray:4,3}
+          .fc-dot-o{fill:#d09130}
+          .fc-dot-s{fill:#6e7e92}
+          .fc-divider{stroke:rgba(85,100,120,.2);stroke-width:.8}
+          .fc-hw-bg{fill:rgba(24,32,46,.7)}
+          .fc-foot{fill:none;stroke:rgba(85,100,120,.3);stroke-width:1;rx:6;stroke-dasharray:4,3}
+          .fc-foot-t{fill:#6e7e92}
+          .fc-text-p{fill:#a855f7}
+          .fc-text-o{fill:#d09130}
+        </style>
+        <marker id="aW" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5" fill="#6e7e92"/></marker>
+        <marker id="aO" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5" fill="#d09130"/></marker>
+        <marker id="aD" markerWidth="5" markerHeight="7" refX="2.5" refY="7" orient="auto"><path d="M0,0 L5,0 L2.5,7" fill="#6e7e92"/></marker>
+
+        <rect x="16" y="6" width="748" height="318" class="fc-dash"/>
+        <text x="32" y="22" class="fc-label">Firecracker Process</text>
+
+        <!-- API Server -->
+        <rect x="34" y="36" width="218" height="118" class="fc-card" filter="url(#fs)"/>
+        <rect x="34" y="36" width="218" height="26" class="fc-hdr-s"/>
+        <text x="143" y="53" text-anchor="middle" class="fc-hdr-t">API Server 线程</text>
+        <circle cx="50" cy="78" r="2.5" class="fc-dot-s"/><text x="60" y="82" class="fc-body">HTTP over Unix socket</text>
+        <circle cx="50" cy="98" r="2.5" class="fc-dot-s"/><text x="60" y="102" class="fc-body">17 个 RESTful 端点</text>
+        <circle cx="50" cy="118" r="2.5" class="fc-dot-s"/><text x="60" y="122" class="fc-body">请求序列化为事件下发</text>
+
+        <line x1="252" y1="92" x2="282" y2="92" class="fc-flow-d" marker-end="url(#aW)"/>
+        <text x="268" y="84" text-anchor="middle" class="fc-label">事件</text>
+
+        <!-- VMM -->
+        <rect x="288" y="36" width="218" height="200" class="fc-card" filter="url(#fs)"/>
+        <rect x="288" y="36" width="218" height="26" class="fc-hdr-o"/>
+        <text x="397" y="53" text-anchor="middle" class="fc-hdr-t">VMM 线程 · 主循环</text>
+        <circle cx="304" cy="78" r="2.5" class="fc-dot-o"/><text x="314" y="82" class="fc-body">epoll 事件驱动循环</text>
+        <circle cx="304" cy="98" r="2.5" class="fc-dot-o"/><text x="314" y="102" class="fc-body">设备生命周期协调</text>
+        <circle cx="304" cy="118" r="2.5" class="fc-dot-o"/><text x="314" y="122" class="fc-body">内存映射 &amp; 中断路由</text>
+
+        <rect x="302" y="136" width="190" height="90" class="fc-amber"/>
+        <text x="397" y="156" text-anchor="middle" class="fc-accent">5 virtio 设备</text>
+        <text x="314" y="176" class="fc-mono-a">virtio-net</text>
+        <text x="314" y="192" class="fc-mono">virtio-block</text>
+        <text x="314" y="208" class="fc-mono">virtio-vsock</text>
+        <text x="424" y="176" class="fc-mono">virtio-rng</text>
+        <text x="424" y="192" class="fc-mono">virtio-pmem</text>
+        <text x="424" y="208" class="fc-tag">+ 串口 &amp; i8042</text>
+
+        <line x1="506" y1="82" x2="536" y2="82" class="fc-flow-o" marker-end="url(#aO)"/>
+        <text x="522" y="74" text-anchor="middle" class="fc-text-o">KVM_RUN</text>
+
+        <!-- vCPU -->
+        <rect x="542" y="36" width="218" height="118" class="fc-card" filter="url(#fs)"/>
+        <rect x="542" y="36" width="218" height="26" class="fc-hdr-s"/>
+        <text x="651" y="53" text-anchor="middle" class="fc-hdr-t">vCPU 线程 × N</text>
+        <circle cx="558" cy="78" r="2.5" class="fc-dot-s"/><text x="568" y="82" class="fc-body">执行 Guest 用户代码</text>
+        <circle cx="558" cy="98" r="2.5" class="fc-dot-s"/><text x="568" y="102" class="fc-body">KVM_RUN ioctl 循环</text>
+        <circle cx="558" cy="118" r="2.5" class="fc-dot-s"/><text x="568" y="122" class="fc-body">VM-exit 时交还 VMM</text>
+
+        <path d="M556,132 L556,172 L504,172 L504,132" class="fc-flow-p" marker-end="url(#aW)"/>
+        <text x="530" y="166" text-anchor="middle" class="fc-text-p">eventfd</text>
+
+        <line x1="34" y1="256" x2="746" y2="256" class="fc-divider"/>
+
+        <rect x="34" y="268" width="712" height="44" class="fc-subtle"/>
+        <text x="390" y="289" text-anchor="middle" class="fc-title">KVM 内核模块</text>
+        <text x="390" y="304" text-anchor="middle" class="fc-body">硬件辅助虚拟化 · 内存虚拟化（EPT / NPT）· I/O 虚拟化</text>
+
+        <line x1="397" y1="236" x2="397" y2="266" class="fc-flow-s"/>
+        <path d="M651,154 L651,246 L540,246 L540,266" class="fc-flow-s"/>
+
+        <rect x="34" y="326" width="712" height="36" class="fc-subtle fc-hw-bg"/>
+        <text x="390" y="350" text-anchor="middle" class="fc-body">CPU 硬件虚拟化扩展（Intel VT-x · AMD-V）</text>
+
+        <rect x="34" y="386" width="712" height="34" class="fc-foot"/>
+        <text x="390" y="408" text-anchor="middle" class="fc-body fc-foot-t">Jailer 安全沙箱：cgroup · namespace · seccomp-bpf · chroot · 特权降级（启动前已就绪）</text>
       </svg>
     </div>
     <div class="flex-1 flex-col gap-sm" style="justify-content:center;">
-      <div class="prose"><strong>核心设计：</strong>三线程分离——API Server 只做配置下发，VMM 线程集中处理所有设备 I/O，vCPU 线程只执行 <span style="font-family:monospace;color:#d09130;">KVM_RUN</span> ioctl，把 Guest 代码交给 CPU 硬件直接跑。</div>
-      <div class="callout mt-sm"><strong>直通启动：</strong>传统 VM 启动要走 BIOS→UEFI→GRUB→模式切换，数百毫秒，固件本身也是攻击面（CVE-2015-3456、CVE-2019-14378）。Firecracker 直接解析 bzImage，读 setup_header，设置 boot_params，跳转到内核入口——<strong>省掉整个固件层，时间 + 安全双赢。</strong></div>
-      <div class="code-block"><span style="color:#5e6e82;"># Firecracker 启动 MicroVM（通过 Unix socket 的 HTTP API）</span>
-curl --unix-socket /run/firecracker.socket -X PUT \
-  'http://localhost/boot-source' -H 'Content-Type: application/json' \
-  -d '{"kernel_image_path":"/srv/vmlinux.bin","boot_args":"console=ttyS0 ro"}'</div>
+      <div class="prose"><strong>核心设计：</strong>三线程分离——API Server 只做配置下发，VMM 线程集中处理所有设备 I/O，vCPU 线程只执行 <span style="font-family:monospace;color:#d09130;">KVM_RUN</span> ioctl，把 Guest 代码交给 CPU 硬件直接跑。I/O 不阻塞 Guest 计算。</div>
+      <div class="callout mt-sm"><strong>直通启动：</strong>传统 VM 启动要走 BIOS→UEFI→GRUB→模式切换，数百毫秒，固件本身也是攻击面。Firecracker 直接解析 bzImage，读 setup_header，设置 boot_params，跳转到内核入口——<strong>省掉整个固件层，时间 + 安全双赢。</strong></div>
+      <div class="prose-sm dim mt-sm">上图底部 Jailer 沙箱在 Firecracker 启动前已就绪——cgroup、namespace、seccomp-bpf、chroot、特权降级全部就位后才 exec Firecracker。详情见下一页。</div>
     </div>
   </div>
 </div>
-</div><span class="page-num">11 / 27</span></section>
+</div><span class="page-num">15 / 31</span></section>
 <section class="slide bg2"><div class="slide-inner">
 <div class="flex-col gap-md" style="max-width:1360px;">
   <h2>Firecracker · Jailer 沙箱 + seccomp 过滤 = 纵深防御</h2>
   <div class="flex-row gap-lg">
     <div class="flex-1 flex-col gap-sm">
-      <svg viewBox="0 0 540 340" width="100%" height="auto">
+      <svg viewBox="0 0 540 320" width="100%" height="auto">
         <text x="15" y="20" fill="#cacfd8" font-size="15" font-weight="700">Jailer · 五层安全沙箱——先隔离，后启动</text>
         <rect x="15" y="34" width="510" height="28" rx="6" fill="rgba(24,32,46,.85)" stroke="rgba(85,100,120,.3)"/><text x="270" y="53" text-anchor="middle" fill="#aeb8c4" font-size="12">cgroup（资源限制）→ namespace（进程隔离）→ chroot（文件系统隔离）</text>
         <rect x="15" y="68" width="510" height="28" rx="6" fill="rgba(24,32,46,.85)" stroke="rgba(85,100,120,.3)"/><text x="270" y="87" text-anchor="middle" fill="#aeb8c4" font-size="12">→ seccomp-bpf（syscall 白名单）→ capabilities 清空 + setuid → exec Firecracker</text>
         <rect x="60" y="104" width="420" height="24" rx="6" fill="rgba(244,63,94,.04)"/><text x="270" y="121" text-anchor="middle" fill="#f87171" font-size="12" font-weight="600">Fail-fast：任一步失败就终止——不存在「半隔离」状态</text>
-        <text x="15" y="160" fill="#cacfd8" font-size="15" font-weight="700">seccomp 三级白名单——syscall 数量对比</text>
-        <text x="15" y="184" fill="#96a4b6" font-size="13">Docker 默认</text><rect x="140" y="172" width="360" height="16" rx="4" fill="rgba(135,149,168,.25)"/><text x="508" y="185" fill="#96a4b6" font-size="13" font-weight="600">300+ syscall</text><text x="530" y="185" fill="#6e7e92" font-size="10">高攻击面</text>
-        <text x="15" y="214" fill="#d09130" font-size="13">API Server</text><rect x="140" y="202" width="48" height="16" rx="4" fill="#d09130"/><text x="196" y="215" fill="#d09130" font-size="13" font-weight="600">40</text><text x="530" y="215" fill="#6e7e92" font-size="11">中低</text>
-        <text x="15" y="244" fill="#d09130" font-size="13">VMM</text><rect x="140" y="232" width="36" height="16" rx="4" fill="rgba(208,145,48,.8)"/><text x="184" y="245" fill="#cacfd8" font-size="13" font-weight="600">30</text><text x="530" y="245" fill="#6e7e92" font-size="11">低（仅 KVM_* ioctl）</text>
-        <text x="15" y="274" fill="#d09130" font-size="13">vCPU</text><rect x="140" y="262" width="12" height="16" rx="4" fill="rgba(208,145,48,.7)"/><text x="160" y="275" fill="#cacfd8" font-size="13" font-weight="600">10</text><text x="530" y="275" fill="#d09130" font-size="12" font-weight="600">极低（仅 KVM_RUN）</text>
-        <text x="270" y="315" text-anchor="middle" fill="#6e7e92" font-size="11">seccompiler 离线编译 JSON 策略 → BPF 字节码 · 不在白名单的调用 → 内核 SIGSYS 终止</text>
+        <text x="15" y="152" fill="#cacfd8" font-size="15" font-weight="700">seccomp 三级白名单——syscall 数量对比</text>
+        <text x="15" y="176" fill="#96a4b6" font-size="13">Docker 默认</text><rect x="140" y="164" width="360" height="16" rx="4" fill="rgba(135,149,168,.25)"/><text x="508" y="177" fill="#96a4b6" font-size="13" font-weight="600">300+ syscall</text><text x="530" y="177" fill="#6e7e92" font-size="10">高攻击面</text>
+        <text x="15" y="206" fill="#d09130" font-size="13">API Server</text><rect x="140" y="194" width="48" height="16" rx="4" fill="#d09130"/><text x="196" y="207" fill="#d09130" font-size="13" font-weight="600">40</text><text x="530" y="207" fill="#6e7e92" font-size="11">中低</text>
+        <text x="15" y="236" fill="#d09130" font-size="13">VMM</text><rect x="140" y="224" width="36" height="16" rx="4" fill="rgba(208,145,48,.8)"/><text x="184" y="237" fill="#cacfd8" font-size="13" font-weight="600">30</text><text x="530" y="237" fill="#6e7e92" font-size="11">低（仅 KVM_* ioctl）</text>
+        <text x="15" y="266" fill="#d09130" font-size="13">vCPU</text><rect x="140" y="254" width="12" height="16" rx="4" fill="rgba(208,145,48,.7)"/><text x="160" y="267" fill="#cacfd8" font-size="13" font-weight="600">10</text><text x="530" y="267" fill="#d09130" font-size="12" font-weight="600">极低（仅 KVM_RUN）</text>
+        <text x="270" y="305" text-anchor="middle" fill="#6e7e92" font-size="11">seccompiler 离线编译 JSON 策略 → BPF 字节码 · 不在白名单的调用 → 内核 SIGSYS 终止</text>
       </svg>
     </div>
     <div class="flex-1 flex-col gap-sm" style="justify-content:center;">
@@ -423,7 +622,7 @@ curl --unix-socket /run/firecracker.socket -X PUT \
     </div>
   </div>
 </div>
-</div><span class="page-num">12 / 27</span></section>
+</div><span class="page-num">16 / 31</span></section>
 <section class="slide bg2"><div class="slide-inner">
 <div class="flex-row gap-lg" style="max-width:1360px;align-items:flex-start;">
   <div class="flex-2 flex-col gap-md">
@@ -438,7 +637,7 @@ curl --unix-socket /run/firecracker.socket -X PUT \
       <div class="stat-item"><div class="stat-val">CNCF</div><div class="stat-lbl">Sandbox</div></div>
       <div class="stat-item"><div class="stat-val">~82%</div><div class="stat-lbl">syscall 兼容</div></div>
     </div>
-    <div class="flex-row gap-sm"><span class="tag">Google Cloud Run</span><span class="tag">OpenAI</span><span class="tag">Anthropic</span><span class="tag">腾讯+MiniMax(日数百万)</span></div>
+    <div class="flex-row gap-sm"><span class="tag">Google Cloud Run</span><span class="tag">OpenAI</span><span class="tag">Anthropic</span><span class="tag">腾讯(Agentic-RL,日数百万)</span></div>
     <div class="prose-sm dim">风险：Google 主导路线图。CNCF Sandbox 8 年没升级成熟度。Go GC 对延迟敏感负载有影响。ARM64 没有 x86_64 的跳板优化。</div>
   </div>
   <div class="flex-1 flex-col gap-sm">
@@ -458,42 +657,112 @@ curl --unix-socket /run/firecracker.socket -X PUT \
     </div>
   </div>
 </div>
-</div><span class="page-num">13 / 27</span></section>
+</div><span class="page-num">17 / 31</span></section>
 <section class="slide bg0"><div class="slide-inner">
 <div class="flex-col gap-md" style="max-width:1360px;">
   <h2>gVisor · 一次 syscall 怎么被拦截</h2>
   <div class="flex-row gap-md">
     <div class="flex-2">
-      <svg viewBox="0 0 640 380" width="100%" height="auto" style="max-height:380px">
-        <text x="15" y="22" fill="#cacfd8" font-size="14" font-weight="700">systrap 拦截流程（默认平台，2023 起）</text>
-        <rect x="15" y="36" width="610" height="38" rx="7" fill="rgba(24,32,46,.85)" stroke="rgba(85,100,120,.32)"/><text x="35" y="56" fill="#aeb8c4" font-size="13"><tspan fill="#d09130" font-weight="700">①</tspan> 应用 syscall → seccomp-bpf 返回 <tspan fill="#f87171" font-weight="600">SECCOMP_RET_TRAP</tspan> → 内核发 SIGSYS 信号</text><text x="35" y="73" fill="#6e7e92" font-size="10">与传统 ptrace 不同——不暂停进程，通过信号异步通知</text>
-        <rect x="15" y="82" width="610" height="38" rx="7" fill="rgba(24,32,46,.85)" stroke="rgba(85,100,120,.32)"/><text x="35" y="102" fill="#aeb8c4" font-size="13"><tspan fill="#d09130" font-weight="700">②</tspan> SIGSYS 处理程序写 <tspan font-family="monospace" fill="#d09130">sysmsg</tspan> 共享内存 → Sentry 被通知</text><text x="35" y="119" fill="#6e7e92" font-size="10">syscall 号 + 参数 + 寄存器状态全部通过共享内存传递，无需上下文切换</text>
-        <rect x="15" y="128" width="610" height="38" rx="7" fill="rgba(24,32,46,.85)" stroke="rgba(85,100,120,.32)"/><text x="35" y="148" fill="#aeb8c4" font-size="13"><tspan fill="#d09130" font-weight="700">③</tspan> Sentry goroutine 处理——VFS 检查路径权限 → 需要文件？→ Gofer 代理</text>
-        <text x="35" y="165" fill="#6e7e92" font-size="10">通过 SCM_RIGHTS 将宿主机文件描述符注入 Sentry 进程</text><text x="35" y="165" fill="#6e7e92" font-size="10">Sentry 不持有宿主机文件描述符——需要时通过内部 RPC 请 Gofer 用 Unix socket 传递</text>
-        <rect x="15" y="174" width="610" height="38" rx="7" fill="rgba(24,32,46,.85)" stroke="rgba(85,100,120,.32)"/><text x="35" y="194" fill="#aeb8c4" font-size="13"><tspan fill="#d09130" font-weight="700">④</tspan> 结果写回 sysmsg → 恢复应用执行。应用完全感知不到被拦截</text>
-        <text x="15" y="250" fill="#cacfd8" font-size="14" font-weight="700">三平台性能对比（syscall 延迟 vs runc 原生）</text>
-        <rect x="15" y="264" width="610" height="24" rx="7" fill="rgba(24,32,46,.85)"/><text x="35" y="275" fill="#aeb8c4" font-size="12">ptrace（<tspan fill="#f87171">已废弃</tspan>）~4-5x &nbsp;&nbsp;|&nbsp;&nbsp; systrap（<tspan fill="#d09130" font-weight="600">默认</tspan>）~2.2x &nbsp;&nbsp;|&nbsp;&nbsp; KVM 模式 ~1.8x</text>
-        <text x="35" y="294" fill="#6e7e92" font-size="11">x86_64 跳板优化：替换 syscall 指令→jmp，绕过 seccomp 过滤器。ARM64 不支持此优化。</text>
-        <text x="15" y="308" fill="#cacfd8" font-size="14" font-weight="700">性能代价明细</text>
-        <rect x="15" y="320" width="300" height="48" rx="7" fill="rgba(24,32,46,.85)" stroke="rgba(55,70,90,.08)"/><text x="165" y="342" text-anchor="middle" fill="#aeb8c4" font-size="12">文件 I/O (Gofer 代理)</text><text x="165" y="360" text-anchor="middle" fill="#f87171" font-size="13" font-weight="600">open+O_CREAT 延迟 最高 48x runc</text>
-        <rect x="325" y="320" width="300" height="48" rx="7" fill="rgba(24,32,46,.85)" stroke="rgba(55,70,90,.08)"/><text x="475" y="342" text-anchor="middle" fill="#aeb8c4" font-size="12">内部 tmpfs（纯内存）</text><text x="475" y="360" text-anchor="middle" fill="#34d399" font-size="13" font-weight="600">大请求吞吐 反超 runc</text>
+      <svg viewBox="0 0 720 400" width="100%" height="auto" style="max-height:400px" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="gs" x="-4%" y="-4%" width="108%" height="112%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.15"/></filter>
+          <marker id="ga" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5" fill="#6e7e92"/></marker>
+          <marker id="go" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5" fill="#d09130"/></marker>
+        </defs>
+        <style>
+          .gv-card{fill:rgba(24,32,46,.88);stroke:rgba(85,100,120,.38);stroke-width:1;rx:8}
+          .gv-card-o{fill:rgba(208,145,48,.06);stroke:rgba(208,145,48,.25);stroke-width:1.2;rx:8}
+          .gv-subtle{fill:rgba(24,32,46,.7);stroke:rgba(85,100,120,.3);stroke-width:1;rx:6}
+          .gv-title{font-family:system-ui,-apple-system,sans-serif;font-size:13px;font-weight:650;fill:#cacfd8;letter-spacing:.01em}
+          .gv-hdr-t{font-family:system-ui,-apple-system,sans-serif;font-size:11px;fill:#fafaf9;font-weight:600;letter-spacing:.02em}
+          .gv-body{font-family:system-ui,-apple-system,sans-serif;font-size:10.5px;fill:#aeb8c4}
+          .gv-mono{font-family:'SF Mono','Cascadia Code',monospace;font-size:9px;fill:#aeb8c4}
+          .gv-accent{font-family:system-ui,-apple-system,sans-serif;font-size:10.5px;font-weight:600;fill:#d09130}
+          .gv-label{font-family:system-ui,-apple-system,sans-serif;font-size:9px;fill:#6e7e92;letter-spacing:.04em}
+          .gv-flow{stroke:rgba(85,100,120,.3);stroke-width:1;fill:none;stroke-dasharray:4,3}
+          .gv-flow-s{stroke:#6e7e92;stroke-width:1;fill:none}
+          .gv-dash{fill:none;stroke:rgba(85,100,120,.3);stroke-width:1;stroke-dasharray:5,4;rx:8}
+          .gv-num{font-family:system-ui,-apple-system,sans-serif;font-size:9px;font-weight:700;fill:#fafaf9}
+          .gv-hdr-o{fill:#d09130}
+          .gv-hdr-s{fill:rgba(96,136,168,.65)}
+          .gv-hdr-g{fill:rgba(96,136,168,.45)}
+        </style>
+
+        <text x="360" y="22" text-anchor="middle" class="gv-title">gVisor 架构全景——一次 syscall 的完整旅程</text>
+
+        <!-- App Process -->
+        <rect x="200" y="36" width="320" height="46" class="gv-card-o" filter="url(#gs)"/>
+        <rect x="200" y="36" width="320" height="22" class="gv-hdr-o"/>
+        <text x="360" y="51" text-anchor="middle" class="gv-hdr-t">应用进程（沙箱内）</text>
+        <text x="360" y="72" text-anchor="middle" class="gv-body">调用 Linux syscall（如 open / read / write）</text>
+
+        <line x1="360" y1="82" x2="360" y2="104" class="gv-flow" marker-end="url(#go)"/>
+        <text x="378" y="96" class="gv-label">syscall</text>
+
+        <!-- Sentry -->
+        <rect x="160" y="108" width="400" height="138" class="gv-card" filter="url(#gs)"/>
+        <rect x="160" y="108" width="400" height="22" class="gv-hdr-s"/>
+        <text x="360" y="123" text-anchor="middle" class="gv-hdr-t">Sentry（用户态内核 · Go 实现）</text>
+
+        <rect x="176" y="138" width="116" height="44" class="gv-subtle"/>
+        <text x="234" y="156" text-anchor="middle" class="gv-accent">VFS</text>
+        <text x="234" y="173" text-anchor="middle" class="gv-mono">虚拟文件系统</text>
+
+        <rect x="302" y="138" width="116" height="44" class="gv-subtle"/>
+        <text x="360" y="156" text-anchor="middle" class="gv-accent">Task</text>
+        <text x="360" y="173" text-anchor="middle" class="gv-mono">进程/线程管理</text>
+
+        <rect x="428" y="138" width="116" height="44" class="gv-subtle"/>
+        <text x="486" y="156" text-anchor="middle" class="gv-accent">Netstack</text>
+        <text x="486" y="173" text-anchor="middle" class="gv-mono">用户态 TCP/IP</text>
+
+        <text x="360" y="202" text-anchor="middle" class="gv-mono">每个沙箱一个 Kernel 实例 · goroutine 调度 · ~200+ syscall 实现</text>
+        <text x="360" y="222" text-anchor="middle" class="gv-label">→ 决策者：知道文件系统层级和权限模型，但不直接访问宿主机</text>
+
+        <line x1="360" y1="246" x2="360" y2="268" class="gv-flow-s"/>
+
+        <!-- Platform -->
+        <rect x="220" y="272" width="280" height="40" class="gv-subtle" filter="url(#gs)"/>
+        <text x="360" y="290" text-anchor="middle" class="gv-accent">Platform：systrap（默认）· KVM · ptrace</text>
+        <text x="360" y="305" text-anchor="middle" class="gv-mono">seccomp 拦截 → SIGSYS → 共享内存传递 sysmsg</text>
+
+        <line x1="360" y1="312" x2="360" y2="330" class="gv-flow-s"/>
+
+        <!-- Host Kernel -->
+        <rect x="220" y="334" width="280" height="28" class="gv-subtle"/>
+        <text x="360" y="353" text-anchor="middle" class="gv-body">宿主机 Linux 内核（仅暴露 ~55 个 syscall）</text>
+
+        <!-- Gofer side -->
+        <rect x="20" y="170" width="128" height="68" class="gv-card" filter="url(#gs)"/>
+        <rect x="20" y="170" width="128" height="20" class="gv-hdr-g"/>
+        <text x="84" y="185" text-anchor="middle" class="gv-hdr-t">Gofer 进程</text>
+        <text x="84" y="206" text-anchor="middle" class="gv-body">文件系统代理</text>
+        <text x="84" y="222" text-anchor="middle" class="gv-mono">SCM_RIGHTS fd 传递</text>
+
+        <line x1="160" y1="188" x2="150" y2="188" class="gv-flow"/>
+        <line x1="148" y1="204" x2="160" y2="210" class="gv-flow"/>
+        <text x="118" y="200" text-anchor="middle" class="gv-label">RPC</text>
+
+        <!-- Host boundary -->
+        <rect x="14" y="140" width="692" height="240" class="gv-dash"/>
+        <text x="24" y="156" class="gv-label">宿主机边界</text>
       </svg>
     </div>
     <div class="flex-1 flex-col gap-sm" style="justify-content:center;">
       <div class="prose-sm"><strong>Sentry + Gofer 决策/执行分离</strong>是 gVisor 最精巧的设计。Sentry 知道文件系统层级和权限模型——但<strong>不持有宿主机文件描述符</strong>。需要文件时请 Gofer 打开，Gofer 通过 Unix socket 的 SCM_RIGHTS 把 fd 传过来。即使 Sentry 被攻破，攻击者也碰不到宿主机文件。</div>
       <div class="prose-sm"><strong>GPU (nvproxy)、Netstack (用户态 TCP/IP)：</strong>宿主机内核只看到以太网帧，看不到 TCP 连接状态和 payload。nvproxy 支持 T4/A100/L4/H100，多沙箱共享 GPU。</div>
-      <div class="prose-sm"><strong>兼容性约束：</strong>syscall 覆盖 ~82%（~200+/340），io_uring 默认禁用。腾讯在 10 个代码执行数据集上做了 74,379 次 runsc vs runc 对比测试，修正后正确率仅差 0.13 个百分点。但不确定时先跑测试。</div>
+      <div class="prose-sm"><strong>性能与兼容性：</strong>systrap 默认 ~2.2x 延迟 vs runc（KVM 模式 ~1.8x，ptrace 已废弃）。文件 I/O（Gofer 代理）open+O_CREAT 延迟最高 48x runc，内部 tmpfs 大请求吞吐反超 runc。syscall 兼容 ~82%，io_uring 默认禁用。x86_64 支持跳板优化（替换 syscall 指令为 jmp 绕过 seccomp），ARM64 不支持。</div>
     </div>
   </div>
 </div>
-</div><span class="page-num">14 / 27</span></section>
+</div><span class="page-num">18 / 31</span></section>
 <section class="slide bg-dark"><div class="slide-inner">
 <div class="flex-row gap-lg" style="max-width:1360px;align-items:flex-start;">
   <div class="flex-2 flex-col gap-md">
     <div class="flex-col gap-sm">
       <div class="dim" style="font-size:0.68rem;letter-spacing:.1em;">项目拆解 · 执行沙箱层</div>
-      <h2>E2B —— 在 Firecracker 之上做平台</h2>
-      <div class="prose">两个捷克发小 2023 年在旧金山创办。先尝试做 Devin-like Agent，发现「让 Agent 安全执行代码」本身就是一个大问题，于是 pivot 做基础设施。在 Firecracker 之上搭了完整五层架构。$35M 融资，SOC 2 + HIPAA 合规。</div>
+      <h2>E2B —— 沙箱即 API</h2>
+      <div class="prose">两个捷克发小 2023 年在旧金山创办。最初做 Devin-like Agent，发现「让 Agent 安全执行代码」<strong>本身就是一个平台级问题</strong>，于是 pivot 做基础设施。它的核心不是「Firecracker 的封装」——而是将沙箱抽象为<strong>一等编程对象</strong>：创建、执行、读写文件、暂停恢复、销毁，全通过 SDK 完成，Agent 开发者不需要知道 Firecracker 是什么。</div>
     </div>
     <div class="flex-row gap-md">
       <div class="stat-item"><div class="stat-val">~13K</div><div class="stat-lbl">Stars</div></div>
@@ -501,78 +770,127 @@ curl --unix-socket /run/firecracker.socket -X PUT \
       <div class="stat-item"><div class="stat-val">3.5M+</div><div class="stat-lbl">月 SDK 下载</div></div>
       <div class="stat-item"><div class="stat-val">1B+</div><div class="stat-lbl">累计沙箱</div></div>
     </div>
-    <div class="flex-row gap-sm"><span class="tag">Manus</span><span class="tag">Perplexity</span><span class="tag">HuggingFace</span><span class="tag">Cursor</span><span class="tag">Genspark</span></div>
-    <div class="callout"><strong>竞争优势 = 三项组合：</strong>Firecracker 硬件隔离 + 完整 Linux 环境 + SOC2/HIPAA。目前公开资料中未发现同时具备这三点的直接竞品。</div>
+    <div class="flex-row gap-sm"><span class="tag-teal">Manus</span><span class="tag-teal">Perplexity</span><span class="tag-teal">HuggingFace</span><span class="tag-teal">Cursor</span><span class="tag-teal">Genspark</span></div>
   </div>
   <div class="flex-1 flex-col gap-sm">
-    <div style="background:rgba(22,30,46,.95);border:1px solid rgba(90,110,140,.3);border-radius:10px;padding:18px;">
-      <div style="font-size:1rem;font-weight:700;margin-bottom:8px;">五层架构</div>
-      <div class="flex-col gap-xs" style="font-size:0.8rem;gap:4px;">
-        <div><span style="color:#d09130;font-weight:600;">SDK</span><span class="dim"> · Python/TS，一行创建沙箱</span></div>
-        <div><span style="color:#6088a8;font-weight:600;">Gateway</span><span class="dim"> · 认证/限流/WebSocket</span></div>
-        <div><span style="color:#dde2ea;font-weight:600;">Orchestrator</span><span class="dim"> · Go 服务，调度+模板</span></div>
-        <div><span style="color:#8795a8;font-weight:600;">Nomad+Consul</span><span class="dim"> · 集群/健康检查</span></div>
-        <div><span style="color:#5e6e82;font-weight:600;">Firecracker</span><span class="dim"> · KVM，~80ms 冷启动</span></div>
+    <div style="background:rgba(46,170,176,.04);border:1px solid rgba(46,170,176,.2);border-radius:10px;padding:14px;">
+      <div style="font-size:0.85rem;font-weight:700;color:#2eaab0;margin-bottom:6px;">E2B 提供的是「沙箱原语」</div>
+      <div class="flex-col gap-sm" style="font-size:0.78rem;line-height:1.45;">
+        <div><span style="color:#2eaab0;font-weight:600;">创建</span><span class="dim"> · Sandbox.create(template, timeout) → 约80ms</span></div>
+        <div><span style="color:#2eaab0;font-weight:600;">执行</span><span class="dim"> · commands.run(cmd, on_stdout, background)</span></div>
+        <div><span style="color:#2eaab0;font-weight:600;">文件</span><span class="dim"> · filesystem.read/write/watch（沙箱内隔离）</span></div>
+        <div><span style="color:#2eaab0;font-weight:600;">暂停</span><span class="dim"> · 空闲自动暂停，任意活动自动恢复</span></div>
+        <div><span style="color:#2eaab0;font-weight:600;">克隆</span><span class="dim"> · sandbox.fork() 复制运行中沙箱</span></div>
+        <div><span style="color:#2eaab0;font-weight:600;">模板</span><span class="dim"> · Dockerfile → ext4 镜像，预装依赖</span></div>
+        <div><span style="color:#2eaab0;font-weight:600;">连接</span><span class="dim"> · Sandbox.connect(id) 重连已有沙箱</span></div>
+        <div><span style="color:#2eaab0;font-weight:600;">销毁</span><span class="dim"> · sandbox.kill() 或超时自动回收</span></div>
       </div>
     </div>
-    <div class="code-block mt-sm"><span style="color:#5e6e82;"># Python SDK</span>
-<span style="color:#d09130;">from</span> e2b <span style="color:#d09130;">import</span> Sandbox
-sandbox = Sandbox.create(template=<span style="color:#6088a8;">"python-research"</span>)
-sandbox.commands.run(cmd=<span style="color:#6088a8;">"python train.py"</span>,
-  on_stdout=<span style="color:#d09130;">lambda</span> l: print(l))
-sandbox.kill()</div>
+    <div class="callout-teal" style="font-size:0.82rem;"><strong>核心洞察：</strong>E2B 将 VM 管理、vsock 通信、MMDS 认证、ext4 镜像构建全部藏在 API 后面。Agent 开发者看到的是一个 <strong>sandbox 对象</strong>——有方法、有生命周期、有回调——不需要知道底层是 Firecracker。</div>
   </div>
 </div>
-</div><span class="page-num">15 / 27</span></section>
+</div><span class="page-num">19 / 31</span></section>
 <section class="slide bg1"><div class="slide-inner">
 <div class="flex-row gap-lg" style="max-width:1360px;">
   <div class="flex-1 flex-col gap-sm">
-    <div style="font-size:1.05rem;font-weight:700;">envd——沙箱里的 PID 1</div>
-    <div class="prose-sm">每个 E2B 沙箱启动后，envd 作为 init 运行。所有文件读写、进程执行、环境变量注入都通过它。通过 vsock（KVM 宿主机-Guest 专用通信通道，不经过网络栈）和 Orchestrator 通信。<strong>MMDS Token 双端认证</strong>——Orchestrator 启动前把一次性 Token 写入 MMDS（MicroVM Metadata Service），envd 启动后读取，SDK 连接时比对。memguard 用 <span style="font-family:monospace;">mlock()</span> 锁住 API Key 防 swap 泄漏——但环境变量在沙箱内仍然可见，这是为什么需要 OpenShell 凭据代理。</div>
+    <div style="font-size:1.05rem;font-weight:700;">四个关键机制</div>
+    <div class="flex-col gap-sm mt-sm">
+      <div class="callout-teal"><strong>① envd 守护进程 —— 沙箱的「操作系统」</strong><br>每个沙箱启动后 envd 作为 PID 1 运行，负责：<br>· <strong>命令执行</strong>——接收 SDK 发来的指令，fork 子进程，流式回传 stdout/stderr<br>· <strong>文件读写</strong>——沙箱内文件系统的读写代理<br>· <strong>进程管理</strong>——后台进程的 PID 追踪、信号发送、退出码收集</div>
+      <div class="callout-teal"><strong>② vsock 通信 —— 绕过网络栈</strong><br>envd 和 Orchestrator 之间不走 TCP/IP，而是通过 KVM 的 virtio-vsock（宿主机-Guest 专用通道）。不经过网络栈意味着：零网络配置、零防火墙规则、零中间人风险。</div>
+    </div>
   </div>
   <div class="flex-1 flex-col gap-sm">
-    <div style="font-size:1.05rem;font-weight:700;">创建链路——~80ms</div>
-    <svg viewBox="0 0 500 230" width="100%" height="auto" style="max-height:220px">
-      <rect x="10" y="5" width="480" height="30" rx="6" fill="rgba(24,32,46,.85)"/><text x="25" y="25" fill="#aeb8c4" font-size="13">① SDK → HTTP POST → Gateway 鉴权+限流</text>
-      <rect x="10" y="40" width="480" height="30" rx="6" fill="rgba(24,32,46,.85)"/><text x="25" y="60" fill="#aeb8c4" font-size="13">② Orchestrator 查 Consul → 选节点 → Nomad 提交</text>
-      <rect x="10" y="75" width="480" height="30" rx="6" fill="rgba(24,32,46,.85)"/><text x="25" y="95" fill="#aeb8c4" font-size="13">③ firecracker-containerd → 加载预热 kernel+rootfs → KVM 创建 VM</text>
-      <rect x="10" y="110" width="480" height="30" rx="6" fill="rgba(24,32,46,.85)"/><text x="25" y="130" fill="#aeb8c4" font-size="13">④ envd 初始化 → 获取 MMDS Token → 配置 cgroup → 就绪信号</text>
-      <rect x="140" y="148" width="220" height="22" rx="11" fill="rgba(208,145,48,.08)" stroke="rgba(208,145,48,.18)"/>
-      <text x="250" y="164" text-anchor="middle" fill="#d09130" font-size="13" font-weight="600">~80ms 官方 · benchmark ~100-150ms</text>
-      <text x="25" y="192" fill="#cacfd8" font-size="12" font-weight="600">Auto-Resume：</text>
-      <text x="25" y="210" fill="#aeb8c4" font-size="12">暂停沙箱收到任何活动自动恢复，最小 timeout 5min。Agent 无需轮询。</text>
-    </svg>
+    <div class="flex-col gap-sm">
+      <div class="callout-teal"><strong>③ MMDS Token 双端认证</strong><br>Orchestrator 在启动 Firecracker 前把一次性 Token 写入 MMDS（MicroVM Metadata Service，AWS 设计的云实例元数据服务）。envd 启动后读取 MMDS 中的 Token，SDK 连接时比对——<strong>两端分别持有 Token 的一半</strong>，中间人无法伪造。沙箱销毁后 Token 自动失效。</div>
+      <div class="callout-teal"><strong>④ memguard 密钥保护</strong><br>用户 API Key 通过 mlock() 锁定在物理内存中，禁止被 swap 到磁盘。但环境变量在沙箱内<strong>仍然可见</strong>——恶意代码可以用 env 命令读取。这是为什么需要 OpenShell 凭据路由器——API Key 不注入沙箱，请求到达代理时才附加。</div>
+    </div>
   </div>
 </div>
-</div><span class="page-num">16 / 27</span></section>
+</div><span class="page-num">20 / 31</span></section>
 <section class="slide bg2"><div class="slide-inner">
 <div class="flex-row gap-lg" style="max-width:1360px;align-items:flex-start;">
   <div class="flex-2 flex-col gap-md">
     <div class="flex-col gap-sm">
       <div class="dim" style="font-size:0.68rem;letter-spacing:.1em;">项目拆解 · 治理运行时层</div>
-      <h2>OpenShell —— 回答「代码能做什么」</h2>
-      <div class="prose">NVIDIA + Cisco 在 GTC 2026 联合发布，Apache 2.0。<strong>它不做隔离——它定义规则。</strong>Firecracker 管「代码跑在哪」，OpenShell 管「代码能做什么」。两者是上下层关系，不是竞品。</div>
+      <h2>OpenShell —— Gateway 管策略，Supervisor 管执行</h2>
+      <div class="prose-sm">NVIDIA + Cisco 在 GTC 2026 联合发布，Apache 2.0。<strong>它不做隔离——它定义策略。</strong>架构上分为控制平面（Gateway，跑在宿主机）和数据平面（Supervisor，跑在每个沙箱内部），两者通过 gRPC 长连接通信。策略热加载、凭据不落沙箱、每次操作有审计记录。</div>
     </div>
-    <div class="flex-row gap-md">
-      <div class="stat-item"><div class="stat-val">GTC 2026</div><div class="stat-lbl">NVIDIA+Cisco</div></div>
-      <div class="stat-item"><div class="stat-val">Apache 2.0</div><div class="stat-lbl">许可证</div></div>
-      <div class="stat-item"><div class="stat-val">OPA</div><div class="stat-lbl">（Open Policy Agent，开源策略引擎）</div></div>
+    <div class="flex-row gap-md" style="margin-top:2px;">
+      <svg viewBox="0 0 720 280" width="100%" height="auto" style="max-height:270px" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="os" x="-4%" y="-4%" width="108%" height="112%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.15"/></filter>
+          <marker id="oa" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5" fill="#6e7e92"/></marker>
+        </defs>
+        <style>
+          .os-title{font-family:system-ui,-apple-system,sans-serif;font-size:13px;font-weight:650;fill:#cacfd8;letter-spacing:.01em}
+          .os-box{fill:rgba(24,32,46,.88);stroke:rgba(85,100,120,.38);stroke-width:1;rx:8}
+          .os-box-p{fill:rgba(168,85,247,.05);stroke:rgba(168,85,247,.25);stroke-width:1.2;rx:8}
+          .os-subtle{fill:rgba(24,32,46,.7);stroke:rgba(85,100,120,.3);stroke-width:1;rx:6}
+          .os-hdr-t{font-family:system-ui,-apple-system,sans-serif;font-size:11px;fill:#fafaf9;font-weight:600;letter-spacing:.02em}
+          .os-hdr-p{fill:#a855f7}
+          .os-hdr-s{fill:rgba(96,136,168,.65)}
+          .os-body{font-family:system-ui,-apple-system,sans-serif;font-size:10.5px;fill:#aeb8c4}
+          .os-mono{font-family:'SF Mono','Cascadia Code',monospace;font-size:9px;fill:#aeb8c4}
+          .os-accent{font-family:system-ui,-apple-system,sans-serif;font-size:10.5px;font-weight:600;fill:#a855f7}
+          .os-label{font-family:system-ui,-apple-system,sans-serif;font-size:9px;fill:#6e7e92;letter-spacing:.04em}
+          .os-flow{stroke:rgba(85,100,120,.3);stroke-width:1;fill:none;stroke-dasharray:4,3}
+          .os-dash{fill:none;stroke:rgba(85,100,120,.3);stroke-width:1;stroke-dasharray:5,4;rx:8}
+        </style>
+
+        <text x="360" y="18" text-anchor="middle" class="os-title">Gateway-Supervisor 分离设计</text>
+
+        <!-- Gateway -->
+        <rect x="14" y="32" width="320" height="90" class="os-box" filter="url(#os)"/>
+        <rect x="14" y="32" width="320" height="22" class="os-hdr-s"/>
+        <text x="174" y="47" text-anchor="middle" class="os-hdr-t">Gateway（宿主机 / 集群侧）</text>
+        <text x="34" y="70" class="os-body">• 管理多个沙箱的 Supervisor 连接</text>
+        <text x="34" y="86" class="os-body">• OPA 策略引擎 + Rego 规则热加载</text>
+        <text x="34" y="102" class="os-body">• 形式化验证集成：Z3 SMT Prover</text>
+        <text x="34" y="118" class="os-mono">监听 policy.local · 长轮询推送策略更新</text>
+
+        <!-- gRPC -->
+        <line x1="334" y1="72" x2="364" y2="72" class="os-flow"/>
+        <text x="350" y="66" class="os-label">gRPC</text>
+        <line x1="364" y1="88" x2="334" y2="88" class="os-flow"/>
+
+        <!-- Supervisor -->
+        <rect x="370" y="32" width="336" height="90" class="os-box-p" filter="url(#os)"/>
+        <rect x="370" y="32" width="336" height="22" class="os-hdr-p"/>
+        <text x="538" y="47" text-anchor="middle" class="os-hdr-t">Supervisor（沙箱内部）</text>
+        <text x="390" y="70" class="os-body">• Per-sandbox 代理进程</text>
+        <text x="390" y="86" class="os-body">• 拦截并裁决文件 / 网络 / 进程操作</text>
+        <text x="390" y="102" class="os-body">• 注入推理凭证 → inference.local</text>
+        <text x="390" y="118" class="os-mono">热加载策略 · 离线时使用缓存策略</text>
+
+        <rect x="368" y="28" width="342" height="102" class="os-dash"/>
+        <text x="378" y="40" class="os-label">沙箱边界</text>
+
+        <!-- Compute backends -->
+        <rect x="14" y="144" width="692" height="42" class="os-subtle"/>
+        <text x="360" y="162" text-anchor="middle" class="os-body" font-weight="600">支持的计算后端</text>
+        <text x="360" y="179" text-anchor="middle" class="os-mono">Docker 容器（轻量） · Firecracker microVM（强隔离） · GPU 直通（NVIDIA CDI）</text>
+
+        <!-- Defense summary -->
+        <text x="360" y="218" text-anchor="middle" class="os-label">沙箱内四层防御：Landlock 文件系统 → OPA 网络策略 → seccomp 进程管控 → inference.local 推理路由</text>
+        <text x="360" y="238" text-anchor="middle" class="os-mono">关键洞察：计算后端决定「盒子多厚」，OpenShell 决定「盒子里能做什么」</text>
+      </svg>
     </div>
-    <div class="prose-sm dim">⚠ 项目很新（2026.03 发布），社区规模和独立生产部署案例还在积累中。NVIDIA+Cisco 背书提供了方向信心，但具体实现细节仍需要时间验证。不要当成和 gVisor/Firecracker 同等成熟度的方案来评估。</div>
   </div>
   <div class="flex-1 flex-col gap-sm">
-    <div style="background:rgba(168,85,247,.03);border:1px solid rgba(168,85,247,.18);border-radius:10px;padding:18px;">
-      <div style="font-size:1rem;font-weight:700;color:#a855f7;margin-bottom:10px;">四大组件</div>
-      <div class="flex-col gap-sm" style="font-size:0.8rem;">
-        <div><span style="font-weight:700;color:#a855f7;">Supervisor</span><br><span class="dim">跑在沙箱内部。拦截每个 syscall、文件操作、网络请求，交给 OPA 裁决。如果被绕过则整个策略层失效——这是最大风险点。</span></div>
-        <div><span style="font-weight:700;color:#a855f7;">OPA 策略引擎</span><br><span class="dim">Rego 声明式策略语言。热加载——改权限不用重建沙箱。相对 Firecracker 静态策略的核心优势。</span></div>
-        <div><span style="font-weight:700;color:#a855f7;">凭据路由器</span><br><span class="dim">inference.local 代理。API Key 不注入沙箱——请求到达代理时才附加。Agent 代码即使恶意也偷不走密钥。</span></div>
-        <div><span style="font-weight:700;color:#a855f7;">审计追踪</span><br><span class="dim">每次裁决都记录——谁在什么时候尝试了什么操作。SOC 2 和 HIPAA 合规审计的刚需。</span></div>
+    <div style="background:rgba(168,85,247,.04);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:14px;">
+      <div style="font-size:0.85rem;font-weight:700;color:#a855f7;margin-bottom:8px;">四层纵深防御</div>
+      <div class="flex-col gap-sm" style="font-size:0.76rem;line-height:1.45;">
+        <div><span style="color:#a855f7;font-weight:600;">① 文件系统</span><span class="dim"> · Landlock LSM，声明式路径白名单，内核强制</span></div>
+        <div><span style="color:#a855f7;font-weight:600;">② 网络</span><span class="dim"> · OPA 策略引擎，TOFU+Per-binary 身份，热加载</span></div>
+        <div><span style="color:#a855f7;font-weight:600;">③ 进程</span><span class="dim"> · seccomp BPF，syscall 白名单过滤，静态策略</span></div>
+        <div><span style="color:#a855f7;font-weight:600;">④ 推理路由</span><span class="dim"> · inference.local 透明代理，凭证自动注入</span></div>
       </div>
     </div>
+    <div class="callout2" style="font-size:0.82rem;"><strong>攻击路径示例：</strong>恶意代码 → Landlock 阻断文件读写 → OPA 阻断异常网络 → seccomp 阻断危险 syscall → inference.local 阻断凭据泄露。每一层堵一个出口。</div>
+    <div class="callout2" style="font-size:0.82rem;"><strong>关键架构选择：</strong>Supervisor 主动向 Gateway 发起出站 gRPC 连接——不依赖容器编排层的网络配置（Pod IP、端口映射、NAT）。这意味着同一套策略逻辑可以在 Docker、K8s、MicroVM 等多种后端上一致工作。</div>
   </div>
 </div>
-</div><span class="page-num">17 / 27</span></section>
+</div><span class="page-num">21 / 31</span></section>
 <section class="slide bg0"><div class="slide-inner">
 <div class="flex-col gap-md" style="max-width:1360px;">
   <h2>四层协同：一个请求的完整旅程</h2>
@@ -583,8 +901,8 @@ sandbox.kill()</div>
     <text x="40" y="56" fill="#aeb8c4" font-size="12">Claude Code: <tspan font-family="monospace" fill="#d09130">import requests; from bs4 import BeautifulSoup; ...</tspan></text>
     <text x="40" y="72" fill="#6e7e92" font-size="11">问题：能访问外部 URL 吗？能把结果写文件吗？API Key 安全吗？</text>
     <text x="600" y="100" text-anchor="middle" fill="#647488" font-size="15">↓</text>
-    <rect x="20" y="112" width="1160" height="64" rx="8" fill="rgba(208,145,48,.05)" stroke="rgba(208,145,48,.22)"/>
-    <text x="40" y="138" fill="#d09130" font-size="13" font-weight="700">② 执行+隔离 · E2B 创建 Firecracker 沙箱（架构上可注入 OpenShell Supervisor）</text>
+    <rect x="20" y="112" width="1160" height="64" rx="8" fill="rgba(46,170,176,.05)" stroke="rgba(46,170,176,.22)"/>
+    <text x="40" y="138" fill="#2eaab0" font-size="13" font-weight="700">② 执行+隔离 · E2B 创建 Firecracker 沙箱（架构上可注入 OpenShell Supervisor）</text>
     <text x="40" y="158" fill="#aeb8c4" font-size="12">Orchestrator 选节点 → Nomad 启动 Firecracker microVM → envd 初始化（~80ms）→ <tspan fill="#a855f7">注入 Supervisor</tspan> → 加载模板（Python+bs4）→ WebSocket 就绪</text>
     <text x="40" y="174" fill="#6e7e92" font-size="11">注意：Supervisor 是随沙箱一起启动的——治理能力在沙箱创建时就嵌入，不是独立前置步骤</text>
     <text x="600" y="202" text-anchor="middle" fill="#647488" font-size="15">↓ 代码开始在沙箱内执行 ↓</text>
@@ -601,7 +919,32 @@ sandbox.kill()</div>
     <text x="600" y="430" text-anchor="middle" fill="#6e7e92" font-size="12">关键理解：治理层不是请求流水线上的前置环节——它是嵌入在沙箱内部的「执法者」，随沙箱启动，在代码执行的每一刻拦截</text>
   </svg>
 </div>
-</div><span class="page-num">18 / 27</span></section>
+</div><span class="page-num">22 / 31</span></section>
+<section class="slide bg2"><div class="slide-inner">
+<div class="flex-col gap-md" style="max-width:1360px;">
+  <h2>国内沙箱生态——同样的需求，不同的技术路线</h2>
+  <div class="flex-row gap-md">
+    <div class="flex-2">
+      <table class="tbl">
+        <thead><tr><th>公司</th><th>产品</th><th>隔离技术</th><th>亮点</th></tr></thead>
+        <tbody>
+          <tr><td><strong>腾讯</strong></td><td>CubeSandbox <span class="tag">开源</span></td><td class="hl">自研 RustVMM + KVM</td><td>&lt;60ms 冷启动 · 2000+/96vCPU · E2B 兼容</td></tr>
+          <tr><td><strong>阿里</strong></td><td>OpenSandbox <span class="tag">开源</span></td><td>runC / gVisor / Kata / FC 多后端</td><td>9.9K stars · fast-sandbox &lt;50ms · 平台层</td></tr>
+          <tr><td><strong>字节</strong></td><td>HiAgent 2.0</td><td class="hl">Firecracker MicroVM</td><td>火山引擎企业级 · 63% 成本降低</td></tr>
+          <tr><td><strong>百度</strong></td><td>Agent Sandbox AX</td><td>VM 级隔离</td><td>E2B 协议兼容 · 浏览器+代码+RL</td></tr>
+          <tr><td><strong>华为</strong></td><td>Agent Harness Infra</td><td>CloudHypervisor</td><td>3-13MB 开销 · Volcano 调度 5x 吞吐</td></tr>
+          <tr><td><strong>蚂蚁</strong></td><td>AntCWPP</td><td>Kata + eBPF</td><td>Kata 4.0 Rust 重写主导者</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="flex-1 flex-col gap-sm">
+      <div class="callout"><strong>关键发现：</strong>国内<strong>没有自研 gVisor 替代品</strong>（用户态内核）。技术路线普遍选择 <strong>KVM 硬件虚拟化</strong>——腾讯自研 RustVMM、字节用 Firecracker、华为用 CloudHypervisor、阿里做多后端平台层。</div>
+      <div class="callout2"><strong>腾讯 CubeSandbox</strong> 是国内最接近 Firecracker 的自研替代品，性能指标甚至更优（&lt;60ms vs 125ms 冷启动）。已开源（Apache 2.0），2026 年 4 月发布，3 个月内 GitHub Trending Top 20。</div>
+      <div class="prose-sm dim">趋势：国内大厂普遍选择「平台化」路线——不绑定单一隔离技术，而是做可插拔的多后端架构（阿里 OpenSandbox 最典型）。E2B 协议正在成为事实标准的 API 层。</div>
+    </div>
+  </div>
+</div>
+</div><span class="page-num">23 / 31</span></section>
 <section class="slide bg1"><div class="slide-inner">
 <div class="flex-col gap-md" style="max-width:1360px;">
   <h2>关键指标对比</h2>
@@ -609,7 +952,7 @@ sandbox.kill()</div>
     <text x="20" y="24" fill="#cacfd8" font-size="16" font-weight="700">冷启动时间（ms）</text><rect x="20" y="34" width="560" height="1" fill="rgba(55,70,90,.15)"/>
     <text x="20" y="58" fill="#96a4b6" font-size="14">Docker</text><rect x="120" y="46" width="16" height="18" rx="4" fill="rgba(135,149,168,.5)"/><text x="144" y="61" fill="#cacfd8" font-size="14" font-weight="600">~20</text>
     <text x="20" y="88" fill="#96a4b6" font-size="14">gVisor</text><rect x="120" y="76" width="42" height="18" rx="4" fill="rgba(208,145,48,.6)"/><text x="170" y="91" fill="#d09130" font-size="14" font-weight="600">~50</text>
-    <text x="20" y="118" fill="#96a4b6" font-size="14">E2B(模板预热)</text><rect x="120" y="106" width="68" height="18" rx="4" fill="rgba(96,136,168,.6)"/><text x="196" y="121" fill="#6088a8" font-size="14" font-weight="600">~80</text>
+    <text x="20" y="118" fill="#96a4b6" font-size="14">E2B(模板预热)</text><rect x="120" y="106" width="68" height="18" rx="4" fill="rgba(46,170,176,.6)"/><text x="196" y="121" fill="#2eaab0" font-size="14" font-weight="600">~80</text>
     <text x="20" y="148" fill="#96a4b6" font-size="14">Firecracker</text><rect x="120" y="136" width="105" height="18" rx="4" fill="rgba(96,136,168,.5)"/><text x="233" y="151" fill="#cacfd8" font-size="14" font-weight="600">~125</text>
     <text x="20" y="178" fill="#96a4b6" font-size="14">QEMU</text><rect x="120" y="166" width="440" height="18" rx="4" fill="rgba(94,110,130,.35)"/><text x="568" y="181" fill="#6e7e92" font-size="14">数百ms~秒级</text>
     <text x="640" y="24" fill="#cacfd8" font-size="16" font-weight="700">内存开销（MiB）</text><rect x="640" y="34" width="540" height="1" fill="rgba(55,70,90,.15)"/>
@@ -630,7 +973,7 @@ sandbox.kill()</div>
     <text x="600" y="468" text-anchor="middle" fill="#647488" font-size="12">来源：Firecracker NSDI '20 · gVisor 官方 · E2B 官方 · 腾讯 74,379 次对比测试 · 社区 benchmark</text>
   </svg>
 </div>
-</div><span class="page-num">19 / 27</span></section>
+</div><span class="page-num">24 / 31</span></section>
 <section class="slide bg2"><div class="slide-inner">
 <div class="flex-col gap-md" style="max-width:1360px;">
   <h2>三种安全思路，解决的是不同层面的问题</h2>
@@ -650,60 +993,27 @@ sandbox.kill()</div>
   </div>
   <div class="callout mt-md"><strong>三者是互补关系。</strong>硬件隔离防代码逃逸到宿主机。软件隔离收缩内核攻击面——300+ syscall 压到 55 个。策略治理管逻辑权限——防 Agent 访问不该访问的目标。理想方案把三者叠起来，缺一层就有盲区。</div>
 </div>
-</div><span class="page-num">20 / 27</span></section>
-<section class="slide bg-dark"><div class="slide-inner">
-<div class="flex-col gap-md" style="max-width:1250px;">
-  <h2>训练场景——RL 为什么要求更高</h2>
+</div><span class="page-num">25 / 31</span></section>
+<section class="slide bg1"><div class="slide-inner">
+<div class="flex-col gap-md" style="max-width:1360px;">
+  <h2>Firecracker 还是 gVisor？——技术选型的核心逻辑</h2>
   <div class="flex-row gap-lg">
     <div class="flex-1 flex-col gap-sm">
-      <div class="prose">RL Agent 的探索性行为<strong>必然包含危险操作</strong>——这不是 bug，是机制。策略为了最大化 reward 会尝试一切路径。训练场景对沙箱的要求比推理高一个数量级。</div>
-      <div class="callout mt-sm"><strong>真实案例：腾讯 × MiniMax（2026.03）</strong><br>腾讯云 Agent Runtime 沙箱支撑 MiniMax 的 RL 框架 Forge，每日运行<strong>百万级 gVisor 沙箱</strong>。74,379 次 runsc vs runc 对比测试，修正后正确率仅差 0.13 个百分点。58 秒内启动 3 万个 4C8G 沙箱实例，单镜像每分钟创建 60 万沙箱。冷启动 80ms 级（快照恢复），P99 延迟 &lt;1s。原生兼容 E2B 协议。</div>
+      <div style="font-size:1.1rem;font-weight:700;color:#d09130;">为什么有人选 Firecracker</div>
+      <div class="prose-sm">E2B、AWS Lambda、Fly.io 的选择——<strong>硬件隔离是刚需。</strong>场景：多租户运行完全不可信的 AI 生成代码。KVM 独立内核，CPU 硬件保证边界。5 个 virtio 设备，攻击面最小化。</div>
+      <div class="callout mt-sm"><strong>代价：需要裸金属或嵌套虚拟化。</strong>公有云 VM（EC2、GCE、Azure）默认不暴露 /dev/kvm。Firecracker 没有 PCI 总线——<strong>架构上不可能支持 GPU 直通。</strong></div>
+      <div class="prose-sm dim" style="margin-top:6px;">E2B 的后端选型：用 Nomad 而非 K8s——因为 Firecracker 不是容器，Nomad 的 system job + 原始进程执行更适配节点本地 VM 池管理模式。Go 全栈（Firecracker Go SDK + Nomad + Consul 原生）。</div>
     </div>
     <div class="flex-1 flex-col gap-sm">
-      <div class="callout"><strong>真实案例：OpenAI RL 基础设施演进</strong><br>OpenAI 在 2026 年公开分享了其 RL 训练沙箱的演进路径：fork-exec → Linux 容器 → <strong>gVisor</strong> → <strong>硬件虚拟化 MicroVM</strong>（Cloud Hypervisor / CrosVM）。使用增量块级快照（XFS + copy-on-write）+ 快照感知调度路由，支撑 Agent 任务运行 3 天以上。</div>
-      <div class="prose-sm"><strong>RL 训练的四个特殊需求：</strong>① 高并发 rollout——每训练步数千沙箱 ② 快照/恢复——MCTS 减少 40-64% token ③ 环境状态持久化——脏环境污染 reward ④ 严格租户隔离——共享环境破坏马尔可夫假设。</div>
-      <div class="prose-sm">选型：对抗性探索 → Firecracker/Kata · 受限环境 → gVisor · 模型评估 → 容器+seccomp</div>
+      <div style="font-size:1.1rem;font-weight:700;color:#d09130;">为什么有人选 gVisor</div>
+      <div class="prose-sm">OpenAI、Anthropic、Google Cloud Run 的选择——<strong>没有 /dev/kvm。</strong>跑在标准云 VM 上，容器原生 K8s 集成。Sentry 用户态内核拦截 syscall，宿主机仅暴露 ~55 个。</div>
+      <div class="callout mt-sm"><strong>代价：syscall 兼容 ~82%，文件 I/O 延迟可达 runc 的 48x。</strong>Go GC 对延迟敏感负载有影响。Sentry 是 Go 代码——有 bug 就是攻击面。</div>
+      <div class="prose-sm dim" style="margin-top:6px;">独特优势：nvproxy 支持 GPU（T4/A100/L4/H100），多沙箱共享。腾讯 Agentic-RL 每日数百万沙箱——GPU + 规模 + 低成本是硬需求。</div>
     </div>
   </div>
+  <div class="callout" style="margin-top:8px;"><strong>决策树：</strong>需要 GPU？→ gVisor(nvproxy) 或 Cloud Hypervisor(VFIO)。有 /dev/kvm？→ Firecracker（硬件隔离，最小攻击面）。跑在云 VM 上？→ gVisor（无需 KVM）。K8s 最强隔离？→ Kata Containers。Firecracker 和 gVisor 不是替代关系——是在<strong>不同基础设施约束下的最优解</strong>。</div>
 </div>
-</div><span class="page-num">21 / 27</span></section>
-<section class="slide bg1"><div class="slide-inner">
-<div class="flex-col gap-md" style="max-width:1250px;">
-  <h2>推理场景——延迟决定方案</h2>
-  <div class="prose-sm mb-sm">不同推理场景的延迟容忍度跨度极大——从微秒级到秒级。这不是碎片化，是场景差异的必然。</div>
-  <div class="flex-row gap-md">
-    <div class="flex-2">
-      <table class="tbl">
-        <thead><tr><th>场景</th><th>延迟</th><th>方案</th><th>原因</th></tr></thead>
-        <tbody>
-          <tr><td><strong>编码 Agent</strong><br><span class="dim">Claude Code · Cursor</span></td><td>秒级</td><td>gVisor / FC</td><td>需完整 Linux</td></tr>
-          <tr><td><strong>数据分析</strong><br><span class="dim">ChatGPT Code Interpreter</span></td><td>秒级</td><td class="hl">gVisor</td><td>云VM无KVM</td></tr>
-          <tr><td><strong>浏览器操作</strong><br><span class="dim">Perplexity · Manus</span></td><td>毫秒级</td><td>E2B / FC</td><td>完整浏览器</td></tr>
-          <tr><td><strong>MCP 工具调用</strong></td><td class="hl">毫秒级</td><td>eBPF / WASM</td><td>极低延迟</td></tr>
-          <tr><td><strong>多 Agent 协作</strong></td><td>秒~分钟</td><td>E2B Fork</td><td>状态共享</td></tr>
-          <tr><td><strong>轻量 Python</strong></td><td class="hl">微秒级</td><td>Monty</td><td>4.5μs</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="flex-1 flex-col gap-sm">
-      <div class="callout"><strong>ChatGPT Code Interpreter（OpenAI）</strong><br>使用 gVisor (runsc)，部署在 K8s/Azure。9GB 内存、4 vCPU/沙箱。内部是 FastAPI + Jupyter Kernel + ZeroMQ。网络完全锁定——仅允许访问内部 API 代理。<strong>2026 年已支持 11 种编程语言</strong>，从 Python-only 演进为完整容器化开发环境。</div>
-      <div class="callout"><strong>Claude 系列（Anthropic）</strong><br>三种产品三种方案：<strong>Claude.ai</strong>（Web）用 ephemeral gVisor 容器；<strong>Claude Code</strong>（本地）用 Seatbelt/Bubblewrap OS 沙箱，权限提示减少 84%；<strong>Claude Cowork</strong>（桌面）用完整本地 VM。Anthropic 2026.05 发布详细 Containment 文档——核心原则是用环境控制设硬边界，而非仅依赖模型层面的安全策略。</div>
-    </div>
-  </div>
-</div>
-</div><span class="page-num">22 / 27</span></section>
-<section class="slide bg2"><div class="slide-inner">
-<div class="flex-col gap-md" style="max-width:1250px;">
-  <h2>生态里还有这些值得关注的项目</h2>
-  <div class="flex-row gap-md"><div class="flex-1 flex-col gap-sm">
-    <div class="prose-sm"><strong style="color:#d09130;">MCPGuard-Dynamic (Meta, 2026.07)：</strong>eBPF 内核级拦截。BPF LSM 在 open/connect/execve 拦截。论文报告攻击阻止率 68.9%，延迟仅 +0.488ms。威胁模型：MCP 服务器自身不可信。</div>
-    <div class="prose-sm"><strong style="color:#d09130;">Monty（Pydantic 开源）：</strong>Rust 实现的沙箱化 Python 运行时。启动 4.5μs，快照仅数 KB。默认零权限。适合仅需 Python 的轻量场景。</div>
-    <div class="prose-sm"><strong style="color:#6088a8;">Kata Containers：</strong>K8s RuntimeClass。支持 FC/Cloud Hypervisor/QEMU 后端。已有 K8s 的团队升级安全的最短路径。</div>
-    <div class="prose-sm"><strong style="color:#6088a8;">Cloud Hypervisor：</strong>与 FC 同源（crosvm）。GPU 直通、Windows、热迁移。多厂商治理。Koyeb 2025 年从 FC 迁过来——因为 GPU。</div>
-  </div></div>
-  <div class="callout"><strong>趋势：</strong>安全哲学在趋同——「默认零权限，显式授权」成为共识，不管实现方式是 eBPF、WASM、MicroVM 还是自定义解释器。</div>
-</div>
-</div><span class="page-num">23 / 27</span></section>
+</div><span class="page-num">26 / 31</span></section>
 <section class="slide bg-dark"><div class="slide-inner">
 <div class="flex-col gap-md" style="max-width:1250px;">
   <h2>选型——先搞清楚你的约束</h2>
@@ -711,13 +1021,13 @@ sandbox.kill()</div>
     <div class="flex-1 flex-col gap-sm">
       <div class="prose-sm" style="background:rgba(22,30,46,.92);border-left:2px solid #d09130;padding:12px 16px;border-radius:0 8px 8px 0;"><strong>Q1: 有 /dev/kvm 吗？</strong><br>没有 → <span class="accent">gVisor</span>（只需 seccomp）。有 → Q2。</div>
       <div class="prose-sm" style="background:rgba(22,30,46,.92);border-left:2px solid #6088a8;padding:12px 16px;border-radius:0 8px 8px 0;"><strong>Q2: 要硬件级安全？</strong><br>是 → <span style="color:#6088a8;">Firecracker / Kata</span>。否但需完整 Linux → <span class="accent">gVisor</span></div>
-      <div class="prose-sm" style="background:rgba(22,30,46,.92);border-left:2px solid #a855f7;padding:12px 16px;border-radius:0 8px 8px 0;"><strong>Q3: 要平台能力？（SDK/模板/快照/合规）</strong><br>是 → <span class="accent">E2B</span> 或 Daytona。否 → 直接用隔离层。</div>
+      <div class="prose-sm" style="background:rgba(22,30,46,.92);border-left:2px solid #2eaab0;padding:12px 16px;border-radius:0 8px 8px 0;"><strong>Q3: 要平台能力？（SDK/模板/快照/合规）</strong><br>是 → <span class="accent-teal">E2B</span> 或 Daytona。否 → 直接用隔离层。</div>
       <div class="prose-sm" style="background:rgba(22,30,46,.92);border-left:2px solid #5e6e82;padding:12px 16px;border-radius:0 8px 8px 0;"><strong>Q4: 要 GPU？</strong><br>是 → <span class="accent">gVisor</span> (nvproxy) 或 Kata+GPU。否 → 都行。</div>
     </div>
     <div class="flex-1 flex-col gap-sm">
       <div style="font-size:1rem;font-weight:700;">快速对照</div>
       <div class="prose-sm">K8s 升级安全 → <span class="accent">Kata</span></div>
-      <div class="prose-sm">创业从零搭 → <span class="accent">E2B</span></div>
+      <div class="prose-sm">创业从零搭 → <span class="accent-teal">E2B</span></div>
       <div class="prose-sm">大规模 RL+GPU → <span class="accent">gVisor</span></div>
       <div class="prose-sm">金融最高合规 → <span style="color:#6088a8;">Firecracker BYOC</span></div>
       <div class="prose-sm">云 VM 无 KVM → <span class="accent">gVisor</span></div>
@@ -726,7 +1036,7 @@ sandbox.kill()</div>
     </div>
   </div>
 </div>
-</div><span class="page-num">24 / 27</span></section>
+</div><span class="page-num">27 / 31</span></section>
 <section class="slide bg0"><div class="slide-inner">
 <div class="flex-col gap-md" style="max-width:1250px;">
   <h2>趋势</h2>
@@ -751,7 +1061,19 @@ sandbox.kill()</div>
     </div>
   </div>
 </div>
-</div><span class="page-num">25 / 27</span></section>
+</div><span class="page-num">28 / 31</span></section>
+<section class="slide bg2"><div class="slide-inner">
+<div class="flex-col gap-md" style="max-width:1250px;">
+  <h2>生态里还有这些值得关注的项目</h2>
+  <div class="flex-row gap-md"><div class="flex-1 flex-col gap-sm">
+    <div class="prose-sm"><strong style="color:#d09130;">MCPGuard-Dynamic (Meta, 2026.07)：</strong>eBPF 内核级拦截。BPF LSM 在 open/connect/execve 拦截。论文报告攻击阻止率 68.9%，延迟仅 +0.488ms。威胁模型：MCP 服务器自身不可信。<span class="source-ref">（来源：Meta AI 论文，2026）</span></div>
+    <div class="prose-sm"><strong style="color:#d09130;">Monty（Pydantic 开源）：</strong>Rust 实现的沙箱化 Python 运行时。启动 4.5μs，快照仅数 KB。默认零权限。适合仅需 Python 的轻量场景。</div>
+    <div class="prose-sm"><strong style="color:#6088a8;">Kata Containers：</strong>K8s RuntimeClass。支持 FC/Cloud Hypervisor/QEMU 后端。已有 K8s 的团队升级安全的最短路径。</div>
+    <div class="prose-sm"><strong style="color:#6088a8;">Cloud Hypervisor：</strong>与 FC 同源（crosvm）。GPU 直通、Windows、热迁移。多厂商治理。Koyeb 2025 年从 FC 迁过来——因为 GPU。</div>
+  </div></div>
+  <div class="callout"><strong>趋势：</strong>安全哲学在趋同——「默认零权限，显式授权」成为共识，不管实现方式是 eBPF、WASM、MicroVM 还是自定义解释器。</div>
+</div>
+</div><span class="page-num">29 / 31</span></section>
 <section class="slide bg1"><div class="slide-inner">
 <div class="flex-col gap-lg" style="max-width:1150px;">
   <h2>总结</h2>
@@ -761,19 +1083,31 @@ sandbox.kill()</div>
     <div class="flex-row gap-sm" style="align-items:baseline;"><div style="font-size:1.5rem;font-weight:800;color:#d09130;min-width:36px;">3</div><div class="prose"><strong>没有银弹。</strong>安全、速度、灵活性的不可能三角意味着不存在最好的方案。gVisor 不需要 KVM 是结构性壁垒，Firecracker 硬件隔离是安全上限，OpenShell 策略治理弥补可见性短板。</div></div>
     <div class="flex-row gap-sm" style="align-items:baseline;"><div style="font-size:1.5rem;font-weight:800;color:#d09130;min-width:36px;">4</div><div class="prose"><strong>「盒子 + 规则」是正确方向。</strong>物理隔离（Firecracker）+ 策略治理（OpenShell）+ 凭据保护 = 纵深防御。缺一环就有盲区。</div></div>
   </div>
+  <div style="margin-top:8px;padding:14px 20px;background:rgba(208,145,48,.06);border:1px solid rgba(208,145,48,.18);border-radius:10px;">
+    <div style="font-size:1.3rem;font-weight:800;color:#d09130;text-align:center;">一句话：Agent 沙箱的本质不是选一个工具，<br>是四层各司其职——隔离层做边界、执行层做供给、治理层做裁决。</div>
+  </div>
   <div class="dim" style="font-size:0.76rem;border-top:1px solid rgba(55,70,90,.12);padding-top:14px;">基于系列分析：容器基础 · Firecracker · gVisor · E2B · OpenShell · 真实案例引自腾讯/MiniMax/OpenAI/Anthropic 公开资料 · 数据截至 2026.07</div>
 </div>
-</div><span class="page-num">26 / 27</span></section>
+</div><span class="page-num">30 / 31</span></section>
 <section class="slide bg-dark"><div class="slide-inner">
 <div class="flex-col" style="text-align:center;align-items:center;max-width:700px;margin:0 auto;">
   <h2 style="margin-bottom:12px;">谢谢，欢迎讨论。</h2>
   <div class="prose" style="text-align:center;">我们现在讨论的这些项目和架构，<br>可能就是几年后的基础设施标配。</div>
-  <div class="flex-row gap-sm" style="margin-top:32px;">
-    <span class="tag">Firecracker</span><span class="tag">gVisor</span><span class="tag">E2B</span>
-    <span class="tag3">OpenShell</span><span class="tag">eBPF</span><span class="tag">WASM</span>
+  <div class="flex-row gap-sm" style="margin-top:24px;">
+    <span class="tag">Firecracker</span><span class="tag">gVisor</span><span class="tag-teal">E2B</span>
+    <span class="tag3">OpenShell</span><span class="tag">eBPF</span>
+  </div>
+  <div style="margin-top:32px;background:rgba(22,30,46,.92);border:1px solid rgba(90,110,140,.25);border-radius:12px;padding:18px 28px;max-width:560px;">
+    <div style="font-size:0.7rem;font-weight:700;letter-spacing:.08em;color:#d09130;margin-bottom:12px;">📖 深度文章 · zhengzhenyu.github.io</div>
+    <div class="flex-col gap-sm" style="font-size:0.82rem;line-height:1.9;">
+      <a href="https://zhengzhenyu.github.io/2026/07/30/firecracker-insight/" target="_blank" style="color:#6088a8;text-decoration:none;">Firecracker 深度洞察 —— 极简即安全，从 5 个 Virtio 设备看 MicroVM 的安全哲学</a>
+      <a href="https://zhengzhenyu.github.io/2026/07/30/gvisor-insight/" target="_blank" style="color:#d09130;text-decoration:none;">gVisor 深度洞察 —— 用户态内核的隔离哲学，仅 55 个 Syscall 的沙箱</a>
+      <a href="https://zhengzhenyu.github.io/2026/07/29/e2b-agent-sandbox-insight/" target="_blank" style="color:#2eaab0;text-decoration:none;">E2B 深度洞察 —— AI Agent 代码执行沙箱的架构、战略与边界</a>
+      <a href="https://zhengzhenyu.github.io/2026/07/23/nvidia-openshell-insight/" target="_blank" style="color:#a855f7;text-decoration:none;">OpenShell 初探 —— AI Agent 安全运行时的架构设计与技术细节</a>
+    </div>
   </div>
 </div>
-</div><span class="page-num">27 / 27</span></section>
+</div><span class="page-num">31 / 31</span></section>
 
 <nav class="nav-dots" id="navDots"></nav>
 <script>const S=document.querySelectorAll(".slide"),N=document.getElementById("navDots");S.forEach((_,i)=>{const d=document.createElement("div");d.className="nav-dot";d.title="Slide "+(i+1);d.addEventListener("click",()=>S[i].scrollIntoView({behavior:"smooth"}));N.appendChild(d)});const O=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){const i=Array.from(S).indexOf(x.target);document.querySelectorAll(".nav-dot").forEach((d,j)=>d.classList.toggle("active",j===i))}})},{threshold:.5});S.forEach(s=>O.observe(s));document.addEventListener("keydown",e=>{const c=Array.from(S).findIndex(s=>{const r=s.getBoundingClientRect();return r.top>=-100&&r.top<=200});if(e.key==="ArrowDown"||e.key==="ArrowRight"||e.key===" "){e.preventDefault();S[Math.min(c+1,S.length-1)].scrollIntoView({behavior:"smooth"})}else if(e.key==="ArrowUp"||e.key==="ArrowLeft"){e.preventDefault();S[Math.max(c-1,0)].scrollIntoView({behavior:"smooth"})}});</script>

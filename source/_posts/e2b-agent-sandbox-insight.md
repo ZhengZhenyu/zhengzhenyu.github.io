@@ -194,9 +194,32 @@ E2B 用 Firecracker microVM 回答了这个问题。这家由两个捷克发小�
 
 创始团队的起点颇有意思。GPT-3.5 发布后，他们尝试做一个类似 Devin 的编码 Agent，在开发过程中发现「让 Agent 生成的代码在安全环境中执行」这件事本身就是一个独立且足够大的问题。于是他们放弃 Agent 产品，转向 Agent 基础设施。这种「做 Agent 不成，转而做 Agent 需要的铲子」的 pivot 路径，与 NVIDIA 从 GPU 销售到 OpenShell 运行时的逻辑异曲同工。
 
+### 4.1.5 核心洞察：沙箱原语——E2B 到底提供了什么能力
+
+理解 E2B 的关键，不是看它的五层架构，而是看它**暴露给开发者的 API surface**。E2B 的本质不是「Firecracker 的封装」，而是将沙箱抽象为**一等编程对象**（first-class programming object）。开发者操作的是一组**沙箱原语**（Sandbox Primitives）——创建、执行、读写文件、暂停恢复、克隆、销毁——全部通过 SDK 完成，不需要知道底层是 Firecracker 还是 Docker。
+
+<div class="callout callout-amber">
+  <div class="callout-label">E2B 的八项沙箱原语</div>
+  <p><strong>① 创建</strong>：<code>Sandbox.create(template, timeout)</code>——约 80ms 返回可用的沙箱对象。模板预装 Python/Node.js/浏览器等环境。</p>
+  <p><strong>② 执行</strong>：<code>sandbox.commands.run(cmd, on_stdout, background)</code>——前台流式输出、后台进程 PID 追踪、退出码收集。</p>
+  <p><strong>③ 文件</strong>：<code>sandbox.filesystem.read/write/watch</code>——沙箱内文件系统读写，路径隔离在沙箱 rootfs 内。</p>
+  <p><strong>④ 暂停与恢复</strong>：空闲沙箱自动暂停（内存状态保持），任何 SDK 活动自动恢复——Agent 无需轮询状态。</p>
+  <p><strong>⑤ 克隆</strong>：<code>sandbox.fork()</code>——复制运行中沙箱的完整状态（文件系统 + 进程树 + 环境变量），多 Agent 协作场景的关键能力。</p>
+  <p><strong>⑥ 模板</strong>：Dockerfile → ext4 镜像的自动转换。自定义基础镜像、预装依赖、固化环境变量。模板在节点本地缓存，命中时跳过拉取。</p>
+  <p><strong>⑦ 连接</strong>：<code>Sandbox.connect(id)</code>——重连已有沙箱。断开连接不会销毁沙箱（除非超时），适合长时间任务。</p>
+  <p><strong>⑧ 销毁</strong>：<code>sandbox.kill()</code>——显式释放资源。或依赖 timeout 自动回收，防止资源泄漏。</p>
+</div>
+
+这八项原语覆盖了 Agent 代码执行的完整生命周期。对比直接用 Firecracker：你需要手动管理 KVM、配置 virtio 设备、处理 vsock 通信、实现 MMDS 认证、构建 ext4 镜像、写调度逻辑——E2B 把这一切压缩成了一个 `Sandbox.create()` 调用。**这是 E2B 的核心价值：不是更安全（Firecracker 已经很安全），而是让安全执行变得和调用一个函数一样简单。**
+
+<div class="verdict">
+  <p class="verdict-title">一句话总结</p>
+  <p>E2B 将 VM 管理、vsock 通信、MMDS 认证、ext4 镜像构建全部藏在 API 后面。Agent 开发者看到的是一个 <strong>sandbox 对象</strong>——有方法、有生命周期、有回调——不需要知道 Firecracker 是什么。</p>
+</div>
+
 ### 4.2 五层架构全景
 
-E2B 的架构是典型的「从 SDK 到硬件」的垂直整合，每一层有明确职责：
+这八项原语由五层架构支撑。E2B 的架构是典型的「从 SDK 到硬件」的垂直整合，每一层有明确职责：
 
 <div class="arch-grid">
   <div class="arch-card arch-sdk">
