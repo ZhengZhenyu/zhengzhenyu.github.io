@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 210" width="100%" role="img" aria-label="四类判断覆盖依赖生命周期的四个决策点：引入、存续、演化、归属">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"></path>
+    </marker>
+  </defs>
+  <style>
+    .title { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 700; fill: #292524; }
+    .box { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; }
+    .stage { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; font-weight: 700; fill: #c2410c; }
+    .box-title { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 700; fill: #292524; }
+    .box-desc { font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; fill: #57534e; }
+    .risk-hi { font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; font-weight: 600; fill: #b91c1c; }
+    .risk-lo { font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; font-weight: 600; fill: #16a34a; }
+    .risk-md { font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; font-weight: 600; fill: #d97706; }
+    .arrow { stroke: #d6d3d1; stroke-width: 1.4; fill: none; }
+    .arrowhead { fill: #d6d3d1; }
+    @media (prefers-color-scheme: dark) {
+      .title { fill: #e7e5e4; }
+      .box { fill: #1c1917; stroke: #44403c; }
+      .stage { fill: #f97316; }
+      .box-title { fill: #e7e5e4; }
+      .box-desc { fill: #a8a29e; }
+      .risk-hi { fill: #f87171; }
+      .risk-lo { fill: #4ade80; }
+      .risk-md { fill: #fbbf24; }
+      .arrow { stroke: #57534e; }
+      .arrowhead { fill: #57534e; }
+    }
+  </style>
+
+  <text class="title" x="40" y="34">四类判断覆盖依赖生命周期的四个决策点</text>
+
+  <rect class="box" x="40" y="60" width="205" height="130" rx="8"/>
+  <text class="stage" x="56" y="82">决策点 01 · 引入</text>
+  <text class="box-title" x="56" y="106">先例判断</text>
+  <text class="box-desc" x="56" y="128">回答：以前批过吗？</text>
+  <text class="box-desc" x="56" y="146">智能体：ORCA</text>
+  <text class="risk-hi" x="56" y="166">自动化风险：高</text>
+
+  <rect class="box" x="273" y="60" width="205" height="130" rx="8"/>
+  <text class="stage" x="289" y="82">决策点 02 · 存续</text>
+  <text class="box-title" x="289" y="106">事实判断</text>
+  <text class="box-desc" x="289" y="128">回答：真的在用吗？</text>
+  <text class="box-desc" x="289" y="146">智能体：CleanUp</text>
+  <text class="risk-lo" x="289" y="166">自动化风险：低</text>
+
+  <rect class="box" x="506" y="60" width="205" height="130" rx="8"/>
+  <text class="stage" x="522" y="82">决策点 03 · 演化</text>
+  <text class="box-title" x="522" y="106">时机判断</text>
+  <text class="box-desc" x="522" y="128">回答：升级安全吗？</text>
+  <text class="box-desc" x="522" y="146">智能体：Upgrade</text>
+  <text class="risk-lo" x="522" y="166">自动化风险：低</text>
+
+  <rect class="box" x="739" y="60" width="205" height="130" rx="8"/>
+  <text class="stage" x="755" y="82">决策点 04 · 归属</text>
+  <text class="box-title" x="755" y="106">责任判断</text>
+  <text class="box-desc" x="755" y="128">回答：归哪个团队？</text>
+  <text class="box-desc" x="755" y="146">智能体：Ownership</text>
+  <text class="risk-md" x="755" y="166">自动化风险：中</text>
+
+  <line class="arrow" x1="245" y1="125" x2="269" y2="125" marker-end="url(#arrow)"/>
+  <line class="arrow" x1="478" y1="125" x2="502" y2="125" marker-end="url(#arrow)"/>
+  <line class="arrow" x1="711" y1="125" x2="735" y2="125" marker-end="url(#arrow)"/>
+</svg>

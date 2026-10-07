@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 330" width="100%" role="img" aria-label="检测与判断两条治理流水线的对比：检测产出票据，判断产出结果">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"></path>
+    </marker>
+  </defs>
+  <style>
+    .title { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 700; fill: #292524; }
+    .lane { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 700; fill: #57534e; }
+    .box { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; }
+    .box-accent { fill: #fffbeb; stroke: #d97706; stroke-width: 1.2; }
+    .box-title { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 600; fill: #292524; }
+    .box-desc { font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; fill: #57534e; }
+    .arrow { stroke: #d6d3d1; stroke-width: 1.4; fill: none; }
+    .arrowhead { fill: #d6d3d1; }
+    @media (prefers-color-scheme: dark) {
+      .title { fill: #e7e5e4; }
+      .lane { fill: #a8a29e; }
+      .box { fill: #1c1917; stroke: #44403c; }
+      .box-accent { fill: #2d1f0c; stroke: #f97316; }
+      .box-title { fill: #e7e5e4; }
+      .box-desc { fill: #a8a29e; }
+      .arrow { stroke: #57534e; }
+      .arrowhead { fill: #57534e; }
+    }
+  </style>
+
+  <text class="title" x="40" y="34">同一条依赖引入事件，走过两条不同的流水线</text>
+  <text class="lane" x="40" y="70">Detection 检测流水线：产出票据</text>
+  <text class="lane" x="40" y="212">Judgment 判断流水线：产出结果</text>
+
+  <!-- Lane A -->
+  <rect class="box" x="40" y="80" width="150" height="76" rx="6"/>
+  <text class="box-title" x="56" y="108">依赖引入</text>
+  <text class="box-desc" x="56" y="128">新依赖被添加</text>
+  <text class="box-desc" x="56" y="144">（同一事件）</text>
+
+  <rect class="box" x="218" y="80" width="150" height="76" rx="6"/>
+  <text class="box-title" x="234" y="108">规则扫描</text>
+  <text class="box-desc" x="234" y="128">许可证 · 漏洞</text>
+  <text class="box-desc" x="234" y="144">策略匹配</text>
+
+  <rect class="box" x="396" y="80" width="150" height="76" rx="6"/>
+  <text class="box-title" x="412" y="108">违规票据</text>
+  <text class="box-desc" x="412" y="128">每个违规</text>
+  <text class="box-desc" x="412" y="144">开一张票</text>
+
+  <rect class="box" x="574" y="80" width="150" height="76" rx="6"/>
+  <text class="box-title" x="590" y="108">人工排队</text>
+  <text class="box-desc" x="590" y="128">分诊 · 评审</text>
+  <text class="box-desc" x="590" y="144">只能人说「通过」</text>
+
+  <rect class="box" x="752" y="80" width="150" height="76" rx="6"/>
+  <text class="box-title" x="768" y="108">Backlog</text>
+  <text class="box-desc" x="768" y="128">积压与摩擦</text>
+  <text class="box-desc" x="768" y="144">拖慢工程速度</text>
+
+  <line class="arrow" x1="190" y1="118" x2="214" y2="118" marker-end="url(#arrow)"/>
+  <line class="arrow" x1="368" y1="118" x2="392" y2="118" marker-end="url(#arrow)"/>
+  <line class="arrow" x1="546" y1="118" x2="570" y2="118" marker-end="url(#arrow)"/>
+  <line class="arrow" x1="724" y1="118" x2="748" y2="118" marker-end="url(#arrow)"/>
+
+  <!-- Lane B -->
+  <rect class="box-accent" x="40" y="222" width="150" height="76" rx="6"/>
+  <text class="box-title" x="56" y="250">依赖引入</text>
+  <text class="box-desc" x="56" y="270">新依赖被添加</text>
+  <text class="box-desc" x="56" y="286">（同一事件）</text>
+
+  <rect class="box-accent" x="218" y="222" width="150" height="76" rx="6"/>
+  <text class="box-title" x="234" y="250">数据基座</text>
+  <text class="box-desc" x="234" y="270">注册中心 · SBOM</text>
+  <text class="box-desc" x="234" y="286">历史先例库</text>
+
+  <rect class="box-accent" x="396" y="222" width="150" height="76" rx="6"/>
+  <text class="box-title" x="412" y="250">智能体推理</text>
+  <text class="box-desc" x="412" y="270">先例匹配</text>
+  <text class="box-desc" x="412" y="286">上下文评估</text>
+
+  <rect class="box-accent" x="574" y="222" width="150" height="76" rx="6"/>
+  <text class="box-title" x="590" y="250">自动行动</text>
+  <text class="box-desc" x="590" y="270">PR · 批准</text>
+  <text class="box-desc" x="590" y="286">路由到责任团队</text>
+
+  <rect class="box-accent" x="752" y="222" width="150" height="76" rx="6"/>
+  <text class="box-title" x="768" y="250">异常升级</text>
+  <text class="box-desc" x="768" y="270">仅边界情况</text>
+  <text class="box-desc" x="768" y="286">交给人判断</text>
+
+  <line class="arrow" x1="190" y1="260" x2="214" y2="260" marker-end="url(#arrow)"/>
+  <line class="arrow" x1="368" y1="260" x2="392" y2="260" marker-end="url(#arrow)"/>
+  <line class="arrow" x1="546" y1="260" x2="570" y2="260" marker-end="url(#arrow)"/>
+  <line class="arrow" x1="724" y1="260" x2="748" y2="260" marker-end="url(#arrow)"/>
+</svg>

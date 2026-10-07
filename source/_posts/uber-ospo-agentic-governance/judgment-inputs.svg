@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" width="100%" role="img" aria-label="一次合规判断的三个输入：规则、上下文、先例">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"></path>
+    </marker>
+  </defs>
+  <style>
+    .title { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 700; fill: #292524; }
+    .box { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; }
+    .box-accent { fill: #fffbeb; stroke: #d97706; stroke-width: 1.2; }
+    .box-title { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 600; fill: #292524; }
+    .box-desc { font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; fill: #57534e; }
+    .box-title-accent { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 700; fill: #292524; }
+    .arrow { stroke: #d6d3d1; stroke-width: 1.4; fill: none; }
+    .arrowhead { fill: #d6d3d1; }
+    @media (prefers-color-scheme: dark) {
+      .title { fill: #e7e5e4; }
+      .box { fill: #1c1917; stroke: #44403c; }
+      .box-accent { fill: #2d1f0c; stroke: #f97316; }
+      .box-title { fill: #e7e5e4; }
+      .box-desc { fill: #a8a29e; }
+      .box-title-accent { fill: #e7e5e4; }
+      .arrow { stroke: #57534e; }
+      .arrowhead { fill: #57534e; }
+    }
+  </style>
+
+  <text class="title" x="40" y="34">一次合规判断的三个输入</text>
+
+  <rect class="box" x="40" y="52" width="210" height="64" rx="6"/>
+  <text class="box-title" x="56" y="76">① 规则（明确性）</text>
+  <text class="box-desc" x="56" y="96">许可证条款 · 政策边界</text>
+  <text class="box-desc" x="56" y="110">可编码，检测工具已覆盖</text>
+
+  <rect class="box" x="40" y="148" width="210" height="64" rx="6"/>
+  <text class="box-title" x="56" y="172">② 上下文（场景性）</text>
+  <text class="box-desc" x="56" y="192">怎么用 · 怎么分发</text>
+  <text class="box-desc" x="56" y="206">无法穷举成规则</text>
+
+  <rect class="box" x="40" y="244" width="210" height="64" rx="6"/>
+  <text class="box-title" x="56" y="268">③ 先例（连续性）</text>
+  <text class="box-desc" x="56" y="288">上次怎么批 · 附加条件</text>
+  <text class="box-desc" x="56" y="302">散落在历史档案里</text>
+
+  <rect class="box-accent" x="440" y="118" width="240" height="116" rx="8"/>
+  <text class="box-title-accent" x="456" y="146">合规判断</text>
+  <text class="box-desc" x="456" y="170">规则 · 上下文 · 先例</text>
+  <text class="box-desc" x="456" y="188">三者交叉 → 受限决策</text>
+  <text class="box-desc" x="456" y="206">每一步可被事后审计</text>
+
+  <line class="arrow" x1="250" y1="84" x2="436" y2="150" marker-end="url(#arrow)"/>
+  <line class="arrow" x1="250" y1="180" x2="436" y2="176" marker-end="url(#arrow)"/>
+  <line class="arrow" x1="250" y1="276" x2="436" y2="202" marker-end="url(#arrow)"/>
+</svg>
