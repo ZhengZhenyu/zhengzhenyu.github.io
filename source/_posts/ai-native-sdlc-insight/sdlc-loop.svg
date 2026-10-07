@@ -1,0 +1,125 @@
+<svg viewBox="0 0 700 680" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="slArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" class="mk"/>
+    </marker>
+    <marker id="slArrowRed" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" class="mk-red"/>
+    </marker>
+  </defs>
+
+  <style>
+    .node    { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; }
+    .hdr     { stroke-width: 0; }
+    .hdr-s   { fill: #57534e; }
+    .hdr-t   { fill: #0f766e; }
+    .hdr-a   { fill: #c2410c; }
+    .n-cn    { font-family: system-ui,-apple-system,sans-serif; font-size: 11px; font-weight: 650; fill: #fff; }
+    .n-en    { font-family: 'SF Mono','Cascadia Code',monospace; font-size: 8px; fill: #a8a29e; letter-spacing: .12em; }
+    .arc     { fill: none; stroke: #d6d3d1; stroke-width: 1.5; }
+    .arc-red { fill: none; stroke: #b91c1c; stroke-width: 1.5; stroke-dasharray: 7,5; }
+    .chip    { fill: #fffbeb; stroke: #fdba74; stroke-width: 1; }
+    .chip-t  { font-family: 'SF Mono','Cascadia Code',monospace; font-size: 9.5px; fill: #92400e; }
+    .gate    { fill: #d97706; }
+    .gate-t  { font-family: system-ui,-apple-system,sans-serif; font-size: 9px; font-weight: 600; fill: #b45309; }
+    .auto-t  { font-family: system-ui,-apple-system,sans-serif; font-size: 9px; font-weight: 600; fill: #b91c1c; }
+    .center  { fill: #f5f5f4; stroke: #d6d3d1; stroke-width: 1; }
+    .c-t1    { font-family: system-ui,-apple-system,sans-serif; font-size: 14px; font-weight: 700; fill: #44403c; }
+    .c-t2    { font-family: system-ui,-apple-system,sans-serif; font-size: 11px; font-weight: 600; fill: #c2410c; }
+    .c-t3    { font-family: 'SF Mono','Cascadia Code',monospace; font-size: 8.5px; fill: #78716c; }
+    .mk      { fill: #a8a29e; }
+    .mk-red  { fill: #b91c1c; }
+
+    @media (prefers-color-scheme: dark) {
+      .node    { fill: #1c1917; stroke: #44403c; }
+      .n-en    { fill: #78716c; }
+      .arc     { stroke: #57534e; }
+      .arc-red { stroke: #f87171; }
+      .chip    { fill: #2d1f0c; stroke: #78350f; }
+      .chip-t  { fill: #fbbf24; }
+      .gate    { fill: #fbbf24; }
+      .gate-t  { fill: #d97706; }
+      .auto-t  { fill: #f87171; }
+      .center  { fill: #292524; stroke: #57534e; }
+      .c-t1    { fill: #d6d3d1; }
+      .c-t2    { fill: #f97316; }
+      .c-t3    { fill: #a8a29e; }
+      .mk      { fill: #57534e; }
+      .mk-red  { fill: #f87171; }
+    }
+  </style>
+
+  <!-- arcs -->
+  <path d="M 407 112 A 235 235 0 0 1 519 177" class="arc" marker-end="url(#slArrow)"/>
+  <path d="M 576 275 A 235 235 0 0 1 576 405" class="arc" marker-end="url(#slArrow)"/>
+  <path d="M 519 503 A 235 235 0 0 1 407 568" class="arc" marker-end="url(#slArrow)"/>
+  <path d="M 293 568 A 235 235 0 0 1 181 503" class="arc" marker-end="url(#slArrow)"/>
+  <path d="M 124 405 A 235 235 0 0 1 124 275" class="arc" marker-end="url(#slArrow)"/>
+  <path d="M 181 177 A 235 235 0 0 1 293 112" class="arc-red" marker-end="url(#slArrowRed)"/>
+
+  <!-- nodes -->
+  <rect x="291" y="83" width="118" height="44" rx="8" class="node"/>
+  <rect x="291" y="83" width="118" height="20" rx="8" class="hdr hdr-s"/>
+  <rect x="291" y="95" width="118" height="8" class="hdr hdr-s"/>
+  <text x="350" y="97" text-anchor="middle" class="n-cn">01 · 计划</text>
+  <text x="350" y="118" text-anchor="middle" class="n-en">PLAN</text>
+
+  <rect x="494" y="200" width="118" height="44" rx="8" class="node"/>
+  <rect x="494" y="200" width="118" height="20" rx="8" class="hdr hdr-t"/>
+  <rect x="494" y="212" width="118" height="8" class="hdr hdr-t"/>
+  <text x="553" y="214" text-anchor="middle" class="n-cn">02 · 设计</text>
+  <text x="553" y="235" text-anchor="middle" class="n-en">DESIGN</text>
+
+  <rect x="494" y="435" width="118" height="44" rx="8" class="node"/>
+  <rect x="494" y="435" width="118" height="20" rx="8" class="hdr hdr-a"/>
+  <rect x="494" y="447" width="118" height="8" class="hdr hdr-a"/>
+  <text x="553" y="449" text-anchor="middle" class="n-cn">03 · 构建</text>
+  <text x="553" y="470" text-anchor="middle" class="n-en">BUILD</text>
+
+  <rect x="291" y="553" width="118" height="44" rx="8" class="node"/>
+  <rect x="291" y="553" width="118" height="20" rx="8" class="hdr hdr-s"/>
+  <rect x="291" y="565" width="118" height="8" class="hdr hdr-s"/>
+  <text x="350" y="567" text-anchor="middle" class="n-cn">04 · 测试</text>
+  <text x="350" y="588" text-anchor="middle" class="n-en">TEST</text>
+
+  <rect x="88" y="435" width="118" height="44" rx="8" class="node"/>
+  <rect x="88" y="435" width="118" height="20" rx="8" class="hdr hdr-t"/>
+  <rect x="88" y="447" width="118" height="8" class="hdr hdr-t"/>
+  <text x="147" y="449" text-anchor="middle" class="n-cn">05 · 部署</text>
+  <text x="147" y="470" text-anchor="middle" class="n-en">DEPLOY</text>
+
+  <rect x="88" y="200" width="118" height="44" rx="8" class="node"/>
+  <rect x="88" y="200" width="118" height="20" rx="8" class="hdr hdr-a"/>
+  <rect x="88" y="212" width="118" height="8" class="hdr hdr-a"/>
+  <text x="147" y="214" text-anchor="middle" class="n-cn">06 · 维护</text>
+  <text x="147" y="235" text-anchor="middle" class="n-en">MAINTAIN</text>
+
+  <!-- artifact chips -->
+  <rect x="429" y="125" width="76" height="22" rx="11" class="chip"/>
+  <text x="467" y="140" text-anchor="middle" class="chip-t">intent.md</text>
+  <rect x="552" y="329" width="66" height="22" rx="11" class="chip"/>
+  <text x="585" y="344" text-anchor="middle" class="chip-t">spec.md</text>
+  <rect x="426" y="532" width="82" height="22" rx="11" class="chip"/>
+  <text x="467" y="547" text-anchor="middle" class="chip-t">diff + 测试</text>
+  <rect x="194" y="532" width="76" height="22" rx="11" class="chip"/>
+  <text x="232" y="547" text-anchor="middle" class="chip-t">PR + 评审</text>
+  <rect x="73" y="329" width="84" height="22" rx="11" class="chip"/>
+  <text x="115" y="344" text-anchor="middle" class="chip-t">部署/回滚</text>
+  <rect x="180" y="125" width="104" height="22" rx="11" class="chip"/>
+  <text x="232" y="140" text-anchor="middle" class="chip-t">事故→新intent</text>
+  <text x="232" y="106" text-anchor="middle" class="auto-t">自治回流 · 无人启动</text>
+
+  <!-- human gates -->
+  <rect x="490.5" y="84.5" width="9" height="9" transform="rotate(45 495 89)" class="gate"/>
+  <text x="506" y="92" class="gate-t">人工：接受意图</text>
+  <rect x="635.5" y="335.5" width="9" height="9" transform="rotate(45 640 340)" class="gate"/>
+  <text x="640" y="366" text-anchor="middle" class="gate-t">人工：批准规格</text>
+  <rect x="55.5" y="335.5" width="9" height="9" transform="rotate(45 60 340)" class="gate"/>
+  <text x="60" y="366" text-anchor="middle" class="gate-t">人工：发布授权</text>
+
+  <!-- center -->
+  <circle cx="350" cy="340" r="110" class="center"/>
+  <text x="350" y="322" text-anchor="middle" class="c-t1">Git 版本控制</text>
+  <text x="350" y="348" text-anchor="middle" class="c-t2">工件链 = 审计轨迹</text>
+  <text x="350" y="370" text-anchor="middle" class="c-t3">谁要求 · Agent 产出 · 谁批准</text>
+</svg>

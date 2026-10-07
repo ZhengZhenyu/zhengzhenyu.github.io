@@ -1,0 +1,76 @@
+<svg viewBox="0 0 720 356" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="taArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" class="mk"/>
+    </marker>
+  </defs>
+
+  <style>
+    .diag   { stroke: #d6d3d1; stroke-width: 1.5; stroke-dasharray: 7,5; fill: none; }
+    .diag-t { font-family: system-ui,-apple-system,sans-serif; font-size: 10px; font-weight: 600; fill: #78716c; }
+    .box    { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; }
+    .hdr    { stroke-width: 0; }
+    .hdr-1  { fill: #57534e; }
+    .hdr-2  { fill: #0f766e; }
+    .hdr-3  { fill: #b45309; }
+    .h-t    { font-family: system-ui,-apple-system,sans-serif; font-size: 11px; font-weight: 650; fill: #fff; }
+    .a-t    { font-family: system-ui,-apple-system,sans-serif; font-size: 10px; font-weight: 650; fill: #44403c; }
+    .b-t    { font-family: system-ui,-apple-system,sans-serif; font-size: 9.5px; fill: #57534e; }
+    .note   { font-family: system-ui,-apple-system,sans-serif; font-size: 9.5px; fill: #78716c; }
+    .mk     { fill: #a8a29e; }
+
+    @media (prefers-color-scheme: dark) {
+      .diag   { stroke: #57534e; }
+      .diag-t { fill: #a8a29e; }
+      .box    { fill: #1c1917; stroke: #44403c; }
+      .a-t    { fill: #d6d3d1; }
+      .b-t    { fill: #a8a29e; }
+      .note   { fill: #78716c; }
+      .mk     { fill: #57534e; }
+    }
+  </style>
+
+  <!-- autonomy axis -->
+  <line x1="60" y1="336" x2="688" y2="42" class="diag" marker-end="url(#taArrow)"/>
+  <text x="640" y="30" text-anchor="end" class="diag-t">自治度 / 行动半径递增 →</text>
+
+  <!-- tier 1 -->
+  <rect x="56" y="228" width="192" height="96" rx="8" class="box"/>
+  <rect x="56" y="228" width="192" height="22" rx="8" class="hdr hdr-1"/>
+  <rect x="56" y="238" width="192" height="12" class="hdr hdr-1"/>
+  <text x="152" y="243" text-anchor="middle" class="h-t">1σ · 轻度偏离</text>
+  <text x="70" y="268" class="a-t">行动：仅记录（log）</text>
+  <text x="70" y="288" class="b-t">脚本写日志，不调用模型</text>
+  <text x="70" y="308" class="note">零成本，可大规模部署</text>
+
+  <!-- tier 2 -->
+  <rect x="286" y="152" width="200" height="172" rx="8" class="box"/>
+  <rect x="286" y="152" width="200" height="22" rx="8" class="hdr hdr-2"/>
+  <rect x="286" y="162" width="200" height="12" class="hdr hdr-2"/>
+  <text x="386" y="167" text-anchor="middle" class="h-t">2σ · 明显偏离</text>
+  <text x="300" y="192" class="a-t">行动：只读诊断</text>
+  <text x="300" y="212" class="b-t">· 可读代码 / 日志 / CI 记录</text>
+  <text x="300" y="230" class="b-t">· 产出诊断 intent.md</text>
+  <text x="300" y="248" class="b-t">· 人工分诊：修 / 排期 / 驳回</text>
+  <text x="300" y="272" class="note">驳回用于调优阈值、降低噪音</text>
+  <text x="300" y="290" class="note">产出进入既有评审门禁</text>
+
+  <!-- tier 3 -->
+  <rect x="514" y="76" width="170" height="248" rx="8" class="box"/>
+  <rect x="514" y="76" width="170" height="22" rx="8" class="hdr hdr-3"/>
+  <rect x="514" y="86" width="170" height="12" class="hdr hdr-3"/>
+  <text x="599" y="91" text-anchor="middle" class="h-t">3σ · 严重偏离</text>
+  <text x="528" y="116" class="a-t">行动：受控行动</text>
+  <text x="528" y="136" class="b-t">· 开回滚 / 修复 PR</text>
+  <text x="540" y="152" class="b-t">（仍过评审门禁）</text>
+  <text x="528" y="174" class="b-t">· 或触发预批准</text>
+  <text x="540" y="190" class="b-t">runbook</text>
+  <text x="528" y="214" class="note">生产环境仍需</text>
+  <text x="540" y="230" class="note">发布授权</text>
+  <text x="528" y="252" class="note">触发层：定时任务 /</text>
+  <text x="540" y="268" class="note">监控 webhook /</text>
+  <text x="540" y="284" class="note">频道消息</text>
+
+  <!-- bottom note -->
+  <text x="360" y="348" text-anchor="middle" class="note">检测保持确定性：版本化脚本 + 统计控制规则（如 Western Electric）+ 单元测试；模型仅在越带后被调用，层级决定其行动半径</text>
+</svg>

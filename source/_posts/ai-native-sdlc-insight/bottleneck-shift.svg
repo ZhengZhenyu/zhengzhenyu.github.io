@@ -1,0 +1,112 @@
+<svg viewBox="0 0 720 352" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="bshatch" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" class="hs-bg"/>
+      <line x1="0" y1="0" x2="0" y2="6" class="hs-line"/>
+    </pattern>
+    <marker id="bsArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" class="mk-red"/>
+    </marker>
+  </defs>
+
+  <style>
+    .lane-t  { font-family: system-ui,-apple-system,sans-serif; font-size: 12px; font-weight: 650; fill: #44403c; }
+    .lane-s  { font-family: system-ui,-apple-system,sans-serif; font-size: 9px; fill: #a8a29e; }
+    .box     { fill: #fafaf9; stroke: #e7e5e4; stroke-width: 1; }
+    .box-b   { fill: #fffbeb; stroke: #fed7aa; stroke-width: 1.2; }
+    .box-h   { fill: url(#bshatch); stroke: #fecaca; stroke-width: 1; }
+    .btxt    { font-family: system-ui,-apple-system,sans-serif; font-size: 10px; font-weight: 600; fill: #57534e; }
+    .btxt-b  { font-family: system-ui,-apple-system,sans-serif; font-size: 10px; font-weight: 600; fill: #92400e; }
+    .btxt-r  { font-family: system-ui,-apple-system,sans-serif; font-size: 9.5px; font-weight: 600; fill: #b91c1c; }
+    .note    { font-family: system-ui,-apple-system,sans-serif; font-size: 9.5px; fill: #78716c; }
+    .loop    { fill: none; stroke: #b91c1c; stroke-width: 1.5; stroke-dasharray: 6,4; }
+    .looptxt { font-family: system-ui,-apple-system,sans-serif; font-size: 9.5px; font-weight: 600; fill: #b91c1c; }
+    .gate    { fill: #d97706; }
+    .hs-bg   { fill: #fef2f2; }
+    .hs-line { stroke: #fecaca; stroke-width: 2; }
+    .mk-red  { fill: #b91c1c; }
+
+    @media (prefers-color-scheme: dark) {
+      .lane-t  { fill: #d6d3d1; }
+      .lane-s  { fill: #78716c; }
+      .box     { fill: #1c1917; stroke: #44403c; }
+      .box-b   { fill: #2d1f0c; stroke: #78350f; }
+      .box-h   { stroke: #7f1d1d; }
+      .btxt    { fill: #a8a29e; }
+      .btxt-b  { fill: #fbbf24; }
+      .btxt-r  { fill: #f87171; }
+      .note    { fill: #78716c; }
+      .loop    { stroke: #f87171; }
+      .looptxt { fill: #f87171; }
+      .gate    { fill: #fbbf24; }
+      .hs-bg   { fill: #2d0f0f; }
+      .hs-line { stroke: #7f1d1d; }
+      .mk-red  { fill: #f87171; }
+    }
+  </style>
+
+  <!-- Lane 1: traditional -->
+  <text x="10" y="50" class="lane-t">传统 SDLC</text>
+  <text x="10" y="64" class="lane-s">线性流水线</text>
+  <rect x="110" y="34" width="86" height="42" rx="6" class="box"/>
+  <text x="153" y="59" text-anchor="middle" class="btxt">计划</text>
+  <rect x="200" y="34" width="82" height="42" rx="6" class="box"/>
+  <text x="241" y="59" text-anchor="middle" class="btxt">设计</text>
+  <rect x="286" y="34" width="162" height="42" rx="6" class="box-b"/>
+  <text x="367" y="59" text-anchor="middle" class="btxt-b">构建 · 以月计</text>
+  <rect x="452" y="34" width="86" height="42" rx="6" class="box"/>
+  <text x="495" y="59" text-anchor="middle" class="btxt">测试</text>
+  <rect x="542" y="34" width="82" height="42" rx="6" class="box"/>
+  <text x="583" y="59" text-anchor="middle" class="btxt">部署</text>
+  <rect x="628" y="34" width="82" height="42" rx="6" class="box"/>
+  <text x="669" y="59" text-anchor="middle" class="btxt">维护</text>
+  <text x="110" y="94" class="note">流程为「控制人写代码」而设计：逐行评审、签字、逐级交接都有意义</text>
+
+  <!-- Lane 2: AI-assisted -->
+  <text x="10" y="138" class="lane-t">AI 辅助</text>
+  <text x="10" y="152" class="lane-s">只加速编码</text>
+  <rect x="110" y="122" width="86" height="42" rx="6" class="box"/>
+  <text x="153" y="147" text-anchor="middle" class="btxt">计划</text>
+  <rect x="200" y="122" width="82" height="42" rx="6" class="box"/>
+  <text x="241" y="147" text-anchor="middle" class="btxt">设计</text>
+  <rect x="286" y="122" width="40" height="42" rx="6" class="box-b"/>
+  <text x="306" y="147" text-anchor="middle" class="btxt-b">构建</text>
+  <rect x="330" y="122" width="96" height="42" rx="6" class="box-h"/>
+  <text x="378" y="147" text-anchor="middle" class="btxt-r">评审积压</text>
+  <rect x="430" y="122" width="58" height="42" rx="6" class="box"/>
+  <text x="459" y="147" text-anchor="middle" class="btxt">测试</text>
+  <rect x="492" y="122" width="96" height="42" rx="6" class="box-h"/>
+  <text x="540" y="147" text-anchor="middle" class="btxt-r">审批积压</text>
+  <rect x="592" y="122" width="52" height="42" rx="6" class="box"/>
+  <text x="618" y="147" text-anchor="middle" class="btxt">部署</text>
+  <rect x="648" y="122" width="62" height="42" rx="6" class="box"/>
+  <text x="679" y="147" text-anchor="middle" class="btxt">维护</text>
+  <text x="110" y="182" class="note">构建塌缩至小时级，计划 / 评审 / 部署仍以人速运行 → 瓶颈向两侧迁移，积压出现</text>
+
+  <!-- Lane 3: AI-native -->
+  <text x="10" y="226" class="lane-t">AI 原生</text>
+  <text x="10" y="240" class="lane-s">闭环 · 工件驱动</text>
+  <rect x="110" y="210" width="70" height="42" rx="6" class="box"/>
+  <text x="145" y="235" text-anchor="middle" class="btxt">计划</text>
+  <rect x="188" y="210" width="74" height="42" rx="6" class="box"/>
+  <text x="225" y="235" text-anchor="middle" class="btxt">设计</text>
+  <rect x="270" y="210" width="84" height="42" rx="6" class="box-b"/>
+  <text x="312" y="235" text-anchor="middle" class="btxt-b">构建</text>
+  <rect x="362" y="210" width="74" height="42" rx="6" class="box"/>
+  <text x="399" y="235" text-anchor="middle" class="btxt">测试</text>
+  <rect x="444" y="210" width="74" height="42" rx="6" class="box"/>
+  <text x="481" y="235" text-anchor="middle" class="btxt">部署</text>
+  <rect x="526" y="210" width="70" height="42" rx="6" class="box"/>
+  <text x="561" y="235" text-anchor="middle" class="btxt">维护</text>
+  <!-- gates -->
+  <rect x="179.5" y="226.5" width="9" height="9" transform="rotate(45 184 231)" class="gate"/>
+  <rect x="261.5" y="226.5" width="9" height="9" transform="rotate(45 266 231)" class="gate"/>
+  <rect x="353.5" y="226.5" width="9" height="9" transform="rotate(45 358 231)" class="gate"/>
+  <rect x="435.5" y="226.5" width="9" height="9" transform="rotate(45 440 231)" class="gate"/>
+  <rect x="517.5" y="226.5" width="9" height="9" transform="rotate(45 522 231)" class="gate"/>
+  <text x="606" y="226" class="note">工件串联各阶段</text>
+  <text x="606" y="240" class="note">人审集中于门禁</text>
+  <!-- feedback loop -->
+  <path d="M 597 254 C 660 266, 640 322, 560 322 L 180 322 C 150 322, 145 304, 145 288 L 145 266" class="loop" marker-end="url(#bsArrow)"/>
+  <text x="372" y="342" text-anchor="middle" class="looptxt">事故记录 → 新 intent.md（闭环回流 · 无人启动）</text>
+</svg>
