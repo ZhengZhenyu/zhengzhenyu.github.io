@@ -1,0 +1,125 @@
+<svg viewBox="0 0 960 620" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="nono 三层架构图：会话沙箱、命令沙箱与受信的 supervisor/代理，底层为内核强制层">
+  <defs>
+    <marker id="arrL" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#a8a29e"/>
+    </marker>
+    <marker id="arrD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#a8a29e"/>
+    </marker>
+  </defs>
+  <style>
+    .z-bg    { fill: #fafaf9; stroke: #e7e5e4; }
+    .z-hero  { fill: #fffbeb; stroke: #c2410c; }
+    .z-kern  { fill: #f5f5f4; stroke: #d6d3d1; }
+    .z-title { fill: #292524; font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 700; }
+    .z-hero-title { fill: #b45309; font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 700; }
+    .z-body  { fill: #57534e; font-family: system-ui, -apple-system, sans-serif; font-size: 10.5px; }
+    .chip    { fill: #f5f5f4; stroke: #d6d3d1; }
+    .chip-t  { fill: #292524; font-family: system-ui, -apple-system, sans-serif; font-size: 10.5px; font-weight: 600; }
+    .chip-hero { fill: #fffbeb; stroke: #b45309; }
+    .mono    { fill: #78716c; font-family: 'SF Mono', 'Cascadia Code', monospace; font-size: 9.5px; }
+    .badge   { fill: #f0fdf4; stroke: #16a34a; }
+    .badge-t { fill: #15803d; font-family: system-ui, -apple-system, sans-serif; font-size: 9px; font-weight: 600; }
+    .edge    { stroke: #a8a29e; stroke-width: 1.2; fill: none; marker-end: url(#arrL); }
+    .edge-label { fill: #78716c; font-family: system-ui, -apple-system, sans-serif; font-size: 9px; }
+    .edge-label-mono { fill: #78716c; font-family: 'SF Mono', 'Cascadia Code', monospace; font-size: 8.5px; }
+    @media (prefers-color-scheme: dark) {
+      .z-bg    { fill: #1c1917; stroke: #44403c; }
+      .z-hero  { fill: #2d1f0c; stroke: #f97316; }
+      .z-kern  { fill: #292524; stroke: #57534e; }
+      .z-title { fill: #e7e5e4; }
+      .z-hero-title { fill: #f97316; }
+      .z-body  { fill: #a8a29e; }
+      .chip    { fill: #292524; stroke: #57534e; }
+      .chip-t  { fill: #e7e5e4; }
+      .chip-hero { fill: #2d1f0c; stroke: #d97706; }
+      .mono    { fill: #a8a29e; }
+      .badge   { fill: #0a2e1a; stroke: #4ade80; }
+      .badge-t { fill: #4ade80; }
+      .edge    { stroke: #57534e; marker-end: url(#arrD); }
+      .edge-label, .edge-label-mono { fill: #a8a29e; }
+    }
+  </style>
+
+  <!-- 会话沙箱 -->
+  <rect class="z-bg" x="24" y="40" width="590" height="160" rx="8" stroke-width="1.2"/>
+  <text class="z-title" x="40" y="64">会话沙箱 Session Sandbox（Agent 本体，静态策略）</text>
+  <rect class="chip-hero" x="40" y="80" width="150" height="30" rx="6"/>
+  <text class="chip-t" x="115" y="99" text-anchor="middle">Claude Code / Codex</text>
+  <rect class="chip" x="200" y="80" width="150" height="30" rx="6"/>
+  <text class="chip-t" x="275" y="99" text-anchor="middle">OpenCode / OpenClaw</text>
+  <rect class="chip" x="360" y="80" width="120" height="30" rx="6"/>
+  <text class="chip-t" x="420" y="99" text-anchor="middle">PTY 代理（真 TTY）</text>
+  <text class="mono" x="40" y="132">filesystem: read/write ["."] · 系统路径只读 · SSH 密钥与云凭据不可见</text>
+  <text class="z-body" x="40" y="150">Landlock / Seatbelt 静态策略：策略不可逆，子进程继承；可 exec 的目标受 execute-only 门约束</text>
+  <text class="z-body" x="40" y="168">运行时新增访问只能经 supervisor 注入 fd —— 会话沙箱自身无法扩大策略</text>
+
+  <!-- 命令沙箱 -->
+  <rect class="z-bg" x="24" y="222" width="590" height="186" rx="8" stroke-width="1.2"/>
+  <text class="z-title" x="40" y="246">命令沙箱 Command Sandbox（每次工具调用一次性）</text>
+  <rect class="chip" x="40" y="262" width="170" height="58" rx="6"/>
+  <text class="chip-t" x="125" y="282" text-anchor="middle">git（shim）</text>
+  <text class="z-body" x="125" y="298" text-anchor="middle">仅仓库 + 可信 Git 配置</text>
+  <rect class="chip" x="222" y="262" width="170" height="58" rx="6"/>
+  <text class="chip-t" x="307" y="282" text-anchor="middle">gh（shim）</text>
+  <text class="z-body" x="307" y="298" text-anchor="middle">phantom token + L7 过滤</text>
+  <rect class="chip" x="404" y="262" width="170" height="58" rx="6"/>
+  <text class="chip-t" x="489" y="282" text-anchor="middle">kubectl（shim）</text>
+  <text class="z-body" x="489" y="298" text-anchor="middle">隔离 kubeconfig + 审批</text>
+  <text class="z-body" x="40" y="344">不继承会话沙箱的 --allow 宽授权、CWD、真实凭据与网络 —— 每项都须在命令策略中显式声明</text>
+  <text class="mono" x="40" y="362">chained policy：git → ssh（can_use 边）；agent 直接调用 ssh 仍被拒</text>
+  <rect class="badge" x="40" y="374" width="196" height="22" rx="6"/>
+  <text class="badge-t" x="138" y="389" text-anchor="middle">调用结束即销毁 · 输出经脱敏回传</text>
+
+  <!-- TCB -->
+  <rect class="z-hero" x="634" y="40" width="302" height="250" rx="8" stroke-width="1.4"/>
+  <text class="z-hero-title" x="650" y="64">Supervisor &amp; Broker（受信组件 TCB）</text>
+  <rect class="badge" x="650" y="76" width="180" height="20" rx="6"/>
+  <text class="badge-t" x="740" y="90" text-anchor="middle">非 root · 与用户同权限 · 无 setuid</text>
+  <text class="z-body" x="650" y="116">· seccomp-notify 调解 openat / socket</text>
+  <text class="z-body" x="650" y="134">· 审批 UI（终端交互 / webhook）</text>
+  <text class="z-body" x="650" y="152">· 回滚快照：内容寻址对象存储 + Merkle</text>
+  <text class="z-body" x="650" y="170">· 审计账本：哈希链 + DSSE 可选签名</text>
+  <text class="z-body" x="650" y="188">· 凭证解析：keyring / 1Password / Bitwarden</text>
+  <text class="mono" x="650" y="210">对沙箱内进程不可见：socketpair 匿名 ·</text>
+  <text class="mono" x="650" y="222">请求限流 · 防重放 · 保护路径先于快路径</text>
+  <text class="z-body" x="650" y="240">决策点全链路 fail-closed：解析失败、审批超时、</text>
+  <text class="z-body" x="650" y="256">凭证缺失 → 一律拒绝</text>
+  <text class="z-body" x="650" y="276">父进程自加固：PR_SET_DUMPABLE / PT_DENY_ATTACH</text>
+
+  <!-- 代理 -->
+  <rect class="z-bg" x="634" y="306" width="210" height="112" rx="8" stroke-width="1.2"/>
+  <text class="z-title" x="650" y="330">nono-proxy</text>
+  <text class="z-body" x="650" y="350">· 域名过滤 + 防 DNS rebinding</text>
+  <text class="z-body" x="650" y="366">· L7 方法/路径策略（默认 deny）</text>
+  <text class="z-body" x="650" y="382">· TLS 拦截：每会话临时 CA</text>
+  <text class="z-body" x="650" y="398">· 凭证注入：phantom → 真实</text>
+
+  <!-- 上游 -->
+  <rect class="chip" x="634" y="446" width="210" height="46" rx="6"/>
+  <text class="chip-t" x="739" y="466" text-anchor="middle">api.github.com …</text>
+  <text class="z-body" x="739" y="482" text-anchor="middle">上游（HTTPS 证书真实校验）</text>
+
+  <!-- 内核 -->
+  <rect class="z-kern" x="24" y="566" width="912" height="40" rx="8" stroke-width="1.2"/>
+  <text class="z-title" x="40" y="591">内核强制层：Linux — Landlock · seccomp · cgroup ｜ macOS — Seatbelt (SBPL) ｜ 规则不可逆、后代继承</text>
+
+  <!-- 连线 -->
+  <line class="edge" x1="319" y1="200" x2="319" y2="220"/>
+  <text class="edge-label" x="328" y="215">exec shim（execute-only 门）</text>
+
+  <line class="edge" x1="614" y1="262" x2="632" y2="262"/>
+  <text class="edge-label" x="600" y="250" text-anchor="end">shim 连接（SO_PEERCRED + inode 自证）</text>
+
+  <line class="edge" x1="634" y1="292" x2="614" y2="292"/>
+  <text class="edge-label-mono" x="600" y="330" text-anchor="end">execveat(AT_EMPTY_PATH) 执行已验证 fd</text>
+
+  <line class="edge" x1="739" y1="418" x2="739" y2="444"/>
+  <text class="edge-label" x="752" y="436">过滤后转发</text>
+
+  <path class="edge" d="M 892 566 L 892 300 L 938 300" marker-end="url(#arrL)"/>
+  <text class="edge-label" x="846" y="303" text-anchor="end">seccomp-notify（syscall 拦截）</text>
+
+  <path class="edge" d="M 24 546 L 24 566" marker-end="url(#arrL)"/>
+  <text class="edge-label" x="36" y="560">Landlock 规则（O_PATH fd 绑定 inode）</text>
+</svg>
