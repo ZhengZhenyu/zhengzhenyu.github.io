@@ -1,0 +1,91 @@
+<svg viewBox="0 0 960 500" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI 推理开源栈五层：网关、路由、服务、推理引擎、GPU 调度，各层列出代表性开源项目">
+  <style>
+    .layer   { fill: #fafaf9; stroke: #e7e5e4; }
+    .layer-h { fill: #fffbeb; stroke: #c2410c; }
+    .ltitle  { fill: #292524; font-family: system-ui, -apple-system, sans-serif; font-size: 12.5px; font-weight: 700; }
+    .lsub    { fill: #78716c; font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; }
+    .chip    { fill: #f5f5f4; stroke: #d6d3d1; }
+    .chip-h  { fill: #fffbeb; stroke: #b45309; }
+    .chip-t  { fill: #292524; font-family: 'SF Mono', 'Cascadia Code', monospace; font-size: 9.5px; font-weight: 600; }
+    .chip-h-t{ fill: #b45309; font-family: 'SF Mono', 'Cascadia Code', monospace; font-size: 9.5px; font-weight: 700; }
+    .note    { fill: #78716c; font-family: system-ui, -apple-system, sans-serif; font-size: 9px; font-style: italic; }
+    @media (prefers-color-scheme: dark) {
+      .layer   { fill: #1c1917; stroke: #44403c; }
+      .layer-h { fill: #2d1f0c; stroke: #f97316; }
+      .ltitle  { fill: #e7e5e4; }
+      .lsub    { fill: #a8a29e; }
+      .chip    { fill: #292524; stroke: #57534e; }
+      .chip-h  { fill: #2d1f0c; stroke: #d97706; }
+      .chip-t  { fill: #e7e5e4; }
+      .chip-h-t{ fill: #f97316; }
+      .note    { fill: #a8a29e; }
+    }
+  </style>
+
+  <!-- 第 1 层：网关 -->
+  <rect class="layer" x="24" y="30" width="912" height="72" rx="8"/>
+  <text class="ltitle" x="40" y="56">① Gateway（谁能用哪个模型）</text>
+  <text class="lsub" x="40" y="76">统一模型端点、鉴权与限流；接入 Kubernetes Inference Gateway API</text>
+  <rect class="chip" x="280" y="40" width="150" height="30" rx="6"/>
+  <text class="chip-t" x="355" y="59" text-anchor="middle">Envoy AI Gateway*</text>
+  <rect class="chip" x="440" y="40" width="120" height="30" rx="6"/>
+  <text class="chip-t" x="500" y="59" text-anchor="middle">kgateway</text>
+  <rect class="chip" x="570" y="40" width="100" height="30" rx="6"/>
+  <text class="chip-t" x="620" y="59" text-anchor="middle">Istio</text>
+  <text class="note" x="40" y="110">* Envoy AI Gateway 已于 2026-09 更名 Agent Router，转入 Linux Foundation 的 AAIF</text>
+
+  <!-- 第 2 层：路由 -->
+  <rect class="layer-h" x="24" y="116" width="912" height="72" rx="8" stroke-width="1.4"/>
+  <text class="ltitle" x="40" y="142">② Routing（挑最好的服务实例）</text>
+  <text class="lsub" x="40" y="162">前缀缓存 / GPU 利用率 / 预测延迟路由</text>
+  <rect class="chip-h" x="280" y="126" width="150" height="30" rx="6"/>
+  <text class="chip-h-t" x="355" y="145" text-anchor="middle">llm-d router</text>
+  <rect class="chip" x="440" y="126" width="120" height="30" rx="6"/>
+  <text class="chip-t" x="500" y="145" text-anchor="middle">Kthena router</text>
+  <rect class="chip" x="570" y="126" width="140" height="30" rx="6"/>
+  <text class="chip-t" x="640" y="145" text-anchor="middle">Inference Extension</text>
+  <text class="note" x="718" y="145">llm-d：CNCF Sandbox（2026-03）</text>
+
+  <!-- 第 3 层：服务 -->
+  <rect class="layer" x="24" y="202" width="912" height="72" rx="8"/>
+  <text class="ltitle" x="40" y="228">③ Serving（部署与扩缩容模型）</text>
+  <text class="lsub" x="40" y="248">模型服务抽象：推理图、金丝雀、自动伸缩</text>
+  <rect class="chip" x="280" y="212" width="130" height="30" rx="6"/>
+  <text class="chip-t" x="345" y="231" text-anchor="middle">KServe</text>
+  <rect class="chip" x="420" y="212" width="110" height="30" rx="6"/>
+  <text class="chip-t" x="475" y="231" text-anchor="middle">Kthena</text>
+  <rect class="chip" x="540" y="212" width="110" height="30" rx="6"/>
+  <text class="chip-t" x="595" y="231" text-anchor="middle">KAITO</text>
+  <rect class="chip" x="660" y="212" width="130" height="30" rx="6"/>
+  <text class="chip-t" x="725" y="231" text-anchor="middle">Ray/KubeRay</text>
+  <text class="note" x="800" y="231">KServe：Incubating</text>
+
+  <!-- 第 4 层：引擎 -->
+  <rect class="layer" x="24" y="288" width="912" height="72" rx="8"/>
+  <text class="ltitle" x="40" y="314">④ Inference engine（跑模型）</text>
+  <text class="lsub" x="40" y="334">引擎已商品化：生产默认 vLLM，多轮场景 SGLang 有缓存优势</text>
+  <rect class="chip" x="280" y="298" width="120" height="30" rx="6"/>
+  <text class="chip-t" x="340" y="317" text-anchor="middle">vLLM 93k★</text>
+  <rect class="chip" x="410" y="298" width="120" height="30" rx="6"/>
+  <text class="chip-t" x="470" y="317" text-anchor="middle">SGLang 37k★</text>
+  <rect class="chip" x="540" y="298" width="130" height="30" rx="6"/>
+  <text class="chip-t" x="605" y="317" text-anchor="middle">Triton 11k★</text>
+  <text class="note" x="680" y="317">均非 CNCF；TGI 2025-12 进维护模式</text>
+
+  <!-- 第 5 层：GPU/调度 -->
+  <rect class="layer" x="24" y="374" width="912" height="72" rx="8"/>
+  <text class="ltitle" x="40" y="400">⑤ GPU 与调度（共享硬件）</text>
+  <text class="lsub" x="40" y="420">设备共享、队列预算、gang 调度</text>
+  <rect class="chip" x="280" y="384" width="100" height="30" rx="6"/>
+  <text class="chip-t" x="330" y="403" text-anchor="middle">DRA (GA)</text>
+  <rect class="chip" x="390" y="384" width="110" height="30" rx="6"/>
+  <text class="chip-t" x="445" y="403" text-anchor="middle">HAMi</text>
+  <rect class="chip" x="510" y="384" width="110" height="30" rx="6"/>
+  <text class="chip-t" x="565" y="403" text-anchor="middle">Kueue</text>
+  <rect class="chip" x="630" y="384" width="110" height="30" rx="6"/>
+  <text class="chip-t" x="685" y="403" text-anchor="middle">Volcano</text>
+  <rect class="chip" x="750" y="384" width="130" height="30" rx="6"/>
+  <text class="chip-t" x="815" y="403" text-anchor="middle">KAI Scheduler</text>
+
+  <text class="note" x="24" y="470">项目状态与 star 数为 2026-10-08 快照；HAMi 2026-07 Incubating、Kueue/Volcano Incubating、KAI Scheduler 为 NVIDIA 项目（非 CNCF）</text>
+</svg>

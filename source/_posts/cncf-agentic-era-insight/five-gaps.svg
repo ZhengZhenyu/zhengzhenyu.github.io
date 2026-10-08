@@ -1,0 +1,102 @@
+<svg viewBox="0 0 960 560" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="软件栈五大缺口：动作树调度、按任务计费、身份委托、追踪与来源、访问与归因，每项标注需要什么与谁在填补">
+  <style>
+    .card    { fill: #fafaf9; stroke: #e7e5e4; }
+    .card-a  { stroke: #f97316; }
+    .card-b  { stroke: #6366f1; }
+    .card-c  { stroke: #7c3aed; }
+    .card-d  { stroke: #0891b2; }
+    .card-e  { stroke: #ef4444; }
+    .title   { fill: #292524; font-family: system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 700; }
+    .title-a { fill: #ea580c; }
+    .title-b { fill: #4f46e5; }
+    .title-c { fill: #7c3aed; }
+    .title-d { fill: #0891b2; }
+    .title-e { fill: #dc2626; }
+    .need    { fill: #57534e; font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; }
+    .who     { fill: #78716c; font-family: system-ui, -apple-system, sans-serif; font-size: 9px; }
+    .who-t   { fill: #292524; font-family: system-ui, -apple-system, sans-serif; font-size: 9px; font-weight: 700; }
+    .vacuum  { fill: #b45309; font-family: system-ui, -apple-system, sans-serif; font-size: 9px; font-weight: 700; }
+    @media (prefers-color-scheme: dark) {
+      .card    { fill: #1c1917; }
+      .card-a  { stroke: #fb923c; }
+      .card-b  { stroke: #a5b4fc; }
+      .card-c  { stroke: #c4b5fd; }
+      .card-d  { stroke: #22d3ee; }
+      .card-e  { stroke: #f87171; }
+      .title   { fill: #e7e5e4; }
+      .title-a { fill: #fb923c; }
+      .title-b { fill: #a5b4fc; }
+      .title-c { fill: #c4b5fd; }
+      .title-d { fill: #22d3ee; }
+      .title-e { fill: #f87171; }
+      .need    { fill: #a8a29e; }
+      .who     { fill: #a8a29e; }
+      .who-t   { fill: #e7e5e4; }
+      .vacuum  { fill: #f97316; }
+    }
+  </style>
+
+  <!-- 缺口 1 -->
+  <rect class="card card-a" x="24" y="30" width="290" height="150" rx="8" stroke-width="1.4"/>
+  <text class="title title-a" x="40" y="56">① 调度 → action-tree 感知</text>
+  <text class="need" x="40" y="78">调度器只见 pod，看不到一次</text>
+  <text class="need" x="40" y="93">请求触发的模型调用与工具链</text>
+  <text class="who-t" x="40" y="124">需要：任务树级调度与端到端预算</text>
+  <text class="who" x="40" y="142">已有：llm-d / Kthena（仅单请求粒度）</text>
+  <text class="vacuum" x="40" y="162">状态：基本无人填</text>
+
+  <!-- 缺口 2 -->
+  <rect class="card card-b" x="335" y="30" width="290" height="150" rx="8" stroke-width="1.4"/>
+  <text class="title title-b" x="351" y="56">② 计量 → value-aware 预算</text>
+  <text class="need" x="351" y="78">按 agent 任务追踪花费，</text>
+  <text class="need" x="351" y="93">在成本复利前止损</text>
+  <text class="who-t" x="351" y="124">需要：per-task 预算原语</text>
+  <text class="who" x="351" y="142">已有：OpenCost + llm-d（每 token 成本，2026-07）</text>
+  <text class="vacuum" x="351" y="162">任务粒度：空缺</text>
+
+  <!-- 缺口 3 -->
+  <rect class="card card-c" x="646" y="30" width="290" height="150" rx="8" stroke-width="1.4"/>
+  <text class="title title-c" x="662" y="56">③ 身份 → 委托授权</text>
+  <text class="need" x="662" y="78">谁的 agent、能做什么、</text>
+  <text class="need" x="662" y="93">授权何时过期</text>
+  <text class="who-t" x="662" y="124">需要：agent 委托链管理</text>
+  <text class="who" x="662" y="142">已有：SPIFFE/SPIRE、CSA Agentic Identity</text>
+  <text class="who" x="662" y="160">（2026-09）、IETF 草案</text>
+
+  <!-- 缺口 4 -->
+  <rect class="card card-d" x="24" y="200" width="290" height="150" rx="8" stroke-width="1.4"/>
+  <text class="title title-d" x="40" y="226">④ 追踪 → 结果与来源</text>
+  <text class="need" x="40" y="248">记录 agent 做了什么、用了</text>
+  <text class="need" x="40" y="263">哪些来源、是否生效</text>
+  <text class="who-t" x="40" y="294">需要：outcome 判定 + provenance</text>
+  <text class="who" x="40" y="312">已有：OTel GenAI 语义约定（agent spans</text>
+  <text class="who" x="40" y="327">仍未 stable）、Langfuse 等</text>
+  <text class="vacuum" x="40" y="342">outcome/provenance：基本无人做</text>
+
+  <!-- 缺口 5 -->
+  <rect class="card card-e" x="335" y="200" width="290" height="150" rx="8" stroke-width="1.4"/>
+  <text class="title title-e" x="351" y="226">⑤ 访问 → 归因与报酬</text>
+  <text class="need" x="351" y="248">让可信来源以可执行条款</text>
+  <text class="need" x="351" y="263">接纳 agent，并获得归因</text>
+  <text class="who-t" x="351" y="294">需要：信任 + 支付原语</text>
+  <text class="who" x="351" y="312">已有：AP2 协议、AAIF（2025-12）、A2A</text>
+  <text class="vacuum" x="351" y="342">状态：协议层早期，基本无人填</text>
+
+  <!-- 右侧总结 -->
+  <rect class="card" x="646" y="200" width="290" height="150" rx="8"/>
+  <text class="title" x="662" y="226">两个反例：无治理的 agent speed</text>
+  <text class="need" x="662" y="248">Wikimedia：bot 仅占 35% 浏览量，</text>
+  <text class="need" x="662" y="263">却产生 65% 昂贵核心流量</text>
+  <text class="need" x="662" y="284">Klarna：AI 首月处理 2/3 客服对话、</text>
+  <text class="need" x="662" y="299">11→2 分钟；2025 因质量回撤，</text>
+  <text class="need" x="662" y="314">重新雇佣人工客服</text>
+  <text class="who-t" x="662" y="340">「速度本身不是目标」</text>
+
+  <!-- 底部结论 -->
+  <rect class="card card-a" x="24" y="380" width="912" height="80" rx="8" stroke-width="1.4"/>
+  <text class="title title-a" x="40" y="408">缺口的本质：agentic 时代的「网络层」原语</text>
+  <text class="need" x="40" y="430">连接 pod 与动作树 · 连接身份与授权 · 连接成本与任务 · 连接行为与归因 —— 对应 Cloudflare 对 agentic internet 的四个属性：</text>
+  <text class="need" x="40" y="450">readable（可读）· discoverable（可发现）· callable（可调用）· payable（可支付）</text>
+
+  <text class="who" x="24" y="540">缺口清单来自演讲 slide 9（官方场次摘要列其中四项：identity / budgets / provenance / attribution）；填补者现状为 2026-10-08 快照</text>
+</svg>
