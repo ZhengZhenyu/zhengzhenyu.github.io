@@ -1,0 +1,97 @@
+<svg viewBox="0 0 960 520" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AIxCC 2026 决赛成绩：Team Atlanta 392.76 分夺冠，右侧为官方统计的修复率 68%、平均修复 45 分钟、单任务成本 152 美元等指标">
+  <style>
+    .grid   { stroke: #e7e5e4; stroke-width: 1; }
+    .axis   { stroke: #57534e; stroke-width: 1.2; }
+    .bar    { fill: #f5f5f4; }
+    .bar-hero { fill: #f97316; }
+    .lbl    { fill: #57534e; font-family: system-ui, -apple-system, sans-serif; font-size: 10.5px; }
+    .mono   { fill: #78716c; font-family: 'SF Mono', 'Cascadia Code', monospace; font-size: 9.5px; }
+    .stat   { fill: #fafaf9; stroke: #e7e5e4; }
+    .stat-t { fill: #292524; font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 700; }
+    .stat-l { fill: #57534e; font-family: system-ui, -apple-system, sans-serif; font-size: 9px; }
+    .note   { fill: #78716c; font-family: system-ui, -apple-system, sans-serif; font-size: 9px; font-style: italic; }
+    @media (prefers-color-scheme: dark) {
+      .grid   { stroke: #44403c; }
+      .axis   { stroke: #a8a29e; }
+      .bar    { fill: #292524; }
+      .bar-hero { fill: #f97316; }
+      .lbl    { fill: #a8a29e; }
+      .mono   { fill: #a8a29e; }
+      .stat   { fill: #1c1917; stroke: #44403c; }
+      .stat-t { fill: #e7e5e4; }
+      .stat-l { fill: #a8a29e; }
+      .note   { fill: #a8a29e; }
+    }
+  </style>
+
+  <!-- 网格 -->
+  <line class="grid" x1="40" y1="60" x2="40" y2="330"/>
+  <line class="grid" x1="200" y1="60" x2="200" y2="330"/>
+  <line class="grid" x1="360" y1="60" x2="360" y2="330"/>
+  <line class="grid" x1="520" y1="60" x2="520" y2="330"/>
+  <line class="axis" x1="40" y1="330" x2="520" y2="330"/>
+  <text class="mono" x="40" y="346">0</text>
+  <text class="mono" x="200" y="346">100</text>
+  <text class="mono" x="360" y="346">200</text>
+  <text class="mono" x="520" y="346">300</text>
+  <text class="lbl" x="280" y="366" text-anchor="middle">总分（AIxCC 2026 Finals 官方计分）</text>
+
+  <!-- 队伍条形图（scale: 1 分 = 1.2px，max 392.76 → 471px） -->
+  <rect class="bar" x="40" y="72" width="126.5" height="22" rx="4"/>
+  <text class="lbl" x="42" y="87">Team Atlanta</text>
+  <text class="mono" x="174" y="87">392.76 · 91.27%</text>
+
+  <rect class="bar" x="40" y="104" width="263.2" height="22" rx="4"/>
+  <text class="lbl" x="42" y="119">Trail of Bits</text>
+  <text class="mono" x="311" y="119">219.35 · 89.33%</text>
+
+  <rect class="bar" x="40" y="136" width="252.8" height="22" rx="4"/>
+  <text class="lbl" x="42" y="151">Theori</text>
+  <text class="mono" x="300" y="151">210.68 · 44.44%</text>
+
+  <rect class="bar" x="40" y="168" width="184.4" height="22" rx="4"/>
+  <text class="lbl" x="42" y="183">All You Need Is A Fuzzing Brain</text>
+  <text class="mono" x="232" y="183">153.70 · 53.77%</text>
+
+  <rect class="bar" x="40" y="200" width="163.1" height="22" rx="4"/>
+  <text class="lbl" x="42" y="215">Shellphish</text>
+  <text class="mono" x="211" y="215">135.89 · 94.83%</text>
+
+  <rect class="bar" x="40" y="232" width="126.0" height="22" rx="4"/>
+  <text class="lbl" x="42" y="247">42-b3yond-6ug</text>
+  <text class="mono" x="174" y="247">105.03 · 89.23%</text>
+
+  <rect class="bar" x="40" y="264" width="11.5" height="22" rx="4"/>
+  <text class="lbl" x="42" y="279">Lacrosse</text>
+  <text class="mono" x="60" y="279">9.59 · 42.86%</text>
+
+  <!-- 右侧官方指标 -->
+  <rect class="stat" x="560" y="60" width="180" height="62" rx="6"/>
+  <text class="stat-t" x="650" y="84" text-anchor="middle">77%</text>
+  <text class="stat-l" x="650" y="104" text-anchor="middle">已知漏洞被发现（54/70，官方全量口径）</text>
+
+  <rect class="stat" x="756" y="60" width="180" height="62" rx="6"/>
+  <text class="stat-t" x="846" y="84" text-anchor="middle">61%</text>
+  <text class="stat-l" x="846" y="104" text-anchor="middle">已知漏洞被修复（43/70，官方全量口径）</text>
+
+  <rect class="stat" x="560" y="134" width="180" height="62" rx="6"/>
+  <text class="stat-t" x="650" y="158" text-anchor="middle">45 min</text>
+  <text class="stat-l" x="650" y="178" text-anchor="middle">平均漏洞修复时间</text>
+
+  <rect class="stat" x="756" y="134" width="180" height="62" rx="6"/>
+  <text class="stat-t" x="846" y="158" text-anchor="middle">~$152</text>
+  <text class="stat-l" x="846" y="178" text-anchor="middle">单任务成功成本</text>
+
+  <rect class="stat" x="560" y="208" width="180" height="62" rx="6"/>
+  <text class="stat-t" x="650" y="232" text-anchor="middle">54M</text>
+  <text class="stat-l" x="650" y="252" text-anchor="middle">分析代码总行数</text>
+
+  <rect class="stat" x="756" y="208" width="180" height="62" rx="6"/>
+  <text class="stat-t" x="846" y="232" text-anchor="middle">1.9M</text>
+  <text class="stat-l" x="846" y="252" text-anchor="middle">LLM 查询总次数</text>
+
+  <text class="note" x="560" y="296">AIxCC 总决赛：DEF CON 33（2025-08-09/10），143 小时全自主运行。</text>
+  <text class="note" x="560" y="310">官方计分板与演讲引用一致；总花费 $359K（$277K 算力 + $82K LLM）。</text>
+  <text class="note" x="560" y="324">真实世界漏洞：SoK 论文口径 25 个（跨 10 个项目，12 个已修复，48%）。</text>
+  <text class="note" x="560" y="338">演讲的 86%/68% 以 63 个计分 CPV 为分母；DARPA 官方全量口径为 77%/61%（分母 70）。</text>
+</svg>

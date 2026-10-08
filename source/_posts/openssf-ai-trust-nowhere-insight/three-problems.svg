@@ -1,0 +1,87 @@
+<svg viewBox="0 0 960 500" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI 开源安全三大问题框架：用 AI 构建软件、用 AI 防护软件、AI 作为攻击面，底部为共同原则 more proof less blind trust">
+  <style>
+    .col     { fill: #fafaf9; stroke: #e7e5e4; }
+    .col-a   { fill: #fafaf9; stroke: #6366f1; }
+    .col-b   { fill: #fafaf9; stroke: #f97316; }
+    .col-c   { fill: #fafaf9; stroke: #ef4444; }
+    .title   { fill: #292524; font-family: system-ui, -apple-system, sans-serif; font-size: 13.5px; font-weight: 700; }
+    .title-a { fill: #4f46e5; }
+    .title-b { fill: #ea580c; }
+    .title-c { fill: #dc2626; }
+    .body    { fill: #57534e; font-family: system-ui, -apple-system, sans-serif; font-size: 10.5px; }
+    .sub     { fill: #78716c; font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; font-style: italic; }
+    .band    { fill: #fffbeb; stroke: #c2410c; }
+    .band-t  { fill: #b45309; font-family: system-ui, -apple-system, sans-serif; font-size: 12.5px; font-weight: 700; }
+    .chip    { fill: #f5f5f4; stroke: #d6d3d1; }
+    .chip-t  { fill: #292524; font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; font-weight: 600; }
+    @media (prefers-color-scheme: dark) {
+      .col, .col-a, .col-b, .col-c { fill: #1c1917; }
+      .col     { stroke: #44403c; }
+      .col-a   { stroke: #a5b4fc; }
+      .col-b   { stroke: #fb923c; }
+      .col-c   { stroke: #f87171; }
+      .title   { fill: #e7e5e4; }
+      .title-a { fill: #a5b4fc; }
+      .title-b { fill: #fb923c; }
+      .title-c { fill: #f87171; }
+      .body    { fill: #a8a29e; }
+      .sub     { fill: #a8a29e; }
+      .band    { fill: #2d1f0c; stroke: #f97316; }
+      .band-t  { fill: #f97316; }
+      .chip    { fill: #292524; stroke: #57534e; }
+      .chip-t  { fill: #e7e5e4; }
+    }
+  </style>
+
+  <!-- 三列 -->
+  <rect class="col-a" x="24" y="40" width="290" height="310" rx="8" stroke-width="1.4"/>
+  <text class="title title-a" x="40" y="66">问题一 · 用 AI 构建软件</text>
+  <text class="body" x="40" y="98">· 不安全默认值的代码建议</text>
+  <text class="body" x="40" y="120">· 幻觉依赖包 → slopsquatting</text>
+  <text class="body" x="40" y="142">· 弱评审纪律 × 生成速度</text>
+  <text class="body" x="40" y="164">· 复制既有风险（copied risk）</text>
+  <text class="body" x="40" y="186">· 密钥处理与鉴权错误</text>
+  <text class="sub" x="40" y="228">构建速度快于安全能力 →</text>
+  <text class="sub" x="40" y="244">不安全默认值规模化</text>
+  <text class="body" x="40" y="286">"AI 是助手，开发者仍是责任人"</text>
+  <text class="sub" x="40" y="310">软件工程 101 依然适用：评审、测试、</text>
+  <text class="sub" x="40" y="326">SBOM、provenance、验证环</text>
+
+  <rect class="col-b" x="335" y="40" width="290" height="310" rx="8" stroke-width="1.4"/>
+  <text class="title title-b" x="351" y="66">问题二 · 用 AI 防护软件</text>
+  <text class="body" x="351" y="98">· AI 漏洞报告洪流（DDoS 项目）</text>
+  <text class="body" x="351" y="120">· 单份报告 triage 平均 1-8 小时</text>
+  <text class="body" x="351" y="142">· 幻觉 CVE / 低质量报告</text>
+  <text class="body" x="351" y="164">· 无 PoV 的"发现"不产生价值</text>
+  <text class="body" x="351" y="186">· 维护者时间被挤占 → 倦怠</text>
+  <text class="sub" x="351" y="228">AI 降低了产生怀疑的成本，</text>
+  <text class="sub" x="351" y="244">没有降低证明影响与写修复的成本</text>
+  <text class="body" x="351" y="286">"发现廉价，修复才值钱"</text>
+  <text class="sub" x="351" y="310">受控实验 AIxCC：修复 45 分钟/个、</text>
+  <text class="sub" x="351" y="326">20-40% 补丁语义错误仍需人工审查</text>
+
+  <rect class="col-c" x="646" y="40" width="290" height="310" rx="8" stroke-width="1.4"/>
+  <text class="title title-c" x="662" y="66">问题三 · AI 作为攻击面</text>
+  <text class="body" x="662" y="98">· 数据投毒 / 模型投毒</text>
+  <text class="body" x="662" y="120">· 模型窃取 / 反转与成员推断</text>
+  <text class="body" x="662" y="142">· AI 供应链攻击（权重、数据集）</text>
+  <text class="body" x="662" y="164">· 输出完整性 / 推理滥用</text>
+  <text class="body" x="662" y="186">· Agent 与 MCP 的新入口</text>
+  <text class="sub" x="662" y="228">"DevSecOps 不够"——风险点</text>
+  <text class="sub" x="662" y="244">扩展到数据集、权重、再训练、推理</text>
+  <text class="body" x="662" y="286">需要 MLSecOps 全生命周期</text>
+  <text class="sub" x="662" y="310">模型签名 / 模型透明度 /</text>
+  <text class="sub" x="662" y="326">Secure Agentic Framework (SAF)</text>
+
+  <!-- 底部原则带 -->
+  <rect class="band" x="24" y="382" width="912" height="96" rx="8" stroke-width="1.4"/>
+  <text class="band-t" x="40" y="410">共同原则：more proof, provenance &amp; policy —— less blind trust</text>
+  <rect class="chip" x="40" y="424" width="206" height="34" rx="6"/>
+  <text class="chip-t" x="143" y="446" text-anchor="middle">Proof of Vulnerability（PoV）</text>
+  <rect class="chip" x="258" y="424" width="206" height="34" rx="6"/>
+  <text class="chip-t" x="361" y="446" text-anchor="middle">Proof of Origin / Build（provenance）</text>
+  <rect class="chip" x="476" y="424" width="206" height="34" rx="6"/>
+  <text class="chip-t" x="579" y="446" text-anchor="middle">Proof of Policy Enforcement</text>
+  <rect class="chip" x="694" y="424" width="226" height="34" rx="6"/>
+  <text class="chip-t" x="807" y="446" text-anchor="middle">Sigstore · SLSA · GUAC · OSS-CRS</text>
+</svg>
