@@ -1,0 +1,80 @@
+<svg viewBox="0 0 960 400" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Agent 起草的 PR 占比从 2026 年 3 月的 17% 上升到 9 月的 40% 以上；右侧标注 9 月单月 1.1 亿个、多文件占比 87%、两周内合并率 90%">
+  <style>
+    .title   { fill: #292524; font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 700; }
+    .sub     { fill: #78716c; font-family: system-ui, -apple-system, sans-serif; font-size: 10.5px; }
+    .axis    { fill: #78716c; font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; }
+    .axis-t  { fill: #57534e; font-family: system-ui, -apple-system, sans-serif; font-size: 10.5px; font-weight: 600; }
+    .grid    { stroke: #e7e5e4; stroke-width: 1; }
+    .area    { fill: #c2410c; opacity: 0.06; }
+    .line    { stroke: #c2410c; stroke-width: 2.6; fill: none; }
+    .dot     { fill: #c2410c; }
+    .big     { fill: #c2410c; font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 800; }
+    .card    { fill: #fafaf9; stroke: #e7e5e4; }
+    .card-h  { fill: #fffbeb; stroke: #c2410c; }
+    .cnum    { fill: #c2410c; font-family: system-ui, -apple-system, sans-serif; font-size: 21px; font-weight: 800; }
+    .clbl    { fill: #57534e; font-family: system-ui, -apple-system, sans-serif; font-size: 10px; }
+    .note    { fill: #78716c; font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; }
+    @media (prefers-color-scheme: dark) {
+      .title   { fill: #e7e5e4; }
+      .sub     { fill: #a8a29e; }
+      .axis    { fill: #a8a29e; }
+      .axis-t  { fill: #a8a29e; }
+      .grid    { stroke: #44403c; }
+      .area    { fill: #f97316; opacity: 0.10; }
+      .line    { stroke: #f97316; }
+      .dot     { fill: #f97316; }
+      .big     { fill: #fdba74; }
+      .card    { fill: #1c1917; stroke: #44403c; }
+      .card-h  { fill: #2d1f0c; stroke: #f97316; }
+      .cnum    { fill: #fb923c; }
+      .clbl    { fill: #a8a29e; }
+      .note    { fill: #a8a29e; }
+    }
+  </style>
+
+  <text class="title" x="40" y="34">Agent 起草的 PR 占比：2026 年 3 月 → 9 月</text>
+  <text class="sub" x="40" y="52">「第一稿交给 agent，人来做 review」正在成为主流工作流</text>
+
+  <!-- 网格与 Y 轴 -->
+  <line class="grid" x1="80" y1="300" x2="640" y2="300"/>
+  <line class="grid" x1="80" y1="252" x2="640" y2="252"/>
+  <line class="grid" x1="80" y1="204" x2="640" y2="204"/>
+  <line class="grid" x1="80" y1="156" x2="640" y2="156"/>
+  <line class="grid" x1="80" y1="108" x2="640" y2="108"/>
+  <line class="grid" x1="80" y1="60" x2="640" y2="60"/>
+  <text class="axis" x="72" y="304" text-anchor="end">0%</text>
+  <text class="axis" x="72" y="256" text-anchor="end">10%</text>
+  <text class="axis" x="72" y="208" text-anchor="end">20%</text>
+  <text class="axis" x="72" y="160" text-anchor="end">30%</text>
+  <text class="axis" x="72" y="112" text-anchor="end">40%</text>
+  <text class="axis" x="72" y="64" text-anchor="end">50%</text>
+
+  <!-- 面积 + 折线（端点取官方数字，中间为示意形态） -->
+  <polygon class="area" points="110,218 198,204 286,185 374,156 462,137 550,118 638,103 638,300 110,300"/>
+  <polyline class="line" points="110,218 198,204 286,185 374,156 462,137 550,118 638,103"/>
+  <circle class="dot" cx="110" cy="218" r="5"/>
+  <circle class="dot" cx="638" cy="103" r="5"/>
+
+  <text class="big" x="110" y="204" text-anchor="middle">17%</text>
+  <text class="axis-t" x="110" y="332" text-anchor="middle">2026-03</text>
+  <text class="big" x="638" y="90" text-anchor="middle">40%+</text>
+  <text class="axis-t" x="638" y="332" text-anchor="middle">2026-09</text>
+
+  <!-- 右侧注释卡 -->
+  <rect class="card-h" x="676" y="76" width="252" height="72" rx="8"/>
+  <text class="cnum" x="700" y="106">110M</text>
+  <text class="clbl" x="700" y="124">9 月单月 agent 起草的 PR 数</text>
+  <text class="clbl" x="700" y="138">约为 3 月的 6 倍</text>
+
+  <rect class="card" x="676" y="160" width="252" height="72" rx="8"/>
+  <text class="cnum" x="700" y="190">87%</text>
+  <text class="clbl" x="700" y="210">agent PR 涉及多个文件</text>
+  <text class="clbl" x="700" y="224">非 agent PR 为 79%</text>
+
+  <rect class="card" x="676" y="244" width="252" height="72" rx="8"/>
+  <text class="cnum" x="700" y="274">90%</text>
+  <text class="clbl" x="700" y="294">agent PR 两周内合并率（9 月）</text>
+  <text class="clbl" x="700" y="308">超越非 agent PR 的 86%（2 月为 83%）</text>
+
+  <text class="note" x="40" y="380">注：占比为 GitHub 可检测口径，agent 信号是下限（部分 agent 使用无法检测）；中间形态为示意曲线，端点取官方数字。</text>
+</svg>

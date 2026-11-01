@@ -1,0 +1,107 @@
+<svg viewBox="0 0 960 430" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GitHub 四类活动相对增速折线图：以 2025 年 9 月为 1 倍，到 2026 年 9 月 commits 6.0 倍、Actions jobs 4.8 倍、pushes 4.5 倍、merged PRs 3.9 倍，2026 年 6 月为拐点">
+  <style>
+    .title   { fill: #292524; font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 700; }
+    .pill    { fill: #fffbeb; stroke: #c2410c; }
+    .pill-t  { fill: #b45309; font-family: system-ui, -apple-system, sans-serif; font-size: 10px; font-weight: 700; }
+    .lg      { fill: #292524; font-family: system-ui, -apple-system, sans-serif; font-size: 11px; }
+    .sw-c    { fill: #c2410c; }
+    .sw-a    { fill: #7c3aed; }
+    .sw-p    { fill: #4f46e5; }
+    .sw-m    { fill: #0891b2; }
+    .axis    { fill: #78716c; font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; }
+    .axis-t  { fill: #57534e; font-family: system-ui, -apple-system, sans-serif; font-size: 10px; }
+    .grid    { stroke: #e7e5e4; stroke-width: 1; }
+    .line-c  { stroke: #c2410c; stroke-width: 2.2; fill: none; }
+    .line-a  { stroke: #7c3aed; stroke-width: 2.2; fill: none; }
+    .line-p  { stroke: #4f46e5; stroke-width: 2.2; fill: none; }
+    .line-m  { stroke: #0891b2; stroke-width: 2.2; fill: none; }
+    .inf     { stroke: #b45309; stroke-width: 1.2; stroke-dasharray: 4 4; }
+    .end-t   { font-family: 'SF Mono', 'Cascadia Code', monospace; font-size: 10.5px; font-weight: 700; }
+    .end-c   { fill: #c2410c; }
+    .end-a   { fill: #7c3aed; }
+    .end-p   { fill: #4f46e5; }
+    .end-m   { fill: #0891b2; }
+    .note    { fill: #78716c; font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; }
+    @media (prefers-color-scheme: dark) {
+      .title   { fill: #e7e5e4; }
+      .pill    { fill: #2d1f0c; stroke: #f97316; }
+      .pill-t  { fill: #f97316; }
+      .lg      { fill: #e7e5e4; }
+      .sw-c    { fill: #f97316; }
+      .sw-a    { fill: #c4b5fd; }
+      .sw-p    { fill: #a5b4fc; }
+      .sw-m    { fill: #22d3ee; }
+      .axis    { fill: #a8a29e; }
+      .axis-t  { fill: #a8a29e; }
+      .grid    { stroke: #44403c; }
+      .line-c  { stroke: #f97316; }
+      .line-a  { stroke: #c4b5fd; }
+      .line-p  { stroke: #a5b4fc; }
+      .line-m  { stroke: #22d3ee; }
+      .inf     { stroke: #d97706; }
+      .end-c   { fill: #f97316; }
+      .end-a   { fill: #c4b5fd; }
+      .end-p   { fill: #a5b4fc; }
+      .end-m   { fill: #22d3ee; }
+      .note    { fill: #a8a29e; }
+    }
+  </style>
+
+  <text class="title" x="40" y="34">GitHub 活动加速：四类活动相对 2025 年 9 月的增速（×）</text>
+  <rect class="pill" x="448" y="18" width="126" height="28" rx="14"/>
+  <text class="pill-t" x="511" y="38" text-anchor="middle">拐点：2026-06</text>
+
+  <rect class="sw-c" x="596" y="24" width="12" height="12" rx="3"/>
+  <text class="lg" x="614" y="34">commits</text>
+  <rect class="sw-a" x="686" y="24" width="12" height="12" rx="3"/>
+  <text class="lg" x="704" y="34">Actions jobs</text>
+  <rect class="sw-p" x="796" y="24" width="12" height="12" rx="3"/>
+  <text class="lg" x="814" y="34">pushes</text>
+  <rect class="sw-m" x="876" y="24" width="12" height="12" rx="3"/>
+  <text class="lg" x="894" y="34">merged PRs</text>
+
+  <!-- 网格与 Y 轴 -->
+  <line class="grid" x1="78" y1="360" x2="900" y2="360"/>
+  <line class="grid" x1="78" y1="300" x2="900" y2="300"/>
+  <line class="grid" x1="78" y1="241" x2="900" y2="241"/>
+  <line class="grid" x1="78" y1="181" x2="900" y2="181"/>
+  <line class="grid" x1="78" y1="122" x2="900" y2="122"/>
+  <line class="grid" x1="78" y1="62" x2="900" y2="62"/>
+  <text class="axis" x="70" y="364" text-anchor="end">1×</text>
+  <text class="axis" x="70" y="304" text-anchor="end">2×</text>
+  <text class="axis" x="70" y="245" text-anchor="end">3×</text>
+  <text class="axis" x="70" y="185" text-anchor="end">4×</text>
+  <text class="axis" x="70" y="126" text-anchor="end">5×</text>
+  <text class="axis" x="70" y="66" text-anchor="end">6×</text>
+
+  <!-- 2026-06 拐点虚线 -->
+  <line class="inf" x1="694.5" y1="62" x2="694.5" y2="360"/>
+
+  <!-- 折线（端点取官方图表，中间为示意形态） -->
+  <polyline class="line-a" points="78,360 146,360 215,359 283,357 352,354 420,345 489,336 557,324 626,312 694,297 763,241 831,187 900,133"/>
+  <polyline class="line-p" points="78,360 146,360 215,359 283,357 352,354 420,345 489,338 557,328 626,316 694,300 763,247 831,199 900,151"/>
+  <polyline class="line-m" points="78,360 146,360 215,359 283,357 352,355 420,348 489,342 557,335 626,328 694,318 763,270 831,229 900,187"/>
+  <polyline class="line-c" points="78,360 146,360 215,359 283,357 352,351 420,342 489,333 557,319 626,303 694,283 763,211 831,140 900,62"/>
+
+  <circle class="sw-c" cx="900" cy="62" r="4"/>
+  <circle class="sw-a" cx="900" cy="133" r="4"/>
+  <circle class="sw-p" cx="900" cy="151" r="4"/>
+  <circle class="sw-m" cx="900" cy="187" r="4"/>
+
+  <text class="end-t end-c" x="890" y="56" text-anchor="end">6.0×</text>
+  <text class="end-t end-a" x="890" y="138" text-anchor="end">4.8×</text>
+  <text class="end-t end-p" x="890" y="158" text-anchor="end">4.5×</text>
+  <text class="end-t end-m" x="890" y="192" text-anchor="end">3.9×</text>
+
+  <!-- X 轴月份 -->
+  <text class="axis-t" x="78" y="382" text-anchor="middle">Sep 25</text>
+  <text class="axis-t" x="215" y="382" text-anchor="middle">Nov 25</text>
+  <text class="axis-t" x="352" y="382" text-anchor="middle">Jan 26</text>
+  <text class="axis-t" x="489" y="382" text-anchor="middle">Mar 26</text>
+  <text class="axis-t" x="626" y="382" text-anchor="middle">May 26</text>
+  <text class="axis-t" x="694.5" y="382" text-anchor="middle">Jun 26</text>
+  <text class="axis-t" x="763" y="382" text-anchor="middle">Jul 26</text>
+  <text class="axis-t" x="900" y="382" text-anchor="middle">Sep 26</text>
+
+  <text class="note" x="40" y="412">注：中间形态为示意曲线；4 个端点、增速与 2026-06 拐点取自 Octoverse 2026 官方图表（统计窗口 2025-10 至 2026-09，含公有 + 私有仓库）。</text>
+</svg>
